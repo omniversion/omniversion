@@ -56,14 +56,11 @@ jobs:
       -
         name: Upload Packages file
         id: upload-packages-file
-        uses: actions/upload-release-asset@v1
+        uses: softprops/action-gh-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.OMNIVERSION_RELEASE_ACTION_TOKEN }}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: dist/Packages.gz
-          asset_name: Packages.gz
-          asset_content_type: application/gzip
+          files: dist/Packages.gz
       - uses: actions/setup-node@v1
       - name: Publish
         run: |
