@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/omniversion/omniversion-cli/cmd"
+	"github.com/omniversion/omniversion/cli/cmd"
 )
 
 func main() {

@@ -2,10 +2,9 @@ package parse
 
 import (
 	"bytes"
-	"github.com/omniversion/omniversion-cli/models"
+	"github.com/omniversion/omniversion/cli/models"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
-	"gopkg.in/yaml.v3"
 	"io"
 )
 

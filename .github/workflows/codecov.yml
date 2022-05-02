@@ -21,7 +21,7 @@ jobs:
           go-version: 1.17
       -
         name: Go test
-        run: go test ./... -coverprofile=test/coverage.out
+        run: go test ./cli/... -coverprofile=test/coverage.out
       -
         name: Upload coverage
         uses: codecov/codecov-action@v2

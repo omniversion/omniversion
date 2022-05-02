@@ -2,7 +2,7 @@ package parse
 
 import (
 	"bytes"
-	"github.com/omniversion/omniversion-cli/models"
+	"github.com/omniversion/omniversion-cli/cli/models"
 	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/assert"
 	"testing"

@@ -4,15 +4,15 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/hashicorp/go-multierror"
-	"github.com/omniversion/omniversion-cli/models"
-	. "github.com/omniversion/omniversion-cli/models/npm"
+	models2 "github.com/omniversion/omniversion/cli/models"
+	. "github.com/omniversion/omniversion/cli/models/npm"
 	"github.com/spf13/cobra"
 	"regexp"
 	"strings"
 )
 
-func parseNpmOutput(input string) ([]models.Dependency, error) {
-	result := make([]models.Dependency, 0, 100)
+func parseNpmOutput(input string) ([]models2.Dependency, error) {
+	result := make([]models2.Dependency, 0, 100)
 	// remove problems that might appear in stderr
 	// and would prevent us from parsing the content as JSON
 	// this is relevant if stdout and stderr have been merged,
@@ -37,12 +37,12 @@ func parseNpmOutput(input string) ([]models.Dependency, error) {
 	}
 }
 
-func parseAsList(input string, result *[]models.Dependency) *multierror.Error {
+func parseAsList(input string, result *[]models2.Dependency) *multierror.Error {
 	listRegex := regexp.MustCompile(`(?m)^(?P<location>[^\n:]*):(?P<wantedPackage>[^\n:]*)@(?P<wantedVersion>[^\n:]*):((?P<currentPackage>[^\n:]*)@(?P<currentVersion>[^\n:]*)|MISSING):(?P<latestPackage>[^\n:]*)@(?P<latestVersion>[^\n:]*)(:(?P<dir>.*))?$`)
 	items := listRegex.FindAllStringSubmatch(input, -1)
 	var allErrors *multierror.Error = nil
 	for _, foundItem := range items {
-		newItem := models.Dependency{
+		newItem := models2.Dependency{
 			Pm: "npm",
 		}
 		currentVersion := foundItem[listRegex.SubexpIndex("currentVersion")]
@@ -61,7 +61,7 @@ func parseAsList(input string, result *[]models.Dependency) *multierror.Error {
 						newItem.Latest = strings.Trim(value, "\n")
 					case "location":
 						if currentVersion != "" {
-							newItem.Installed = []models.InstalledDependency{{Location: value, Version: currentVersion}}
+							newItem.Installed = []models2.InstalledDependency{{Location: value, Version: currentVersion}}
 						}
 					}
 				}
@@ -72,12 +72,12 @@ func parseAsList(input string, result *[]models.Dependency) *multierror.Error {
 	return allErrors
 }
 
-func stripProblems(input string, result *[]models.Dependency) (string, *multierror.Error) {
+func stripProblems(input string, result *[]models2.Dependency) (string, *multierror.Error) {
 	problemRegex := regexp.MustCompile(`(?m)npm ERR! (?P<problem>[^:]*): (?P<name>\S*)@(?P<version>[^\s,]*)(, required by (?P<requiredBy>[^\s]*))?( (?P<location>.*))?`)
 	var allErrors *multierror.Error
 	foundProblems := problemRegex.FindAllStringSubmatch(input, -1)
 	for _, foundProblem := range foundProblems {
-		newItem := models.Dependency{
+		newItem := models2.Dependency{
 			Pm: "npm",
 		}
 		problemKind := foundProblem[problemRegex.SubexpIndex("problem")]
@@ -98,7 +98,7 @@ func stripProblems(input string, result *[]models.Dependency) (string, *multierr
 							allErrors = multierror.Append(allErrors, fmt.Errorf("unknown npm problem kind: %q", problemKind))
 						}
 					case "location":
-						newItem.Installed = []models.InstalledDependency{{Location: value}}
+						newItem.Installed = []models2.InstalledDependency{{Location: value}}
 					}
 				}
 			}
@@ -110,7 +110,7 @@ func stripProblems(input string, result *[]models.Dependency) (string, *multierr
 	return strippedInput, allErrors
 }
 
-func parseAsJson(input string, dependenciesAsJson NpmJson, result *[]models.Dependency) *multierror.Error {
+func parseAsJson(input string, dependenciesAsJson NpmJson, result *[]models2.Dependency) *multierror.Error {
 	if len(dependenciesAsJson.Dependencies) > 0 {
 		return parseJsonDependencies(dependenciesAsJson.Dependencies, result)
 	}
@@ -134,7 +134,7 @@ func parseAsJson(input string, dependenciesAsJson NpmJson, result *[]models.Depe
 	return multierror.Append(multiError, fmt.Errorf("unable to interpret this input: %q", input))
 }
 
-func parseJsonDependencies(dependencyData map[string]NpmDependency, result *[]models.Dependency) *multierror.Error {
+func parseJsonDependencies(dependencyData map[string]NpmDependency, result *[]models2.Dependency) *multierror.Error {
 	var allErrors *multierror.Error = nil
 	for name, dependency := range dependencyData {
 		version := dependency.Version
@@ -142,7 +142,7 @@ func parseJsonDependencies(dependencyData map[string]NpmDependency, result *[]mo
 			allErrors = multierror.Append(allErrors, fmt.Errorf("no version found: %q", name))
 			continue
 		}
-		newResult := models.Dependency{
+		newResult := models2.Dependency{
 			Name:    name,
 			Version: version,
 			Pm:      "npm",
@@ -152,13 +152,13 @@ func parseJsonDependencies(dependencyData map[string]NpmDependency, result *[]mo
 	return allErrors
 }
 
-func parseJsonAdvisories(advisoryData map[string]NpmAdvisory, result *[]models.Dependency) *multierror.Error {
+func parseJsonAdvisories(advisoryData map[string]NpmAdvisory, result *[]models2.Dependency) *multierror.Error {
 	var allErrors *multierror.Error = nil
 	for _, advisory := range advisoryData {
-		newDependency := models.Dependency{
+		newDependency := models2.Dependency{
 			Name: advisory.ModuleName,
 			Pm:   "npm",
-			Advisories: []models.Advisory{{
+			Advisories: []models2.Advisory{{
 				Access:             advisory.Access,
 				CVSSScore:          advisory.CVSS.Score,
 				Id:                 advisory.Id,
@@ -180,10 +180,10 @@ func parseJsonAdvisories(advisoryData map[string]NpmAdvisory, result *[]models.D
 	return allErrors
 }
 
-func parseAsNpmJson(dependenciesAsNpmVersionJson NpmVersionJson, result *[]models.Dependency) *multierror.Error {
+func parseAsNpmJson(dependenciesAsNpmVersionJson NpmVersionJson, result *[]models2.Dependency) *multierror.Error {
 	var allErrors *multierror.Error = nil
 	for packageName, version := range dependenciesAsNpmVersionJson {
-		newResult := models.Dependency{
+		newResult := models2.Dependency{
 			Name:    packageName,
 			Version: version,
 			Pm:      "npm",
@@ -193,10 +193,10 @@ func parseAsNpmJson(dependenciesAsNpmVersionJson NpmVersionJson, result *[]model
 	return allErrors
 }
 
-func parseAsFlatJson(dependenciesAsJson NpmFlatJson, result *[]models.Dependency) *multierror.Error {
+func parseAsFlatJson(dependenciesAsJson NpmFlatJson, result *[]models2.Dependency) *multierror.Error {
 	var allErrors *multierror.Error = nil
 	for packageName, details := range dependenciesAsJson {
-		newResult := models.Dependency{
+		newResult := models2.Dependency{
 			Name:    packageName,
 			Version: details.Current,
 			Wanted:  details.Wanted,

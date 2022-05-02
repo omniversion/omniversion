@@ -39,12 +39,13 @@ jobs:
           passphrase: ${{ secrets.OMNIVERSION_RELEASE_GPG_PASSPHRASE }}
       -
         name: Generate repo shasum
-        run: echo "OMNIVERSION_INSTALL_SHASUM=$(tar -cf - cmd include src util install.pipe | shasum | sed 's/[^0-9a-f]*//g' | tr -d '\\n')" >> $GITHUB_ENV
+        run: echo "OMNIVERSION_INSTALL_SHASUM=$(tar -cf - cli | shasum | sed 's/[^0-9a-f]*//g' | tr -d '\\n')" >> $GITHUB_ENV
       -
         name: Run GoReleaser
         id: goreleaser
         uses: goreleaser/goreleaser-action@v2
         with:
+          workdir: cli
           version: latest
           args: release --rm-dist
         env:

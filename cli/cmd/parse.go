@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"github.com/omniversion/omniversion-cli/cmd/parse"
+	parse2 "github.com/omniversion/omniversion/cli/cmd/parse"
 	"github.com/spf13/cobra"
 )
 
@@ -13,8 +13,8 @@ var parseCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(parseCmd)
-	parseCmd.AddCommand(parse.AptCmd)
-	parseCmd.AddCommand(parse.NpmCmd)
-	parseCmd.AddCommand(parse.RubygemsCmd)
-	parseCmd.AddCommand(parse.RvmCmd)
+	parseCmd.AddCommand(parse2.AptCmd)
+	parseCmd.AddCommand(parse2.NpmCmd)
+	parseCmd.AddCommand(parse2.RubygemsCmd)
+	parseCmd.AddCommand(parse2.RvmCmd)
 }

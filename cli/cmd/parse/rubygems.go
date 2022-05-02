@@ -3,17 +3,17 @@ package parse
 import (
 	"fmt"
 	"github.com/hashicorp/go-multierror"
-	"github.com/omniversion/omniversion-cli/models"
+	models2 "github.com/omniversion/omniversion/cli/models"
 	"github.com/spf13/cobra"
 	"regexp"
 	"strings"
 )
 
-func parseRubygemsOutput(input string) ([]models.Dependency, error) {
+func parseRubygemsOutput(input string) ([]models2.Dependency, error) {
 	extractionRegex := regexp.MustCompile(`(?m)(?P<name>.*) \((?P<versions>.*)\)(\n(?P<content>(^ +.*\n?|^\n)*))?`)
 	items := extractionRegex.FindAllStringSubmatch(input, -1)
 
-	result := make([]models.Dependency, 0, len(items))
+	result := make([]models2.Dependency, 0, len(items))
 	var allErrors *multierror.Error
 	for _, item := range items {
 		name := item[extractionRegex.SubexpIndex("name")]
@@ -35,7 +35,7 @@ func parseRubygemsOutput(input string) ([]models.Dependency, error) {
 	return result, allErrors.ErrorOrNil()
 }
 
-func parseListItem(name string, versions string, dependencies *[]models.Dependency) *error {
+func parseListItem(name string, versions string, dependencies *[]models2.Dependency) *error {
 	versionComponents := strings.Split(versions, " < ")
 	if len(versionComponents) != 2 {
 		err := fmt.Errorf("unable to parse package description: %q", name)
@@ -45,24 +45,24 @@ func parseListItem(name string, versions string, dependencies *[]models.Dependen
 	currentVersion := versionComponents[0]
 	latestVersion := versionComponents[1]
 
-	newResult := models.Dependency{
+	newResult := models2.Dependency{
 		Pm:        "rubygems",
 		Name:      name,
 		Version:   currentVersion,
 		Latest:    latestVersion,
-		Installed: []models.InstalledDependency{{Version: currentVersion}},
+		Installed: []models2.InstalledDependency{{Version: currentVersion}},
 	}
 	*dependencies = append(*dependencies, newResult)
 	return nil
 }
 
-func parseDetails(name string, versions string, content string, dependencies *[]models.Dependency) *error {
+func parseDetails(name string, versions string, content string, dependencies *[]models2.Dependency) *error {
 	parseRegex := regexp.MustCompile(`(?m)\s+Authors?: (?P<authors>(.+\n)+)\s+Homepage: (?P<homepage>.+)\n\s+Licenses?: (?P<license>.+)\n\s+Installed at ?(?P<locations>(.+\n)+)\n(?P<description>(\n?.+)+)`)
 	groupNames := parseRegex.SubexpNames()
 
 	parsedContent := parseRegex.FindStringSubmatch(content)
 
-	newResult := models.Dependency{
+	newResult := models2.Dependency{
 		Pm:   "rubygems",
 		Name: name,
 	}
@@ -96,12 +96,12 @@ func parseDetails(name string, versions string, content string, dependencies *[]
 	return nil
 }
 
-func parseLocations(locationsData string, dependency *models.Dependency) {
+func parseLocations(locationsData string, dependency *models2.Dependency) {
 	locationsRegex := regexp.MustCompile(`(?m)^\s*(\((?P<version>.*)\))?: (?P<location>.*)`)
 	installedLocationData := locationsRegex.FindAllStringSubmatch(locationsData, -1)
-	installations := []models.InstalledDependency{}
+	installations := []models2.InstalledDependency{}
 	for _, installedLocation := range installedLocationData {
-		newInstallation := models.InstalledDependency{}
+		newInstallation := models2.InstalledDependency{}
 		parseVersion(installedLocation[locationsRegex.SubexpIndex("version")], dependency, &newInstallation)
 
 		newInstallation.Location = installedLocation[locationsRegex.SubexpIndex("location")]
@@ -110,7 +110,7 @@ func parseLocations(locationsData string, dependency *models.Dependency) {
 	dependency.Installed = installations
 }
 
-func parseVersion(versionData string, dependency *models.Dependency, installedDependency *models.InstalledDependency) {
+func parseVersion(versionData string, dependency *models2.Dependency, installedDependency *models2.InstalledDependency) {
 	// could be either empty or a version or "default" or both, separated by a comma
 	versionString := versionData
 	versionComponents := strings.Split(versionString, ", ")

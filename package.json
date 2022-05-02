@@ -5,7 +5,7 @@
   "main": "index.js",
   "directories": {
     "doc": "docs",
-    "test": "test"
+    "test": "cli/test"
   },
   "goBinary": {
     "name": "omniversion",
