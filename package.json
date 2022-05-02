@@ -1,6 +1,6 @@
 {
   "name": "omniversion",
-  "version": "0.37.1",
+  "version": "0.37.2",
   "description": "Omniversion",
   "main": "index.js",
   "directories": {
@@ -12,8 +12,7 @@
     "path": "./bin",
     "url": "https://github.com/omniversion/omniversion-cli/releases/download/v{{version}}/npm_omniversion_{{version}}_{{platform}}_{{arch}}.tar.gz"
   },
-  "files": [
-  ],
+  "files": [],
   "scripts": {
     "test": "go test src",
     "postinstall": "go-npm install",
