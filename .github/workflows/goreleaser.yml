@@ -53,7 +53,7 @@ jobs:
           GPG_FINGERPRINT: ${{ steps.import_gpg.outputs.fingerprint }}
       -
         name: Create Packages file
-        run: dpkg-scanpackages -m dist | gzip -c > dist/Packages.gz
+        run: dpkg-scanpackages -m cli/dist | gzip -c > cli/dist/Packages.gz
       -
         name: Upload Packages file
         id: upload-packages-file
@@ -61,7 +61,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.OMNIVERSION_RELEASE_ACTION_TOKEN }}
         with:
-          files: dist/Packages.gz
+          files: cli/dist/Packages.gz
       - uses: actions/setup-node@v1
       - name: Publish
         run: |
