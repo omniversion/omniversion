@@ -2,7 +2,6 @@ package parse
 
 import (
 	"bytes"
-	"github.com/hashicorp/go-multierror"
 	"github.com/omniversion/omniversion-cli/models"
 	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/assert"
@@ -13,7 +12,7 @@ func TestEmptyOutput(t *testing.T) {
 	stdin := new(bytes.Buffer)
 	stdout := new(bytes.Buffer)
 	stderr := new(bytes.Buffer)
-	runParser(func(input string) ([]models.Dependency, *multierror.Error) {
+	runParser(func(input string) ([]models.Dependency, error) {
 		return []models.Dependency{}, nil
 	})(stdin, stdout, stderr, []string{})
 
@@ -25,7 +24,7 @@ func TestSimpleOutput(t *testing.T) {
 	stdin := new(bytes.Buffer)
 	stdout := new(bytes.Buffer)
 	stderr := new(bytes.Buffer)
-	runParser(func(input string) ([]models.Dependency, *multierror.Error) {
+	runParser(func(input string) ([]models.Dependency, error) {
 		return []models.Dependency{
 			{Name: "test"},
 		}, nil
@@ -43,7 +42,7 @@ func TestWrapCommand(t *testing.T) {
 	command.SetIn(stdin)
 	command.SetOut(stdout)
 	command.SetErr(stderr)
-	wrapCommand(func(input string) ([]models.Dependency, *multierror.Error) {
+	wrapCommand(func(input string) ([]models.Dependency, error) {
 		return []models.Dependency{
 			{Name: "test"},
 		}, nil

@@ -8,11 +8,11 @@ import (
 	"strings"
 )
 
-func parseAptOutput(input string) ([]models.Dependency, *multierror.Error) {
+func parseAptOutput(input string) ([]models.Dependency, error) {
 	compiledRegex := regexp.MustCompile(`(?m)^(?P<name>.*?)/(?P<sources>\S*) (?P<version>\S*) (?P<architecture>\S*)( \[(?P<installed>installed)?(,(?P<automatic>automatic))?(,upgradable to: (?P<latest>.*))?(upgradable from: (?P<outdatedVersion>.*))?])?$`)
 	matches := compiledRegex.FindAllStringSubmatch(input, -1)
 	result := make([]models.Dependency, 0, len(matches))
-	var allErrors *multierror.Error = nil
+	var allErrors *multierror.Error
 	for _, match := range matches {
 		newDependency := models.Dependency{
 			Pm: "apt",
@@ -56,7 +56,7 @@ func parseAptOutput(input string) ([]models.Dependency, *multierror.Error) {
 		}
 		result = append(result, newDependency)
 	}
-	return result, allErrors
+	return result, allErrors.ErrorOrNil()
 }
 
 var AptCmd = &cobra.Command{

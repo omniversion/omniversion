@@ -338,3 +338,31 @@ func TestParseNpmVersion(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, 17, len(result))
 }
+
+func TestUnknownProblemKind(t *testing.T) {
+	vector := `
+npm ERR! covfefe: name@version
+`
+
+	result, err := parseNpmOutput(vector)
+
+	assert.NotNil(t, err)
+	assert.Contains(t, err.Error(), "unknown npm problem kind")
+	assert.Equal(t, 1, len(result))
+}
+
+func TestEmptyVersionInJsonDependency(t *testing.T) {
+	vector := `{
+	"dependencies": {
+		"test": {
+			"version": ""
+		}
+	}
+}`
+
+	result, err := parseNpmOutput(vector)
+
+	assert.NotNil(t, err)
+	assert.Contains(t, err.Error(), "no version found")
+	assert.Equal(t, 0, len(result))
+}

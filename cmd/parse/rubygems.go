@@ -9,12 +9,12 @@ import (
 	"strings"
 )
 
-func parseRubygemsOutput(input string) ([]models.Dependency, *multierror.Error) {
+func parseRubygemsOutput(input string) ([]models.Dependency, error) {
 	extractionRegex := regexp.MustCompile(`(?m)(?P<name>.*) \((?P<versions>.*)\)(\n(?P<content>(^ +.*\n?|^\n)*))?`)
 	items := extractionRegex.FindAllStringSubmatch(input, -1)
 
 	result := make([]models.Dependency, 0, len(items))
-	var allErrors *multierror.Error = nil
+	var allErrors *multierror.Error
 	for _, item := range items {
 		name := item[extractionRegex.SubexpIndex("name")]
 		versions := item[extractionRegex.SubexpIndex("versions")]
@@ -32,7 +32,7 @@ func parseRubygemsOutput(input string) ([]models.Dependency, *multierror.Error) 
 			}
 		}
 	}
-	return result, allErrors
+	return result, allErrors.ErrorOrNil()
 }
 
 func parseListItem(name string, versions string, dependencies *[]models.Dependency) *error {

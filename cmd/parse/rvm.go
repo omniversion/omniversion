@@ -1,13 +1,12 @@
 package parse
 
 import (
-	"github.com/hashicorp/go-multierror"
 	"github.com/omniversion/omniversion-cli/models"
 	"github.com/spf13/cobra"
 	"regexp"
 )
 
-func parseRvmOutput(input string) ([]models.Dependency, *multierror.Error) {
+func parseRvmOutput(input string) ([]models.Dependency, error) {
 	compiledRegex := regexp.MustCompile("(?m)^(?P<current>=)? ?(?P<default>\\*)?([ >])? *ruby-(?P<version>[^ ]*) \\[ (?P<architecture>.*) ]$")
 	matches := compiledRegex.FindAllStringSubmatch(input, -1)
 	newItem := models.Dependency{

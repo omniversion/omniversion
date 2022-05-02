@@ -5,18 +5,19 @@ import (
 	"fmt"
 	"github.com/hashicorp/go-multierror"
 	"github.com/omniversion/omniversion-cli/models"
+	. "github.com/omniversion/omniversion-cli/models/npm"
 	"github.com/spf13/cobra"
 	"regexp"
 	"strings"
 )
 
-func parseNpmOutput(input string) ([]models.Dependency, *multierror.Error) {
+func parseNpmOutput(input string) ([]models.Dependency, error) {
 	result := make([]models.Dependency, 0, 100)
 	// remove problems that might appear in stderr
 	// and would prevent us from parsing the content as JSON
 	// this is relevant if stdout and stderr have been merged,
 	// e.g. in terminal output copied from the console
-	var allErrors *multierror.Error = nil
+	var allErrors *multierror.Error
 	input, err := stripProblems(input, &result)
 	if err != nil {
 		allErrors = multierror.Append(allErrors, err)
@@ -29,10 +30,10 @@ func parseNpmOutput(input string) ([]models.Dependency, *multierror.Error) {
 
 	if jsonUnmarshallErr == nil {
 		err = parseAsJson(input, *dependenciesAsJson, &result)
-		return result, err
+		return result, multierror.Append(allErrors, err).ErrorOrNil()
 	} else {
 		err = parseAsList(input, &result)
-		return result, err
+		return result, multierror.Append(allErrors, err).ErrorOrNil()
 	}
 }
 
@@ -73,7 +74,7 @@ func parseAsList(input string, result *[]models.Dependency) *multierror.Error {
 
 func stripProblems(input string, result *[]models.Dependency) (string, *multierror.Error) {
 	problemRegex := regexp.MustCompile(`(?m)npm ERR! (?P<problem>[^:]*): (?P<name>\S*)@(?P<version>[^\s,]*)(, required by (?P<requiredBy>[^\s]*))?( (?P<location>.*))?`)
-	var allErrors *multierror.Error = nil
+	var allErrors *multierror.Error
 	foundProblems := problemRegex.FindAllStringSubmatch(input, -1)
 	for _, foundProblem := range foundProblems {
 		newItem := models.Dependency{
@@ -93,6 +94,8 @@ func stripProblems(input string, result *[]models.Dependency) (string, *multierr
 							newItem.Wanted = value
 						case "extraneous":
 							newItem.Version = value
+						default:
+							allErrors = multierror.Append(allErrors, fmt.Errorf("unknown npm problem kind: %q", problemKind))
 						}
 					case "location":
 						newItem.Installed = []models.InstalledDependency{{Location: value}}
@@ -136,7 +139,7 @@ func parseJsonDependencies(dependencyData map[string]NpmDependency, result *[]mo
 	for name, dependency := range dependencyData {
 		version := dependency.Version
 		if version == "" {
-			allErrors = multierror.Append(allErrors, fmt.Errorf("no version found: %v", name))
+			allErrors = multierror.Append(allErrors, fmt.Errorf("no version found: %q", name))
 			continue
 		}
 		newResult := models.Dependency{
@@ -211,65 +214,3 @@ var NpmCmd = &cobra.Command{
 	Long:  `Transform the output of npm into a common format.`,
 	Run:   wrapCommand(parseNpmOutput),
 }
-
-type NpmJson struct {
-	Advisories   map[string]NpmAdvisory
-	Problems     []string
-	Dependencies map[string]NpmDependency
-}
-
-type NpmRequirement struct {
-	Id          string `json:"_id"`
-	Name        string
-	Version     string
-	PeerMissing []NpmPeerMissingRequirement
-}
-
-type NpmPeerMissingRequirement struct {
-	RequiredBy string
-	Requires   string
-}
-
-type NpmDependency struct {
-	Version      string
-	From         string
-	Resolved     string
-	Dependencies map[string]NpmDependency
-
-	Required    NpmRequirement
-	PeerMissing bool
-}
-
-type NpmAdvisory struct {
-	Findings []struct {
-		Version string
-		Paths   []string
-	}
-	VulnerableVersions string `json:"vulnerable_versions"`
-	ModuleName         string `json:"module_name"`
-	Severity           string
-	Access             string
-	PatchedVersions    string `json:"patched_versions"`
-	CVSS               struct {
-		Score        float64
-		VectorString string
-	}
-	Recommendation string
-	Id             int
-	References     string
-	Title          string
-	Overview       string
-	Url            string
-}
-
-type NpmFlatJson map[string]NpmOutdatedDependency
-
-type NpmOutdatedDependency struct {
-	Current   string
-	Wanted    string
-	Latest    string
-	Dependent string
-	Location  string
-}
-
-type NpmVersionJson map[string]string
