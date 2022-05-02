@@ -1,13 +1,9 @@
 #!/usr/bin/env python
-import time
 from dataclasses import dataclass
-from datetime import datetime
 from itertools import groupby
 from typing import List, Optional
 from ..format import format
-from ..constants import STALE_DATA_THRESHOLD_IN_SECONDS
 
-from .dependency import Dependency
 from .file_info import OmniversionFileInfo
 
 @dataclass

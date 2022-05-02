@@ -1,0 +1,29 @@
+name: Publish Python integration to PyPi
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v3
+        with:
+          python-version: '3.8'
+
+      - name: Install dependencies
+        working-directory: python
+        run: pip3 install -r requirements.txt
+         
+      - name: Create PyPi package
+        working-directory: python
+        run: VERSION=${{ github.ref }} python3 -m build
+
+      - name: Publish package
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          user: __token__
+          password: ${{ secrets.PYPI_API_TOKEN }}
