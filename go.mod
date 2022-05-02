@@ -1,3 +1,3 @@
-module github/omniversion/omniversion-cli
+module github.com/omniversion/omniversion-cli
 
 go 1.17
