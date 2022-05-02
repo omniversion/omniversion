@@ -1,0 +1,5 @@
+---
+- name: List available updates
+  hosts: all
+  roles:
+    - ../../roles/omniversion/outdated

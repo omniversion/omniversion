@@ -1,0 +1,35 @@
+---
+- name: Determine output directory
+  set_fact:
+    var_omniversion_full_output_dir: "{{ var_omniversion_output_dir }}/{{ inventory_hostname }}/{{ var_omniversion_pm }}"
+
+- name: Ensure output directory exists
+  file:
+    path: "{{ var_omniversion_full_output_dir }}"
+    state: directory
+  delegate_to: localhost
+
+- name: Remove previous results
+  copy:
+    dest: "{{ var_omniversion_full_output_dir }}/{{ var_omniversion_verb }}.omniversion.yaml"
+    content: ""
+  delegate_to: localhost
+
+- name: Parse output
+  command: "omniversion parse {{ var_omniversion_pm }}"
+  args:
+    stdin: "{{ omniversion_result.stdout | string }}"
+  delegate_to: localhost
+  register: omniversion_result
+  ignore_errors: true
+
+- name: Log error
+  debug:
+    msg: "{{ omniversion_result.stderr }}"
+  when: omniversion_result.stderr
+
+- name: Store parsed result
+  copy:
+    dest: "{{ var_omniversion_full_output_dir }}/{{ var_omniversion_verb }}.omniversion.yaml"
+    content: "{{omniversion_result.stdout}}"
+  delegate_to: localhost

@@ -1,0 +1,63 @@
+---
+- name: Set verb to `list`
+  set_fact:
+    var_omniversion_verb: list
+  tags:
+    - always
+
+- name: List and store apt versions
+  when: var_omniversion.apt is defined
+  tags:
+    - apt
+  block:
+    - name: List apt package versions
+      shell: 'apt list --installed 2> /dev/null || true'
+      register: omniversion_result
+
+    - include_tasks: ../../shared/save.yaml
+      vars:
+        var_omniversion_pm: apt
+
+- name: List and store npm versions
+  when: var_omniversion.npm is defined
+  tags:
+    - npm
+  block:
+    - name: List npm versions
+      shell: 'npm ls --parseable 2>&1 || true'
+      args:
+        chdir: '{{ var_omniversion.npm.dir | default("/") }}'
+      register: omniversion_result
+
+    - include_tasks: ../../shared/save.yaml
+      vars:
+        var_omniversion_pm: npm
+
+- name: List and store rubygems versions
+  when: var_omniversion.rubygems is defined
+  tags:
+    - rubygems
+    - gem
+  block:
+    - name: Fetch rubygems versions
+      command: 'gem list --details --versions --all'
+      args:
+        chdir: '{{var_omniversion.rubygems.dir}}'
+      register: omniversion_result
+
+    - include_tasks: ../../shared/save.yaml
+      vars:
+        var_omniversion_pm: rubygems
+
+- name: List and store rvm ruby versions
+  when: var_omniversion.rvm is defined
+  tags:
+    - rvm
+  block:
+    - name: Fetch rvm ruby versions
+      shell: '/usr/local/rvm/bin/rvm ls'
+      register: omniversion_result
+
+    - include_tasks: ../../shared/save.yaml
+      vars:
+        var_omniversion_pm: rvm

@@ -1,0 +1,21 @@
+---
+- name: Set verb to `version`
+  set_fact:
+    var_omniversion_verb: version
+  tags:
+    - always
+
+- name: Get versions of npm, Node etc.
+  when: var_omniversion.npm is defined
+  tags:
+    - npm
+  block:
+    - name: Get versions as json
+      shell: 'npm version --json'
+      args:
+        chdir: '{{ var_omniversion.npm.dir | default("/") }}'
+      register: omniversion_result
+
+    - include_tasks: ../../shared/save.yaml
+      vars:
+        var_omniversion_pm: npm

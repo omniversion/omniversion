@@ -1,0 +1,7 @@
+---
+- name: Refresh apt cache
+  when: var_omniversion.apt is defined
+  shell: 'apt update'
+  become: true
+  tags:
+    - apt

@@ -1,0 +1,37 @@
+---
+- name: Set verb to `audit`
+  set_fact:
+    var_omniversion_verb: audit
+  tags:
+    - always
+
+- name: List and store available npm updates
+  when: var_omniversion.npm is defined
+  tags:
+    - npm
+  block:
+    - name: List available npm updates
+      shell: 'npm audit --prod --json 2>&1 || true'
+      args:
+        chdir: '{{ var_omniversion.npm.dir | default("/") }}'
+      register: omniversion_result
+
+    - include_tasks: ../../shared/save.yaml
+      vars:
+        var_omniversion_pm: npm
+
+- name: Fetch and store available bundler updates
+  when: var_omniversion.rubygems is defined
+  tags:
+    - rubygems
+    - gem
+  block:
+    - name: Fetch available bundler updates
+      shell: 'bundle-audit 2>&1 || true'
+      args:
+        chdir: '{{var_omniversion.rubygems.dir}}'
+      register: omniversion_result
+
+    - include_tasks: ../../shared/save.yaml
+      vars:
+        var_omniversion_pm: rubygems

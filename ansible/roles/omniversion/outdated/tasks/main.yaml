@@ -1,0 +1,50 @@
+---
+- name: Set verb to `outdated`
+  set_fact:
+    var_omniversion_verb: outdated
+  tags:
+    - always
+
+- name: List and store apt versions
+  when: var_omniversion.apt is defined
+  tags:
+    - apt
+  block:
+    - name: List apt package versions
+      shell: 'apt list --upgradeable 2> /dev/null || true'
+      register: omniversion_result
+
+    - include_tasks: ../../shared/save.yaml
+      vars:
+        var_omniversion_pm: apt
+
+- name: List and store npm versions
+  when: var_omniversion.npm is defined
+  tags:
+    - npm
+  block:
+    - name: List npm versions
+      shell: 'npm outdated --parseable 2>&1 || true'
+      args:
+        chdir: '{{ var_omniversion.npm.dir | default("/") }}'
+      register: omniversion_result
+
+    - include_tasks: ../../shared/save.yaml
+      vars:
+        var_omniversion_pm: npm
+
+- name: Fetch and store rubygems versions
+  when: var_omniversion.rubygems is defined
+  tags:
+    - rubygems
+    - gem
+  block:
+    - name: Fetch rubygems versions
+      command: 'gem outdated --update-sources --quiet'
+      args:
+        chdir: '{{var_omniversion.rubygems.dir}}'
+      register: omniversion_result
+
+    - include_tasks: ../../shared/save.yaml
+      vars:
+        var_omniversion_pm: rubygems

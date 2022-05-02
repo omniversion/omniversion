@@ -1,0 +1,5 @@
+---
+- name: Refresh all deplendency caches
+  hosts: all
+  roles:
+    - ../../roles/omniversion/refresh

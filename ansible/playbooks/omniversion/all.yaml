@@ -1,0 +1,9 @@
+---
+- name: Fetch all info from servers
+  hosts: webservers
+  roles:
+    - ../../roles/omniversion/refresh
+    - ../../roles/omniversion/list
+    - ../../roles/omniversion/outdated
+    - ../../roles/omniversion/audit
+    - ../../roles/omniversion/version
