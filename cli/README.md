@@ -6,5 +6,5 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/omniversion/omniversion-cli?style=for-the-badge)](https://goreportcard.com/report/github.com/omniversion/omniversion-cli)
 [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg?style=for-the-badge)](https://conventionalcommits.org)
 
-# omniversion-cli
+# omniversion/cli
 The omniversion command line tool turns output from various package managers into a common, easily parseable format
