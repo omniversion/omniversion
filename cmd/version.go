@@ -21,6 +21,9 @@ var RepoChecksum = "-"
 // Date is the date and time at which the build was created
 var Date = "-"
 
+// Via is the installation method ("npm"/"brew"/"compiled from source"/...)
+var Via = "compiled from source"
+
 // Cmd implements the version command that outputs information on the current installation as a yaml string map
 func init() {
 	rootCmd.AddCommand(&cobra.Command{
@@ -38,9 +41,10 @@ func versionCmd(writer io.Writer) {
 	_, _ = writer.Write([]byte(fmt.Sprintln(fmt.Sprintf(
 		`name: omniversion
 version: %v
+via: %v
 date: %v
 commit: %-8v
 checksum: %-8v
 location: %v
-`, Version, Date, CommitHash, RepoChecksum, executableLocation))))
+`, Version, Via, Date, CommitHash, RepoChecksum, executableLocation))))
 }

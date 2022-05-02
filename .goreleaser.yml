@@ -1,0 +1,124 @@
+before:
+  hooks:
+    - go mod download
+    - go generate ./...
+project_name: "omniversion"
+release:
+  github:
+    owner: omniversion
+    name: omniversion-cli
+builds:
+  - id: omniversion_brew
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+    ldflags:
+      - -s -w
+      - -X github.com/omniversion/omniversion-cli/cmd/version.Via=brew
+      - -X github.com/omniversion/omniversion-cli/cmd/version.Version={{ .Version }}
+      - -X github.com/omniversion/omniversion-cli/cmd/version.CommitHash={{ .Commit }}
+      - -X github.com/omniversion/omniversion-cli/cmd/version.Date={{ .Date }}
+      - -X github.com/omniversion/omniversion-cli/cmd/version.RepoChecksum={{ .Env.OMNIVERSION_INSTALL_SHASUM }}
+  - id: omniversion_npm
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+    ldflags:
+      - -s -w
+      - -X github.com/omniversion/omniversion-cli/cmd/version.Via=npm
+      - -X github.com/omniversion/omniversion-cli/cmd/version.Version={{ .Version }}
+      - -X github.com/omniversion/omniversion-cli/cmd/version.CommitHash={{ .Commit }}
+      - -X github.com/omniversion/omniversion-cli/cmd/version.Date={{ .Date }}
+      - -X github.com/omniversion/omniversion-cli/cmd/version.RepoChecksum={{ .Env.OMNIVERSION_INSTALL_SHASUM }}
+  - id: omniversion_apt
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+    ldflags:
+      - -s -w
+      - -X github.com/omniversion/omniversion-cli/cmd/version.Via=apt
+      - -X github.com/omniversion/omniversion-cli/cmd/version.Version={{ .Version }}
+      - -X github.com/omniversion/omniversion-cli/cmd/version.CommitHash={{ .Commit }}
+      - -X github.com/omniversion/omniversion-cli/cmd/version.Date={{ .Date }}
+      - -X github.com/omniversion/omniversion-cli/cmd/version.RepoChecksum={{ .Env.OMNIVERSION_INSTALL_SHASUM }}
+archives:
+  - id: npm_archive
+    builds:
+      - omniversion_npm
+    name_template: "npm_{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+  - id: brew_archive
+    builds:
+      - omniversion_brew
+    name_template: "brew_{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+checksum:
+  name_template: 'checksums.txt'
+snapshot:
+  name_template: "{{ .Tag }}-next"
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+brews:
+  - name: omniversion
+    ids:
+      - brew_archive
+
+    tap:
+      owner: omniversion
+      name: homebrew-tap
+
+    commit_author:
+      name: Layer9GmbH
+      email: hello@layer9.berlin
+
+    folder: Formula
+
+    homepage: "https://layer9.berlin/"
+
+    description: "Omniversion"
+
+    license: "AGPL-3.0"
+
+    install: |
+      bin.install "omniversion"
+
+    test: |
+      system "#{bin}/omniversion version"
+nfpms:
+  - id: omniversion
+    builds:
+      - omniversion_apt
+
+    package_name: omniversion
+
+    vendor: Layer9 GmbH
+    homepage: https://layer9.berlin
+    maintainer: Layer9 GmbH <info@layer9.berlin>
+
+    description: Omniversion
+
+    license: "AGPL-3.0"
+
+    formats:
+      - apk
+      - deb
+      - rpm
+
+    suggests:
+      - git
+      - zsh
+signs:
+  - artifacts: checksum
+    id: sign_checksums
+    args: [ "--batch", "-u", "{{ .Env.GPG_FINGERPRINT }}", "--output", "${signature}", "--detach-sign", "${artifact}" ]
