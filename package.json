@@ -1,0 +1,38 @@
+{
+  "name": "omniversion",
+  "version": "0.37.1",
+  "description": "Omniversion",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "test": "test"
+  },
+  "goBinary": {
+    "name": "omniversion",
+    "path": "./bin",
+    "url": "https://github.com/omniversion/omniversion-cli/releases/download/v{{version}}/npm_omniversion_{{version}}_{{platform}}_{{arch}}.tar.gz"
+  },
+  "files": [
+  ],
+  "scripts": {
+    "test": "go test src",
+    "postinstall": "go-npm install",
+    "preuninstall": "go-npm uninstall"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/omniversion/omniversion-cli.git"
+  },
+  "keywords": [
+    "omniversion"
+  ],
+  "author": "Layer9 GmbH",
+  "license": "AGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/omniversion/omniversion-cli/issues"
+  },
+  "homepage": "https://github.com/omniversion/omniversion-cli#readme",
+  "dependencies": {
+    "go-npm": "^0.1.9"
+  }
+}
