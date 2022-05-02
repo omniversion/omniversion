@@ -6,7 +6,7 @@ project_name: "omniversion"
 release:
   github:
     owner: omniversion
-    name: omniversion-cli
+    name: omniversion
 builds:
   - id: omniversion_brew
     env:
@@ -17,11 +17,11 @@ builds:
       - darwin
     ldflags:
       - -s -w
-      - -X github.com/omniversion/omniversion-cli/cmd/version.Via=brew
-      - -X github.com/omniversion/omniversion-cli/cmd/version.Version={{ .Version }}
-      - -X github.com/omniversion/omniversion-cli/cmd/version.CommitHash={{ .Commit }}
-      - -X github.com/omniversion/omniversion-cli/cmd/version.Date={{ .Date }}
-      - -X github.com/omniversion/omniversion-cli/cmd/version.RepoChecksum={{ .Env.OMNIVERSION_INSTALL_SHASUM }}
+      - -X github.com/omniversion/omniversion/cli/cmd/version.Via=brew
+      - -X github.com/omniversion/omniversion/cli/cmd/version.Version={{ .Version }}
+      - -X github.com/omniversion/omniversion/cli/cmd/version.CommitHash={{ .Commit }}
+      - -X github.com/omniversion/omniversion/cli/cmd/version.Date={{ .Date }}
+      - -X github.com/omniversion/omniversion/cli/cmd/version.RepoChecksum={{ .Env.OMNIVERSION_INSTALL_SHASUM }}
   - id: omniversion_npm
     env:
       - CGO_ENABLED=0
@@ -31,11 +31,11 @@ builds:
       - darwin
     ldflags:
       - -s -w
-      - -X github.com/omniversion/omniversion-cli/cmd/version.Via=npm
-      - -X github.com/omniversion/omniversion-cli/cmd/version.Version={{ .Version }}
-      - -X github.com/omniversion/omniversion-cli/cmd/version.CommitHash={{ .Commit }}
-      - -X github.com/omniversion/omniversion-cli/cmd/version.Date={{ .Date }}
-      - -X github.com/omniversion/omniversion-cli/cmd/version.RepoChecksum={{ .Env.OMNIVERSION_INSTALL_SHASUM }}
+      - -X github.com/omniversion/omniversion/cli/cmd/version.Via=npm
+      - -X github.com/omniversion/omniversion/cli/cmd/version.Version={{ .Version }}
+      - -X github.com/omniversion/omniversion/cli/cmd/version.CommitHash={{ .Commit }}
+      - -X github.com/omniversion/omniversion/cli/cmd/version.Date={{ .Date }}
+      - -X github.com/omniversion/omniversion/cli/cmd/version.RepoChecksum={{ .Env.OMNIVERSION_INSTALL_SHASUM }}
   - id: omniversion_apt
     env:
       - CGO_ENABLED=0
@@ -45,11 +45,11 @@ builds:
       - darwin
     ldflags:
       - -s -w
-      - -X github.com/omniversion/omniversion-cli/cmd/version.Via=apt
-      - -X github.com/omniversion/omniversion-cli/cmd/version.Version={{ .Version }}
-      - -X github.com/omniversion/omniversion-cli/cmd/version.CommitHash={{ .Commit }}
-      - -X github.com/omniversion/omniversion-cli/cmd/version.Date={{ .Date }}
-      - -X github.com/omniversion/omniversion-cli/cmd/version.RepoChecksum={{ .Env.OMNIVERSION_INSTALL_SHASUM }}
+      - -X github.com/omniversion/omniversion/cli/cmd/version.Via=apt
+      - -X github.com/omniversion/omniversion/cli/cmd/version.Version={{ .Version }}
+      - -X github.com/omniversion/omniversion/cli/cmd/version.CommitHash={{ .Commit }}
+      - -X github.com/omniversion/omniversion/cli/cmd/version.Date={{ .Date }}
+      - -X github.com/omniversion/omniversion/cli/cmd/version.RepoChecksum={{ .Env.OMNIVERSION_INSTALL_SHASUM }}
 archives:
   - id: npm_archive
     builds:

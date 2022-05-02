@@ -2,19 +2,19 @@ package parse
 
 import (
 	"github.com/hashicorp/go-multierror"
-	models2 "github.com/omniversion/omniversion/cli/models"
+	"github.com/omniversion/omniversion/cli/models"
 	"github.com/spf13/cobra"
 	"regexp"
 	"strings"
 )
 
-func parseAptOutput(input string) ([]models2.Dependency, error) {
+func parseAptOutput(input string) ([]models.Dependency, error) {
 	compiledRegex := regexp.MustCompile(`(?m)^(?P<name>.*?)/(?P<sources>\S*) (?P<version>\S*) (?P<architecture>\S*)( \[(?P<installed>installed)?(,(?P<automatic>automatic))?(,upgradable to: (?P<latest>.*))?(upgradable from: (?P<outdatedVersion>.*))?])?$`)
 	matches := compiledRegex.FindAllStringSubmatch(input, -1)
-	result := make([]models2.Dependency, 0, len(matches))
+	result := make([]models.Dependency, 0, len(matches))
 	var allErrors *multierror.Error
 	for _, match := range matches {
-		newDependency := models2.Dependency{
+		newDependency := models.Dependency{
 			Pm: "apt",
 		}
 		version := match[compiledRegex.SubexpIndex("version")]
@@ -25,7 +25,7 @@ func parseAptOutput(input string) ([]models2.Dependency, error) {
 			newDependency.Latest = latest
 			if isInstalled {
 				newDependency.Version = version
-				newDependency.Installed = []models2.InstalledDependency{{
+				newDependency.Installed = []models.InstalledDependency{{
 					Version: version,
 				}}
 			} else {
@@ -34,7 +34,7 @@ func parseAptOutput(input string) ([]models2.Dependency, error) {
 		} else {
 			// we are dealing with the output of an `outdated` command
 			newDependency.Version = outdatedVersion
-			newDependency.Installed = []models2.InstalledDependency{{
+			newDependency.Installed = []models.InstalledDependency{{
 				Version: outdatedVersion,
 			}}
 			newDependency.Latest = version
