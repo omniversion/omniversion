@@ -17,10 +17,14 @@ jobs:
       - name: Install dependencies
         working-directory: python
         run: pip3 install -r requirements.txt
-         
+
+      - name: Extract version from tag (e.g. `/refs/tags/0.1.2` -> `0.1.2`)
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
+
       - name: Create PyPi package
         working-directory: python
-        run: VERSION=${{ github.event.release.tag_name }} python3 -m build
+        run: VERSION=${{ steps.get_version.outputs.VERSION }} python3 -m build
 
       - name: Publish package
         uses: pypa/gh-action-pypi-publish@release/v1
