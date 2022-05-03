@@ -24,6 +24,11 @@ jobs:
         working-directory: cli
         run: go test ./... -coverprofile=test/coverage.out
 
+      - name: Set up python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.8'
+
       - name: Python test
         working-directory: python
         run: pytest --cov=omniversion --cov-report=xml omniversion
