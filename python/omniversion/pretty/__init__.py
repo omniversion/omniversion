@@ -1,5 +1,6 @@
 #!/usr/bin/env python
-from . import format
-
 from colorama import init
+
+from . import pretty
+
 init(strip=None, convert=None, wrap=False)

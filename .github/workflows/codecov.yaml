@@ -23,8 +23,13 @@ jobs:
         name: Go test
         working-directory: cli
         run: go test ./... -coverprofile=test/coverage.out
+
+      - name: Python test
+        working-directory: python
+        run: pytest --cov=omniversion --cov-report=xml omniversion
+
       -
         name: Upload coverage
         uses: codecov/codecov-action@v2
         with:
-          file: ./cli/test/coverage.out
+          files: ./cli/test/coverage.out,./python/coverage.xml

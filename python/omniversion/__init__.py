@@ -1,3 +1,5 @@
 #!/usr/bin/env python
-from .models import AvailableUpdates, OmniversionData, VersionsMatch
-from .format import format
+"""Omniversion Python integration"""
+from .dependency import AvailableUpdates, VersionsMatch
+from .omniversion_data import OmniversionData
+from .pretty import pretty

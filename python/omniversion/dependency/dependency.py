@@ -1,16 +1,17 @@
 #!/usr/bin/env python
 from dataclasses import dataclass
-from dacite import from_dict
 from typing import List, Optional
-from .advisory import Advisory
-from ..format import format
+from dacite import from_dict
+
+from .audit.advisory import Advisory
+from ..pretty import pretty
 
 
 @dataclass
-class Dependency:
+class Dependency:  # pylint: disable=too-many-instance-attributes
     host: Optional[str]
     name: Optional[str]
-    pm: Optional[str]
+    pm: Optional[str]  # pylint: disable=invalid-name
     version: Optional[str]
 
     advisories: Optional[List[Advisory]] = None
@@ -18,17 +19,21 @@ class Dependency:
     author: Optional[str] = None
     description: Optional[str] = None
     homepage: Optional[str] = None
-    identifier: Optional[str] = None
+    id: Optional[str] = None  # pylint: disable=invalid-name
     latest: Optional[str] = None
     license: Optional[str] = None
     sources: Optional[List[str]] = None
     wanted: Optional[str] = None
 
     def __str__(self):
+        name = pretty.white_on_black(self.name)
+        version = pretty.white(self.version)
         if self.advisories is not None and len(self.advisories) > 0:
-            return f'package {format.white_on_black(self.name)} has version {format.white(self.version)} with {self.advisories[0]}'
-        return f'package {format.white_on_black(self.name)} has version {format.white(self.version)}'
+            return f"package {name} has version {version} with {self.advisories[0]}"
+        return f"package {name} has version {version}"
 
     @staticmethod
     def from_list(list_data: List[str]):
-        return list(map(lambda item: from_dict(data_class=Dependency, data=item), list_data))
+        return list(
+            map(lambda item: from_dict(data_class=Dependency, data=item), list_data)
+        )

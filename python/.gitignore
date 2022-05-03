@@ -1,3 +1,5 @@
 dist
 env
 omniversion.egg-info
+.coverage
+coverage.xml
