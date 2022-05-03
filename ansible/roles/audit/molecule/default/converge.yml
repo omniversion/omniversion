@@ -1,0 +1,10 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: "Include audit"
+      include_role:
+        name: "audit"
+      vars:
+        var_omniversion:
+          npm: "test"
