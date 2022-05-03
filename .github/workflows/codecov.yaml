@@ -29,6 +29,10 @@ jobs:
         with:
           python-version: '3.8'
 
+      - name: Install test dependencies
+        working-directory: python
+        run: pip3 install pytest pytest-cov
+
       - name: Python test
         working-directory: python
         run: pytest --cov=omniversion --cov-report=xml omniversion
