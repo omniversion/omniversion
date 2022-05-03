@@ -6,6 +6,7 @@ from itertools import groupby
 from .dependency import Dependency
 from ..format import format
 
+
 @dataclass
 class Dependencies:
     data: List[Dependency]

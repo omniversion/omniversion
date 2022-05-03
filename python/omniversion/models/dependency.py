@@ -5,6 +5,7 @@ from typing import List, Optional
 from .advisory import Advisory
 from ..format import format
 
+
 @dataclass
 class Dependency:
     host: Optional[str]

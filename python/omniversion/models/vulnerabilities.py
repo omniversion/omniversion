@@ -4,6 +4,7 @@ from ..format import format
 from dataclasses import dataclass
 from .dependency import Dependency
 
+
 @dataclass
 class Vulnerabilities:
     data: List[Dependency]

@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from .dependency import Dependency
 from ..format import format
 
+
 @dataclass
 class VersionsMatch:
     items: List[Dependency]

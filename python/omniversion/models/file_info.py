@@ -8,6 +8,7 @@ from ..format import format
 from ..constants import STALE_DATA_THRESHOLD_IN_SECONDS
 from .dependency import Dependency
 
+
 @dataclass
 class OmniversionFileInfo:
     data: Optional[List[Dependency]]

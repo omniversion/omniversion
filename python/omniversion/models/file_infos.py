@@ -6,6 +6,7 @@ from ..format import format
 
 from .file_info import OmniversionFileInfo
 
+
 @dataclass
 class OmniversionFileInfos:
     files: List[OmniversionFileInfo]

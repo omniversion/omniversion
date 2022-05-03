@@ -10,6 +10,7 @@ from ..models.advisory import Advisory
 from ..models.dependency import Dependency
 from ..models.file_info import OmniversionFileInfo
 
+
 def load_file(file_path: str):
     try:
         with open(file_path) as file:
@@ -18,6 +19,7 @@ def load_file(file_path: str):
         return None
     except FileNotFoundError:
         return None
+
 
 def load_data(base_path: str, add_file: Callable[[OmniversionFileInfo], None], hosts: Optional[List[str]] = None, pms: Optional[List[str]] = None, verbs: Optional[List[str]] = None):
     # we look for subdirectories containing data for a particular host

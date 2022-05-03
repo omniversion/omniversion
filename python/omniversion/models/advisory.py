@@ -4,6 +4,7 @@ from dacite import from_dict
 from typing import List, Optional
 from ..format import format
 
+
 @dataclass
 class Advisory:
     access: Optional[str]
