@@ -1,4 +1,4 @@
-package npm
+package types
 
 type NpmJson struct {
 	Advisories   map[string]NpmAdvisory

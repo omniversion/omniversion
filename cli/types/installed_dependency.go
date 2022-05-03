@@ -1,4 +1,4 @@
-package models
+package types
 
 type InstalledDependency struct {
 	Version  string `json:",omitempty" toml:",omitempty" yaml:",omitempty"`

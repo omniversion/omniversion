@@ -12,7 +12,7 @@
     <br />
 </div>
 
-`omniversion` simplifies version management in complex projects by streamlining the following steps:
+`omniversion` simplifies dependency management in complex projects by streamlining the following steps:
 
 ### Collection
 [omniversion/ansible](ansible) collects version and dependency information from servers managed via Ansible.

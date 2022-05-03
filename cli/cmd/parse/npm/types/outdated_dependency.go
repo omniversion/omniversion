@@ -1,4 +1,4 @@
-package npm
+package types
 
 type NpmOutdatedDependency struct {
 	Current   string

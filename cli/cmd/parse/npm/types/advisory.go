@@ -1,4 +1,4 @@
-package npm
+package types
 
 type NpmAdvisory struct {
 	Findings []struct {

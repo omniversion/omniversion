@@ -1,7 +1,8 @@
-package cmd
+package version
 
 import (
 	"fmt"
+	root "github.com/omniversion/omniversion/cli/cmd"
 	"github.com/spf13/cobra"
 	"io"
 	"os"
@@ -26,7 +27,7 @@ var Via = "compiled from source"
 
 // Cmd implements the version command that outputs information on the current installation as a yaml string map
 func init() {
-	rootCmd.AddCommand(&cobra.Command{
+	root.RootCmd.AddCommand(&cobra.Command{
 		Use:   "version",
 		Short: "Print the version of the omniversion binary",
 		Long:  `All software has versions, even omniversion. This is the current version of your omniversion installation`,

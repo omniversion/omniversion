@@ -1,4 +1,4 @@
-package models
+package types
 
 type Dependency struct {
 	Name       string `json:",omitempty" toml:",omitempty" yaml:",omitempty"`

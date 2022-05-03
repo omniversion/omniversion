@@ -1,4 +1,4 @@
-package parse
+package apt
 
 import (
 	"github.com/stretchr/testify/assert"

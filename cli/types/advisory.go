@@ -1,4 +1,4 @@
-package models
+package types
 
 type Advisory struct {
 	Access             string  `json:",omitempty" toml:",omitempty" yaml:",omitempty"`

@@ -1,8 +1,8 @@
-package parse
+package shared
 
 import (
 	"bytes"
-	"github.com/omniversion/omniversion/cli/models"
+	. "github.com/omniversion/omniversion/cli/types"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
@@ -11,13 +11,13 @@ import (
 
 var log = logrus.New()
 
-func wrapCommand(parser func(input string) ([]models.Dependency, error)) func(cmd *cobra.Command, args []string) {
+func WrapCommand(parser func(input string) ([]Dependency, error)) func(cmd *cobra.Command, args []string) {
 	return func(cmd *cobra.Command, args []string) {
 		runParser(parser)(cmd.InOrStdin(), cmd.OutOrStdout(), cmd.ErrOrStderr(), args)
 	}
 }
 
-func runParser(parser func(input string) ([]models.Dependency, error)) func(stdin io.Reader, stdout io.Writer, stderr io.Writer, args []string) {
+func runParser(parser func(input string) ([]Dependency, error)) func(stdin io.Reader, stdout io.Writer, stderr io.Writer, args []string) {
 	return func(stdin io.Reader, stdout io.Writer, stderr io.Writer, args []string) {
 		input, err := io.ReadAll(stdin)
 		if err != nil {

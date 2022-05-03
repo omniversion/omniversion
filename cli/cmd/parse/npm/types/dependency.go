@@ -1,4 +1,4 @@
-package npm
+package types
 
 type NpmDependency struct {
 	Version      string

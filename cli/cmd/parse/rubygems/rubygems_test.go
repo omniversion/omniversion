@@ -1,4 +1,4 @@
-package parse
+package rubygems
 
 import (
 	"github.com/stretchr/testify/assert"

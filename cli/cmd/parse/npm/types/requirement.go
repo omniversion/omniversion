@@ -1,4 +1,4 @@
-package npm
+package types
 
 type NpmRequirement struct {
 	Id          string `json:"_id"`

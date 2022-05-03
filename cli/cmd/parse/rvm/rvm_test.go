@@ -1,4 +1,4 @@
-package parse
+package rvm
 
 import (
 	"github.com/stretchr/testify/assert"

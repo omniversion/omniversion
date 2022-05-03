@@ -1,19 +1,20 @@
-package parse
+package rubygems
 
 import (
 	"fmt"
 	"github.com/hashicorp/go-multierror"
-	models2 "github.com/omniversion/omniversion/cli/models"
+	"github.com/omniversion/omniversion/cli/cmd/parse/shared"
+	. "github.com/omniversion/omniversion/cli/types"
 	"github.com/spf13/cobra"
 	"regexp"
 	"strings"
 )
 
-func parseRubygemsOutput(input string) ([]models2.Dependency, error) {
+func parseRubygemsOutput(input string) ([]Dependency, error) {
 	extractionRegex := regexp.MustCompile(`(?m)(?P<name>.*) \((?P<versions>.*)\)(\n(?P<content>(^ +.*\n?|^\n)*))?`)
 	items := extractionRegex.FindAllStringSubmatch(input, -1)
 
-	result := make([]models2.Dependency, 0, len(items))
+	result := make([]Dependency, 0, len(items))
 	var allErrors *multierror.Error
 	for _, item := range items {
 		name := item[extractionRegex.SubexpIndex("name")]
@@ -35,7 +36,7 @@ func parseRubygemsOutput(input string) ([]models2.Dependency, error) {
 	return result, allErrors.ErrorOrNil()
 }
 
-func parseListItem(name string, versions string, dependencies *[]models2.Dependency) *error {
+func parseListItem(name string, versions string, dependencies *[]Dependency) *error {
 	versionComponents := strings.Split(versions, " < ")
 	if len(versionComponents) != 2 {
 		err := fmt.Errorf("unable to parse package description: %q", name)
@@ -45,24 +46,24 @@ func parseListItem(name string, versions string, dependencies *[]models2.Depende
 	currentVersion := versionComponents[0]
 	latestVersion := versionComponents[1]
 
-	newResult := models2.Dependency{
+	newResult := Dependency{
 		Pm:        "rubygems",
 		Name:      name,
 		Version:   currentVersion,
 		Latest:    latestVersion,
-		Installed: []models2.InstalledDependency{{Version: currentVersion}},
+		Installed: []InstalledDependency{{Version: currentVersion}},
 	}
 	*dependencies = append(*dependencies, newResult)
 	return nil
 }
 
-func parseDetails(name string, versions string, content string, dependencies *[]models2.Dependency) *error {
+func parseDetails(name string, versions string, content string, dependencies *[]Dependency) *error {
 	parseRegex := regexp.MustCompile(`(?m)\s+Authors?: (?P<authors>(.+\n)+)\s+Homepage: (?P<homepage>.+)\n\s+Licenses?: (?P<license>.+)\n\s+Installed at ?(?P<locations>(.+\n)+)\n(?P<description>(\n?.+)+)`)
 	groupNames := parseRegex.SubexpNames()
 
 	parsedContent := parseRegex.FindStringSubmatch(content)
 
-	newResult := models2.Dependency{
+	newResult := Dependency{
 		Pm:   "rubygems",
 		Name: name,
 	}
@@ -96,12 +97,12 @@ func parseDetails(name string, versions string, content string, dependencies *[]
 	return nil
 }
 
-func parseLocations(locationsData string, dependency *models2.Dependency) {
+func parseLocations(locationsData string, dependency *Dependency) {
 	locationsRegex := regexp.MustCompile(`(?m)^\s*(\((?P<version>.*)\))?: (?P<location>.*)`)
 	installedLocationData := locationsRegex.FindAllStringSubmatch(locationsData, -1)
-	installations := []models2.InstalledDependency{}
+	var installations []InstalledDependency
 	for _, installedLocation := range installedLocationData {
-		newInstallation := models2.InstalledDependency{}
+		var newInstallation InstalledDependency
 		parseVersion(installedLocation[locationsRegex.SubexpIndex("version")], dependency, &newInstallation)
 
 		newInstallation.Location = installedLocation[locationsRegex.SubexpIndex("location")]
@@ -110,7 +111,7 @@ func parseLocations(locationsData string, dependency *models2.Dependency) {
 	dependency.Installed = installations
 }
 
-func parseVersion(versionData string, dependency *models2.Dependency, installedDependency *models2.InstalledDependency) {
+func parseVersion(versionData string, dependency *Dependency, installedDependency *InstalledDependency) {
 	// could be either empty or a version or "default" or both, separated by a comma
 	versionString := versionData
 	versionComponents := strings.Split(versionString, ", ")
@@ -135,9 +136,9 @@ func parseDescription(descriptionData string) string {
 	return strings.Join(result, "\n")
 }
 
-var RubygemsCmd = &cobra.Command{
+var ParseCommand = &cobra.Command{
 	Use:   "rubygems",
 	Short: "Parse the output of rubygems",
 	Long:  `Transform the output of rubygems into a common format.`,
-	Run:   wrapCommand(parseRubygemsOutput),
+	Run:   shared.WrapCommand(parseRubygemsOutput),
 }

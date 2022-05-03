@@ -1,4 +1,4 @@
-package parse
+package npm
 
 import (
 	"github.com/stretchr/testify/assert"
