@@ -6,7 +6,7 @@ on:
       - '*'
 
 jobs:
-  python:
+  publish_to_ansible_galaxy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
