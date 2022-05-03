@@ -1,6 +1,0 @@
----
-- name: List upgradeable packages on localhost
-  delegate_to: localhost
-  run_once: true
-  block:
-    -

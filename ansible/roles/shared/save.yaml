@@ -1,35 +1,39 @@
 ---
 - name: Determine output directory
-  set_fact:
+  ansible.builtin.set_fact:
     var_omniversion_full_output_dir: "{{ var_omniversion_output_dir }}/{{ inventory_hostname }}/{{ var_omniversion_pm }}"
 
 - name: Ensure output directory exists
-  file:
+  ansible.builtin.file:
     path: "{{ var_omniversion_full_output_dir }}"
     state: directory
+    mode: 0644
   delegate_to: localhost
 
 - name: Remove previous results
-  copy:
+  ansible.builtin.copy:
     dest: "{{ var_omniversion_full_output_dir }}/{{ var_omniversion_verb }}.omniversion.yaml"
     content: ""
+    mode: 0644
   delegate_to: localhost
 
 - name: Parse output
-  command: "omniversion parse {{ var_omniversion_pm }}"
+  ansible.builtin.command: "omniversion parse {{ var_omniversion_pm }}"
   args:
     stdin: "{{ omniversion_result.stdout | string }}"
   delegate_to: localhost
   register: omniversion_result
+  changed_when: true
   ignore_errors: true
 
 - name: Log error
-  debug:
+  ansible.builtin.debug:
     msg: "{{ omniversion_result.stderr }}"
   when: omniversion_result.stderr
 
 - name: Store parsed result
-  copy:
+  ansible.builtin.copy:
     dest: "{{ var_omniversion_full_output_dir }}/{{ var_omniversion_verb }}.omniversion.yaml"
-    content: "{{omniversion_result.stdout}}"
+    content: "{{ omniversion_result.stdout }}"
+    mode: 0644
   delegate_to: localhost

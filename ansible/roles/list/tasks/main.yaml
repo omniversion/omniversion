@@ -1,6 +1,6 @@
 ---
 - name: Set verb to `list`
-  set_fact:
+  ansible.builtin.set_fact:
     var_omniversion_verb: list
   tags:
     - always
@@ -11,8 +11,9 @@
     - apt
   block:
     - name: List apt package versions
-      shell: 'apt list --installed 2> /dev/null || true'
+      ansible.builtin.shell: 'apt list --installed 2> /dev/null || true'
       register: omniversion_result
+      changed_when: true
 
     - include_tasks: ../../shared/save.yaml
       vars:
@@ -24,10 +25,11 @@
     - npm
   block:
     - name: List npm versions
-      shell: 'npm ls --parseable 2>&1 || true'
+      ansible.builtin.shell: 'npm ls --parseable 2>&1 || true'
       args:
         chdir: '{{ var_omniversion.npm.dir | default("/") }}'
       register: omniversion_result
+      changed_when: true
 
     - include_tasks: ../../shared/save.yaml
       vars:
@@ -40,10 +42,11 @@
     - gem
   block:
     - name: Fetch rubygems versions
-      command: 'gem list --details --versions --all'
+      ansible.builtin.command: 'gem list --details --versions --all'
       args:
-        chdir: '{{var_omniversion.rubygems.dir}}'
+        chdir: '{{ var_omniversion.rubygems.dir }}'
       register: omniversion_result
+      changed_when: true
 
     - include_tasks: ../../shared/save.yaml
       vars:
@@ -55,8 +58,9 @@
     - rvm
   block:
     - name: Fetch rvm ruby versions
-      shell: '/usr/local/rvm/bin/rvm ls'
+      ansible.builtin.shell: '/usr/local/rvm/bin/rvm ls' # noqa command-instead-of-shell
       register: omniversion_result
+      changed_when: true
 
     - include_tasks: ../../shared/save.yaml
       vars:

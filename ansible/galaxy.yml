@@ -3,7 +3,7 @@
 # The namespace of the collection. This can be a company/brand/organization or product namespace under which all
 # content lives. May only contain alphanumeric lowercase characters and underscores. Namespaces cannot start with
 # underscores or numbers and cannot contain consecutive underscores
-namespace: omniversion
+namespace: layer9gmbh
 
 # The name of the collection. Has the same character restrictions as 'namespace'
 name: omniversion
@@ -17,7 +17,7 @@ readme: README.md
 # A list of the collection's content authors. Can be just the name or in the format 'Full Name <email> (url)
 # @nicks:irc/im.site#channel'
 authors:
-- Layer9 GmbH <hello@layer9.berlin>
+  - Layer9 GmbH <hello@layer9.berlin>
 
 
 # A short summary description of the collection
@@ -26,7 +26,7 @@ description: Omniversion
 # Either a single license or a list of licenses for content inside of a collection. Ansible Galaxy currently only
 # accepts L(SPDX,https://spdx.org/licenses/) licenses. This key is mutually exclusive with 'license_file'
 license:
-- AGPL-3.0-only
+  - AGPL-3.0-only
 
 # A list of tags you want to associate with the collection for indexing/searching. A tag name has the same character
 # requirements as 'namespace' and 'name'

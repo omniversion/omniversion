@@ -1,6 +1,6 @@
 ---
 - name: Set verb to `version`
-  set_fact:
+  ansible.builtin.set_fact:
     var_omniversion_verb: version
   tags:
     - always
@@ -11,10 +11,11 @@
     - npm
   block:
     - name: Get versions as json
-      shell: 'npm version --json'
+      ansible.builtin.command: 'npm version --json'
       args:
         chdir: '{{ var_omniversion.npm.dir | default("/") }}'
       register: omniversion_result
+      changed_when: true
 
     - include_tasks: ../../shared/save.yaml
       vars:

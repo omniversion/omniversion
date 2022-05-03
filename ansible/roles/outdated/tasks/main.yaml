@@ -1,6 +1,6 @@
 ---
 - name: Set verb to `outdated`
-  set_fact:
+  ansible.builtin.set_fact:
     var_omniversion_verb: outdated
   tags:
     - always
@@ -11,8 +11,9 @@
     - apt
   block:
     - name: List apt package versions
-      shell: 'apt list --upgradeable 2> /dev/null || true'
+      ansible.builtin.shell: 'apt list --upgradeable 2> /dev/null || true'
       register: omniversion_result
+      changed_when: true
 
     - include_tasks: ../../shared/save.yaml
       vars:
@@ -24,10 +25,11 @@
     - npm
   block:
     - name: List npm versions
-      shell: 'npm outdated --parseable 2>&1 || true'
+      ansible.builtin.shell: 'npm outdated --parseable 2>&1 || true'
       args:
         chdir: '{{ var_omniversion.npm.dir | default("/") }}'
       register: omniversion_result
+      changed_when: true
 
     - include_tasks: ../../shared/save.yaml
       vars:
@@ -40,10 +42,11 @@
     - gem
   block:
     - name: Fetch rubygems versions
-      command: 'gem outdated --update-sources --quiet'
+      ansible.builtin.command: 'gem outdated --update-sources --quiet'
       args:
-        chdir: '{{var_omniversion.rubygems.dir}}'
+        chdir: '{{ var_omniversion.rubygems.dir }}'
       register: omniversion_result
+      changed_when: true
 
     - include_tasks: ../../shared/save.yaml
       vars:

@@ -1,6 +1,6 @@
 ---
 - name: Set verb to `audit`
-  set_fact:
+  ansible.builtin.set_fact:
     var_omniversion_verb: audit
   tags:
     - always
@@ -11,10 +11,11 @@
     - npm
   block:
     - name: List available npm updates
-      shell: 'npm audit --prod --json 2>&1 || true'
+      ansible.builtin.shell: 'npm audit --prod --json 2>&1 || true'
       args:
         chdir: '{{ var_omniversion.npm.dir | default("/") }}'
       register: omniversion_result
+      changed_when: true
 
     - include_tasks: ../../shared/save.yaml
       vars:
@@ -27,10 +28,11 @@
     - gem
   block:
     - name: Fetch available bundler updates
-      shell: 'bundle-audit 2>&1 || true'
+      ansible.builtin.shell: 'bundle-audit 2>&1 || true'
       args:
-        chdir: '{{var_omniversion.rubygems.dir}}'
+        chdir: '{{ var_omniversion.rubygems.dir }}'
       register: omniversion_result
+      changed_when: true
 
     - include_tasks: ../../shared/save.yaml
       vars:
