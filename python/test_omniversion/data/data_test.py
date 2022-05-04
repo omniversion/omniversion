@@ -32,4 +32,4 @@ def test_load_files():
     base_path = os.path.join(os.path.dirname(__file__), "./../vectors")
     data = Data(base_path=base_path)
     data_as_str = data.__str__()
-    assert "2 files loaded" in data_as_str
+    assert "4 files loaded" in data_as_str
