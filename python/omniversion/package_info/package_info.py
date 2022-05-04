@@ -22,7 +22,7 @@ class PackageInfo:  # pylint: disable=too-many-instance-attributes
     id: str | None = None  # pylint: disable=invalid-name
     latest: str | None = None
     license: str | None = None
-    sources: list[str] | None = None
+    sources: list[str] = field(default_factory=lambda: [])
     wanted: str | None = None
 
     def __str__(self):
