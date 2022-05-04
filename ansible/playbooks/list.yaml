@@ -2,4 +2,4 @@
 - name: List all versions
   hosts: all
   roles:
-    - ../../roles/omniversion/list
+    - ../roles/list
