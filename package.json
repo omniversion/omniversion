@@ -32,6 +32,6 @@
   },
   "homepage": "https://github.com/omniversion/omniversion-cli#readme",
   "dependencies": {
-    "go-npm": "^0.1.9"
+    "@gzuidhof/go-npm": "^0.1.13"
   }
 }

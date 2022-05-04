@@ -18,12 +18,7 @@
     [omniversion/ansible](ansible) collects versions and dependencies from servers orchestrated via Ansible.
 
 * #### Aggregation
-    [omniversion/cli](cli) translates the output of different version managers into a single, coherent list.
+    [omniversion/cli](cli) translates the output of many different version managers into a single, coherent list.
 
 * #### Analysis
     [omniversion/python](python) adds convenience methods to create dashboards and much more in a few lines of code.
-
-
-### How to install
-
-
