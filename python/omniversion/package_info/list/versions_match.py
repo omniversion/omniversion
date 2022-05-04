@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """List of installations of one particular package"""
 from .package_infos_list import PackageInfosList
-from python.omniversion.pretty import pretty
+from omniversion.pretty import pretty
 
 
 class VersionsMatch(PackageInfosList):

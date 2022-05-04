@@ -3,7 +3,7 @@
 from dataclasses import dataclass
 
 from omniversion.package_info.advisory import Advisory
-from python.omniversion.pretty import pretty
+from omniversion.pretty import pretty
 
 
 @dataclass

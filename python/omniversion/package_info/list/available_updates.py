@@ -3,7 +3,7 @@
 from itertools import groupby
 
 from .package_infos_list import PackageInfosList
-from python.omniversion.pretty import pretty
+from omniversion.pretty import pretty
 
 
 class AvailableUpdates(PackageInfosList):

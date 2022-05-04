@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """A list of dependencies, optionally containing vulnerability notices"""
 from .package_infos_list import PackageInfosList
-from python.omniversion.pretty import pretty
+from omniversion.pretty import pretty
 
 
 class Vulnerabilities(PackageInfosList):

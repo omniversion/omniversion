@@ -7,7 +7,7 @@ from typing import Any
 from dacite import from_dict
 
 from ..package_info import PackageInfo
-from python.omniversion.pretty import pretty
+from omniversion.pretty import pretty
 
 
 class PackageInfosList(UserList[PackageInfo]):
