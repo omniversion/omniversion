@@ -2,4 +2,5 @@
 - name: List available updates
   hosts: all
   roles:
+    - ../roles/check
     - ../roles/outdated

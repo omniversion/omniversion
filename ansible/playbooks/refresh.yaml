@@ -2,4 +2,5 @@
 - name: Refresh all deplendency caches
   hosts: all
   roles:
+    - ../roles/check
     - ../roles/refresh

@@ -1,0 +1,9 @@
+---
+- name: Ensure omniversion binary is installed
+  shell: "omniversion version"
+  register: omniversion_check_result
+  ignore_errors: true
+
+- fail:
+    msg: "The `omniversion` binary is not installed. Please use `pip`, `npm` or `homebrew` to install it: https://github.com/omniversion/omniversion"
+  when: omniversion_check_result.rc != 0

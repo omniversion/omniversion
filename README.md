@@ -12,13 +12,18 @@
     <br />
 </div>
 
-`omniversion` simplifies dependency management in complex projects by streamlining the following steps:
+`omniversion` simplifies dependency management in complex projects by streamlining these steps:
 
-### Collection
-[omniversion/ansible](ansible) collects version and dependency information from servers managed via Ansible.
+* #### Collection
+    [omniversion/ansible](ansible) collects versions and dependencies from servers orchestrated via Ansible.
 
-### Aggregation
-[omniversion/cli](cli) collates the output of different version managers into a single, coherent list.
+* #### Aggregation
+    [omniversion/cli](cli) translates the output of different version managers into a single, coherent list.
 
-### Analysis
-[omniversion/python](python) adds convenience methods for analysing the dependency lists to create dashboards, alerts and much more in a few lines of code.
+* #### Analysis
+    [omniversion/python](python) adds convenience methods to create dashboards and much more in a few lines of code.
+
+
+### How to install
+
+

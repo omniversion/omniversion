@@ -2,4 +2,5 @@
 - name: List known security vulnerabilities
   hosts: all
   roles:
+    - ../roles/check
     - ../roles/audit

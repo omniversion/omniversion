@@ -2,6 +2,7 @@
 - name: Fetch all info from servers
   hosts: webservers
   roles:
+    - ../roles/check
     - ../roles/refresh
     - ../roles/list
     - ../roles/outdated

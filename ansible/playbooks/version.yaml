@@ -2,4 +2,5 @@
 - name: Show version of package manager itself
   hosts: all
   roles:
+    - ../roles/check
     - ../roles/version
