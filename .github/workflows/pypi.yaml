@@ -1,4 +1,4 @@
-name: Publish Python integration to PyPi
+name: Publish Python module
 
 on:
   push:
