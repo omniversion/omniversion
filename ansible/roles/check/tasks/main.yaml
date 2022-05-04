@@ -3,6 +3,7 @@
   shell: "omniversion version"
   register: omniversion_check_result
   ignore_errors: true
+  delegate_to: localhost
 
 - fail:
     msg: "The `omniversion` binary is not installed. Please use `pip`, `npm` or `homebrew` to install it: https://github.com/omniversion/omniversion"

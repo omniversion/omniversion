@@ -12,15 +12,12 @@ The omniversion command line tool translates the output of many different versio
 npm install -g omniversion
 ```
 
-#### Via pip
-```shell
-pip install omniversion
-```
-
 #### Via homebrew
 ```shell
 brew tap omniversion/tap && brew install omniversion
 ```
+
+
 
 ### How to uninstall
 
@@ -32,11 +29,6 @@ omniversion version
 #### Via npm
 ```shell
 npm uninstall omniversion
-```
-
-#### Via pip
-```shell
-pip uninstall omniversion
 ```
 
 #### Via homebrew
