@@ -18,10 +18,11 @@ class Data:
     """Root class used to load and extract all omniversion data"""
     files: FileInfosList
 
-    def __init__(self, base_path: str):
+    def __init__(self, base_path: str | None = None, file_infos: FileInfosList | list[FileInfo] | None = None):
         """Initialialize the root class"""
-        self.files = FileInfosList()
-        load_data(base_path, self.files.append)
+        self.files = FileInfosList() if file_infos is None else FileInfosList(file_infos)
+        if base_path is not None:
+            load_data(base_path, self.files.append)
 
     def __str__(self):
         """Human-readable summary of the data, counting loaded files"""

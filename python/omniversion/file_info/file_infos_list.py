@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 """List of imported files, including meta data"""
 from collections import UserList
-from dataclasses import dataclass
 
 from ..helpers.group_by import group_by_host, group_by_verb
 from ..pretty import pretty
@@ -9,7 +8,6 @@ from ..pretty import pretty
 from .file_info import FileInfo
 
 
-@dataclass
 class FileInfosList(UserList[FileInfo]):
     """List of imported files, including meta data"""
 

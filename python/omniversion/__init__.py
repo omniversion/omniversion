@@ -1,9 +1,7 @@
 #!/usr/bin/env python
 """Omniversion Python integration"""
-import omniversion.data
-import omniversion.file_info
-import omniversion.helpers
-import omniversion.loader
-import omniversion.package_info
+from omniversion.data import Data
+from omniversion.package_info import Advisory, AvailableUpdates, PackageInfo, PackageInfosList, VersionsMatch, \
+    Vulnerabilities
 import omniversion.pretty
 import omniversion.types

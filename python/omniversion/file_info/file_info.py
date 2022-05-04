@@ -14,11 +14,11 @@ class FileInfo:
     """An imported file including meta data"""
     data: PackageInfosList | None
     name: str
-    host: str
-    package_manager: str
-    verb: str
-    time: float
-    path: str
+    host: str | None = None
+    package_manager: str | None = None
+    verb: str | None = None
+    time: float | None = None
+    path: str | None = None
 
     @property
     def is_stale(self):

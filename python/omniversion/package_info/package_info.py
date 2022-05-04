@@ -9,10 +9,10 @@ from omniversion.pretty import pretty
 @dataclass
 class PackageInfo:  # pylint: disable=too-many-instance-attributes
     """A generic dependency"""
-    host: str | None
-    name: str | None
-    pm: str | None  # pylint: disable=invalid-name
-    version: str | None
+    host: str | None = None
+    name: str | None = None
+    pm: str | None = None  # pylint: disable=invalid-name
+    version: str | None = None
 
     advisories: list[Advisory] | None = None
     architecture: str | None = None
