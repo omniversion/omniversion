@@ -1,13 +1,16 @@
 #!/usr/bin/env python
+"""A list of dependencies, optionally containing vulnerability notices"""
 from dataclasses import dataclass
 
-from ..list import Dependencies
+from ..common import Dependencies
 from ...pretty import pretty
 
 
 @dataclass
 class Vulnerabilities(Dependencies):
+    """A list of dependencies, optionally containing vulnerability notices"""
     def __str__(self):
+        """Human-readable description of the security advisories for each dependency"""
         num_vulnerabilities = len(self.data)
         if num_vulnerabilities > 1:
             audit_items = [

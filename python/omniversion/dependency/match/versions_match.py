@@ -1,25 +1,27 @@
 #!/usr/bin/env python
-from typing import List, Optional
+"""List of installations of one particular package"""
 from dataclasses import dataclass
-from ..dependency import Dependency
-from ..list.dependencies import Dependencies
+from python.omniversion.dependency.common.dependency import Dependency
+from ..common.dependencies import Dependencies
 from ...pretty import pretty
 
 
 @dataclass
 class VersionsMatch(Dependencies):
+    """List of installations of one particular package"""
     package_name: str
     display_name: str
     match: bool
-    expected_num: Optional[int]
+    expected_num: int | None
 
     def __init__(
             self,
-            data: List[Dependency],
+            data: list[Dependency],
             package_name: str,
-            display_name: Optional[str] = None,
-            expected_num: Optional[int] = None,
+            display_name: str | None = None,
+            expected_num: int | None = None,
     ):
+        """Initialize the dependency match"""
         super().__init__(data)
         self.package_name = package_name
         self.display_name = display_name or package_name
@@ -27,15 +29,18 @@ class VersionsMatch(Dependencies):
 
     @property
     def is_consistent(self):
+        """Do all versions match?"""
         if len(self.deduplicated_versions()) == 1:
             return True
         return False
 
     @property
     def has_all_expected_items(self):
+        """Does the number of dependencies match the expected value?"""
         return self.expected_num is None or len(self.data) == self.expected_num
 
     def __str__(self):
+        """Human-readable description of the version match"""
         table_items = [
             f'\t{(item.version or "").ljust(20)}'
             + f'\t{(item.host or "").ljust(12)}'
@@ -75,4 +80,5 @@ class VersionsMatch(Dependencies):
         )
 
     def deduplicated_versions(self):
+        """All dependency versions with duplicates removed"""
         return {dependency.version for dependency in self.data}

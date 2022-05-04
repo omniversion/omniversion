@@ -1,9 +1,8 @@
 #!/usr/bin/env python
+"""Root class used to load and extract all omniversion data"""
 import os
 import time
 import re
-
-from typing import List, Optional, Union
 
 import __main__
 
@@ -16,30 +15,36 @@ from ..loader import load_data
 
 
 class OmniversionData:
-    _files: List[OmniversionFileInfo]
+    """Root class used to load and extract all omniversion data"""
+    _files: list[OmniversionFileInfo]
 
     def __init__(self, base_path: str):
+        """Initialialize the root class"""
         self._files = []
         load_data(base_path, self._files.append)
 
     def __str__(self):
+        """Human-readable summary of the data, counting loaded files"""
         return pretty.file_count(len(self._files))
 
     def file_infos(self):
+        """Meta data for all loaded files"""
         return OmniversionFileInfos(self._files)
 
     def hosts(self):
+        """Deduplicated list of hosts for which files are present in the list"""
         return list({file.host for file in self._files})
 
     def items(
             self,
-            verb: Union[str, List[str]] = "list",
-            host: Optional[str] = None,
-            package_manager: Optional[str] = None,
-            package_name: Optional[Union[str, List[str]]] = None,
+            verb: str | list[str] = "list",
+            host: str | None = None,
+            package_manager: str | None = None,
+            package_name: str | list[str] | None = None,
     ):
+        """List all dependencies matching the given criteria"""
         def file_condition(file):
-            if file.data is None:
+            if file.list is None:
                 return False
             if host is not None and file.host != host:
                 return False
@@ -50,10 +55,10 @@ class OmniversionData:
             return file.verb == verb
 
         files_with_dependencies_data = [
-            file.data for file in self._files if file_condition(file)
+            file.list for file in self._files if file_condition(file)
         ]
         all_items = [
-            item for file_data in files_with_dependencies_data for item in file_data
+            item for dependencies in files_with_dependencies_data for item in dependencies.data
         ]
 
         def package_condition(package):
@@ -67,31 +72,35 @@ class OmniversionData:
 
     def vulnerabilities(
             self,
-            host: Optional[str] = None,
-            package_manager: Optional[str] = None,
-            package_name: Optional[Union[str, List[str]]] = None,
+            host: str | None = None,
+            package_manager: str | None = None,
+            package_name: str | list[str] | None = None,
     ):
+        """List security vulnerabilities"""
         return Vulnerabilities(self.items("audit", host, package_manager, package_name))
 
     def dependencies(
             self,
-            host: Optional[str] = None,
-            package_manager: Optional[str] = None,
-            package_name: Optional[Union[str, List[str]]] = None,
+            host: str | None = None,
+            package_manager: str | None = None,
+            package_name: str | list[str] | None = None,
     ):
+        """List software packages"""
         return Dependencies(self.items(["list", "version"], host, package_manager, package_name))
 
     def available_updates(
             self,
-            host: Optional[str] = None,
-            package_manager: Optional[str] = None,
-            package_name: Optional[Union[str, List[str]]] = None,
+            host: str | None = None,
+            package_manager: str | None = None,
+            package_name: str | list[str] | None = None,
     ):
+        """List available updates"""
         return AvailableUpdates(self.items("outdated", host, package_manager, package_name))
 
     def match_versions(
-            self, package_name: Union[str, List[str]], display_name: Optional[str] = None
+            self, package_name: str | list[str], display_name: str | None = None
     ):
+        """Match versions of all installations of a particular package"""
         return VersionsMatch(
             self.items(["list", "version"], package_name=package_name),
             package_name,
@@ -99,8 +108,9 @@ class OmniversionData:
         )
 
     def add_local_config_value(
-            self, file_path, regex: str, package: Optional[str] = None
+            self, file_path, regex: str, package: str | None = None
     ):
+        """Add dependency meta data from a local file"""
         script_path = os.path.dirname(os.path.abspath(__main__.__file__))
         absolute_file_path = os.path.realpath(os.path.join(script_path, file_path))
         with open(absolute_file_path, encoding="utf8") as file:
@@ -118,7 +128,7 @@ class OmniversionData:
                 )
                 file_name = os.path.basename(absolute_file_path)
                 file_info = OmniversionFileInfo(
-                    [dependency],
+                    Dependencies([dependency]),
                     file_name,
                     "localhost",
                     "local file",

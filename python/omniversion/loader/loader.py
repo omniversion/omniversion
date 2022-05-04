@@ -1,31 +1,34 @@
 #!/usr/bin/env python
+"""Helper for loading omniversion files"""
 import os
-from typing import Callable, List, Optional
+from typing import Callable
 import yaml
 
-from ..dependency import Dependency
+from ..dependency import Dependencies
 from ..omniversion_file import OmniversionFileInfo
 
 AVAILABLE_VERBS = ["audit", "list", "refresh", "outdated", "version"]
 
 
-def load_file(file_path: str):
+def load_file(file_path: str) -> tuple[any, float]:
+    """load an omniversion file containing yaml data"""
     try:
         with open(file_path, encoding="utf8") as file:
             return yaml.safe_load(file), os.stat(file_path).st_ctime
     except yaml.YAMLError:
-        return None
+        return None, 0
     except FileNotFoundError:
-        return None
+        return None, 0
 
 
 def load_data(
         base_path: str,
         add_file: Callable[[OmniversionFileInfo], None],
-        hosts: Optional[List[str]] = None,
-        package_managers: Optional[List[str]] = None,
-        verbs: Optional[List[str]] = None,
-):
+        hosts: list[str] | None = None,
+        package_managers: list[str] | None = None,
+        verbs: list[str] | None = None,
+) -> None:
+    """load all omniversion files in the base path"""
     # we look for subdirectories containing data for a particular host
     for host in [
         directory
@@ -55,7 +58,8 @@ def process_file(
         host_path: str,
         package_manager: str,
         add_file: Callable[[OmniversionFileInfo], None]
-):
+) -> None:
+    """load the file data and hand an `OmniversionFileInfo` object to the callback"""
     file_name = verb + ".omniversion.yaml"
     file_path = os.path.join(host_path, package_manager, file_name)
     if os.path.exists(file_path):
@@ -72,7 +76,7 @@ def process_file(
                 item["host"] = host
             add_file(
                 OmniversionFileInfo(
-                    Dependency.from_list(file_data),
+                    Dependencies.from_list(file_data),
                     file_name,
                     host,
                     package_manager,

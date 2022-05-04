@@ -2,7 +2,6 @@
 """List of imported files, including meta data"""
 from dataclasses import dataclass
 from itertools import groupby
-from typing import List
 from ..pretty import pretty
 
 from .omniversion_file_info import OmniversionFileInfo
@@ -10,9 +9,11 @@ from .omniversion_file_info import OmniversionFileInfo
 
 @dataclass
 class OmniversionFileInfos:
-    files: List[OmniversionFileInfo]
+    """List of imported files, including meta data"""
+    files: list[OmniversionFileInfo]
 
     def hosts(self):
+        """Deduplicated list of hosts for which files are present in the list"""
         return list({file.host for file in self.files})
 
     def __str__(self):

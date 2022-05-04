@@ -2,17 +2,17 @@
 """An imported file including meta data"""
 import time
 from dataclasses import dataclass
-from typing import List, Optional
 
-from ..dependency.dependency import Dependency
+from python.omniversion.dependency import Dependencies
 from ..pretty import pretty
 
 STALENESS_THRESHOLD_IN_SECS: int = 60 * 60
 
+
 @dataclass
 class OmniversionFileInfo:
     """An imported file including meta data"""
-    data: Optional[List[Dependency]]
+    list: Dependencies | None
     name: str
     host: str
     package_manager: str
@@ -28,14 +28,14 @@ class OmniversionFileInfo:
     @property
     def has_data(self):
         """Does the file contain any parseable data at all?"""
-        return self.data is not None
+        return self.list is not None
 
     @property
     def num_entries(self):
         """Number of entries contained in the file"""
-        if self.data is None:
+        if self.list is None:
             return 0
-        return len(self.data)
+        return len(self.list.data)
 
     def __str__(self):
         """Pretty string representation describing the file"""

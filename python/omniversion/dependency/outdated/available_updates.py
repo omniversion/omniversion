@@ -3,13 +3,15 @@
 from dataclasses import dataclass
 from itertools import groupby
 
-from ..list.dependencies import Dependencies
+from ..common.dependencies import Dependencies
 from ...pretty import pretty
 
 
 @dataclass
 class AvailableUpdates(Dependencies):
+    """List of packages for which a newer version is available"""
     def __str__(self):
+        """Human-readable description of the available update"""
         sorted_items = sorted(self.data, key=lambda item: item.host)
         grouped_items = groupby(sorted_items, lambda item: item.host)
         result = ""
@@ -42,7 +44,7 @@ class AvailableUpdates(Dependencies):
                     for item in updates:
                         result += (
                             "        "
-                            + f"update for {pretty.white_on_black(item.name)} available:"
+                            + f"update for {pretty.black_on_white(item.name)} available:"
                             + f" {pretty.white(item.version)} -> {pretty.white(item.latest)}"
                             + "\n"
                         )
