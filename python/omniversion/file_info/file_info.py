@@ -12,8 +12,8 @@ STALENESS_THRESHOLD_IN_SECS: int = 60 * 60
 @dataclass
 class FileInfo:
     """An imported file including meta data"""
-    data: PackageInfosList | None
-    name: str
+    data: PackageInfosList | None = None
+    name: str = None
     host: str | None = None
     package_manager: str | None = None
     verb: str | None = None

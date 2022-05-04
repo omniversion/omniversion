@@ -16,7 +16,7 @@ class Data:
     files: FileInfosList
 
     def __init__(self, base_path: str | None = None, file_infos: FileInfosList | list[FileInfo] | None = None):
-        """Initialialize the root class"""
+        """Initialize the root class"""
         self.files = FileInfosList() if file_infos is None else FileInfosList(file_infos)
         if base_path is not None:
             load_data(base_path, self.files.append)
@@ -27,7 +27,7 @@ class Data:
 
     def hosts(self):
         """Deduplicated list of hosts for which files are present in the list"""
-        return list({file.host for file in self.files})
+        return sorted(list({file.host for file in self.files}))
 
     def items(
             self,
