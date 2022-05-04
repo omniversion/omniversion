@@ -20,9 +20,10 @@ class FileInfosList(UserList[FileInfo]):
         for host, package_infos_by_host in group_by_host(self):
             if host == "localhost":
                 continue
-            result += "\n  " + pretty.hostname(host) + "\n"
+            result += "\n  " + pretty.hostname(host)
             for verb, infos_by_verb in group_by_verb(package_infos_by_host):
                 result += "\n    " + pretty.verb(verb)
                 for file in infos_by_verb:
-                    result += "\n      " + file.__str__() + "\n"
+                    result += "\n      " + file.__str__()
+            result += "\n"
         return result
