@@ -4,7 +4,8 @@
   register: omniversion_check_result
   ignore_errors: true
   delegate_to: localhost
+  changed_when: false
 
 - fail:
-    msg: "The `omniversion` binary is not installed. Please use `pip`, `npm` or `homebrew` to install it: https://github.com/omniversion/omniversion"
+    msg: "The `omniversion` binary is not installed. Please follow this advice to install it: https://github.com/omniversion/omniversion/cli"
   when: omniversion_check_result.rc != 0
