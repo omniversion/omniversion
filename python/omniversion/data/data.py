@@ -105,8 +105,7 @@ class Data:
             self, file_path, regex: str, package: str | None = None
     ):
         """Add dependency meta data from a local file"""
-        script_path = os.path.dirname(os.path.abspath(__file__))
-        absolute_file_path = os.path.realpath(os.path.join(script_path, file_path))
+        absolute_file_path = os.path.realpath(file_path)
         with open(absolute_file_path, encoding="utf8") as file:
             matches = re.compile(regex).finditer(file.read())
             for match in matches:
