@@ -3,16 +3,16 @@
 import time
 from dataclasses import dataclass
 
-from python.omniversion.dependency import Dependencies
+from ..package_info import PackageInfosList
 from ..pretty import pretty
 
 STALENESS_THRESHOLD_IN_SECS: int = 60 * 60
 
 
 @dataclass
-class OmniversionFileInfo:
+class FileInfo:
     """An imported file including meta data"""
-    list: Dependencies | None
+    data: PackageInfosList | None
     name: str
     host: str
     package_manager: str
@@ -28,14 +28,14 @@ class OmniversionFileInfo:
     @property
     def has_data(self):
         """Does the file contain any parseable data at all?"""
-        return self.list is not None
+        return self.data is not None
 
     @property
     def num_entries(self):
         """Number of entries contained in the file"""
-        if self.list is None:
+        if self.data is None:
             return 0
-        return len(self.list.data)
+        return len(self.data.data)
 
     def __str__(self):
         """Pretty string representation describing the file"""

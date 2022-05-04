@@ -1,27 +1,27 @@
 #!/usr/bin/env python
 """A list of dependencies, i.e. software packages"""
-from dataclasses import dataclass
+from collections import UserList
 from itertools import groupby
+from typing import Any
+
 from dacite import from_dict
 
-from python.omniversion.dependency.common.dependency import Dependency
-from ...pretty import pretty
+from ..package_info import PackageInfo
+from python.omniversion.pretty import pretty
 
 
-@dataclass
-class Dependencies:
-    """A list of dependencies, i.e. software packages"""
-    data: list[Dependency]
+class PackageInfosList(UserList[PackageInfo]):
+    """A list of software package mate data infos"""
 
     def __str__(self):
         """Human-readable description of each dependency"""
-        num_items = len(self.data)
+        num_items = len(self)
         if num_items > 0:
             table_items = [
                 f'\t{(item.host or "").ljust(12)}'
                 + f'\t{(item.version or "").ljust(20)}'
                 + f'\t{(item.pm or "").ljust(12)}'
-                for item in self.data
+                for item in self
             ]
             return (
                     f'{num_items} version{"" if num_items == 1 else "s"} found\n'
@@ -31,7 +31,7 @@ class Dependencies:
 
     def overview(self):
         """Summary of dependency counts grouped by host"""
-        sorted_dependencies = sorted(self.data, key=lambda dependency: dependency.host)
+        sorted_dependencies = sorted(self, key=lambda package_info: package_info.host)
         grouped_dependencies = groupby(
             sorted_dependencies, lambda dependency: dependency.host
         )
@@ -42,8 +42,6 @@ class Dependencies:
         return result
 
     @staticmethod
-    def from_list(list_data: list[str]):
+    def from_list(list_data: list[dict[str, Any]]):
         """Create a list of dependencies from """
-        return Dependencies(list(
-            map(lambda item: from_dict(data_class=Dependency, data=item), list_data)
-        ))
+        return PackageInfosList([from_dict(data_class=PackageInfo, data=item) for item in list_data])

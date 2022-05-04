@@ -1,14 +1,12 @@
 #!/usr/bin/env python
 """Result of a versions match, i.e. a list of installations with corresponding versions"""
-from dataclasses import dataclass
 from itertools import groupby
 
-from ..common.dependencies import Dependencies
-from ...pretty import pretty
+from .package_infos_list import PackageInfosList
+from python.omniversion.pretty import pretty
 
 
-@dataclass
-class AvailableUpdates(Dependencies):
+class AvailableUpdates(PackageInfosList):
     """List of packages for which a newer version is available"""
     def __str__(self):
         """Human-readable description of the available update"""

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """A vulnerability notice"""
 from dataclasses import dataclass
-from ...pretty import pretty
+from python.omniversion.pretty import pretty
 
 
 @dataclass

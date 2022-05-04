@@ -4,8 +4,8 @@ import os
 from typing import Callable
 import yaml
 
-from ..dependency import Dependencies
-from ..omniversion_file import OmniversionFileInfo
+from omniversion.package_info import PackageInfosList
+from omniversion.file_info import FileInfo
 
 AVAILABLE_VERBS = ["audit", "list", "refresh", "outdated", "version"]
 
@@ -23,7 +23,7 @@ def load_file(file_path: str) -> tuple[any, float]:
 
 def load_data(
         base_path: str,
-        add_file: Callable[[OmniversionFileInfo], None],
+        add_file: Callable[[FileInfo], None],
         hosts: list[str] | None = None,
         package_managers: list[str] | None = None,
         verbs: list[str] | None = None,
@@ -57,16 +57,16 @@ def process_file(
         host: str,
         host_path: str,
         package_manager: str,
-        add_file: Callable[[OmniversionFileInfo], None]
+        add_file: Callable[[FileInfo], None]
 ) -> None:
-    """load the file data and hand an `OmniversionFileInfo` object to the callback"""
+    """load the file data and hand an `FileInfo` object to the callback"""
     file_name = verb + ".omniversion.yaml"
     file_path = os.path.join(host_path, package_manager, file_name)
     if os.path.exists(file_path):
         file_data, time = load_file(file_path)
         if file_data is None:
             add_file(
-                OmniversionFileInfo(
+                FileInfo(
                     None, file_name, host, package_manager, verb, time, file_path
                 )
             )
@@ -75,8 +75,8 @@ def process_file(
                 item["pm"] = package_manager
                 item["host"] = host
             add_file(
-                OmniversionFileInfo(
-                    Dependencies.from_list(file_data),
+                FileInfo(
+                    PackageInfosList.from_list(file_data),
                     file_name,
                     host,
                     package_manager,

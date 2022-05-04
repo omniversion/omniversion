@@ -1,13 +1,10 @@
 #!/usr/bin/env python
 """List of installations of one particular package"""
-from dataclasses import dataclass
-from python.omniversion.dependency.common.dependency import Dependency
-from ..common.dependencies import Dependencies
-from ...pretty import pretty
+from .package_infos_list import PackageInfosList
+from python.omniversion.pretty import pretty
 
 
-@dataclass
-class VersionsMatch(Dependencies):
+class VersionsMatch(PackageInfosList):
     """List of installations of one particular package"""
     package_name: str
     display_name: str
@@ -16,7 +13,7 @@ class VersionsMatch(Dependencies):
 
     def __init__(
             self,
-            data: list[Dependency],
+            data: PackageInfosList,
             package_name: str,
             display_name: str | None = None,
             expected_num: int | None = None,

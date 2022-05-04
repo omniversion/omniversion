@@ -7,33 +7,29 @@ import re
 import __main__
 
 
-from ..dependency import AvailableUpdates, Dependency, Dependencies, VersionsMatch, Vulnerabilities
-from ..omniversion_file import OmniversionFileInfo, OmniversionFileInfos
+from omniversion.package_info import AvailableUpdates, PackageInfo, PackageInfosList, VersionsMatch, Vulnerabilities
+from omniversion.file_info import FileInfo, FileInfosList
 
-from ..pretty import pretty
-from ..loader import load_data
+from omniversion.pretty import pretty
+from omniversion.loader import load_data
 
 
-class OmniversionData:
+class Data:
     """Root class used to load and extract all omniversion data"""
-    _files: list[OmniversionFileInfo]
+    files: FileInfosList
 
     def __init__(self, base_path: str):
         """Initialialize the root class"""
-        self._files = []
-        load_data(base_path, self._files.append)
+        self.files = FileInfosList()
+        load_data(base_path, self.files.append)
 
     def __str__(self):
         """Human-readable summary of the data, counting loaded files"""
-        return pretty.file_count(len(self._files))
-
-    def file_infos(self):
-        """Meta data for all loaded files"""
-        return OmniversionFileInfos(self._files)
+        return pretty.file_count(len(self.files))
 
     def hosts(self):
         """Deduplicated list of hosts for which files are present in the list"""
-        return list({file.host for file in self._files})
+        return list({file.host for file in self.files})
 
     def items(
             self,
@@ -41,10 +37,10 @@ class OmniversionData:
             host: str | None = None,
             package_manager: str | None = None,
             package_name: str | list[str] | None = None,
-    ):
+    ) -> list[PackageInfo]:
         """List all dependencies matching the given criteria"""
-        def file_condition(file):
-            if file.list is None:
+        def file_condition(file: FileInfo) -> bool:
+            if file.data is None:
                 return False
             if host is not None and file.host != host:
                 return False
@@ -54,14 +50,14 @@ class OmniversionData:
                 return file.verb in verb
             return file.verb == verb
 
-        files_with_dependencies_data = [
-            file.list for file in self._files if file_condition(file)
+        files_with_dependencies_data: list[FileInfo] = [
+            file for file in self.files if file_condition(file)
         ]
         all_items = [
-            item for dependencies in files_with_dependencies_data for item in dependencies.data
+            item for file_info in files_with_dependencies_data for item in file_info.data
         ]
 
-        def package_condition(package):
+        def package_condition(package: PackageInfo) -> bool:
             if package_name is None:
                 return True
             if isinstance(package_name, list):
@@ -86,7 +82,7 @@ class OmniversionData:
             package_name: str | list[str] | None = None,
     ):
         """List software packages"""
-        return Dependencies(self.items(["list", "version"], host, package_manager, package_name))
+        return PackageInfosList(self.items(["list", "version"], host, package_manager, package_name))
 
     def available_updates(
             self,
@@ -102,7 +98,7 @@ class OmniversionData:
     ):
         """Match versions of all installations of a particular package"""
         return VersionsMatch(
-            self.items(["list", "version"], package_name=package_name),
+            PackageInfosList(self.items(["list", "version"], package_name=package_name)),
             package_name,
             display_name,
         )
@@ -120,15 +116,15 @@ class OmniversionData:
                 package_name = package
                 if package_name is None:
                     package_name = match.group("name")
-                dependency = Dependency(
+                package_info = PackageInfo(
                     host="localhost",
                     name=package_name,
                     pm="local file",
                     version=version,
                 )
                 file_name = os.path.basename(absolute_file_path)
-                file_info = OmniversionFileInfo(
-                    Dependencies([dependency]),
+                file_info = FileInfo(
+                    PackageInfosList([package_info]),
                     file_name,
                     "localhost",
                     "local file",
@@ -136,4 +132,4 @@ class OmniversionData:
                     time.time(),
                     file_path,
                 )
-                self._files.append(file_info)
+                self.files.append(file_info)

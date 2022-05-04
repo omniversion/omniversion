@@ -2,12 +2,12 @@
 """A generic dependency"""
 from dataclasses import dataclass
 
-from python.omniversion.dependency.audit.advisory import Advisory
+from omniversion.package_info.advisory import Advisory
 from python.omniversion.pretty import pretty
 
 
 @dataclass
-class Dependency:  # pylint: disable=too-many-instance-attributes
+class PackageInfo:  # pylint: disable=too-many-instance-attributes
     """A generic dependency"""
     host: str | None
     name: str | None
