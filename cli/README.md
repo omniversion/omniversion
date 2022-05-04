@@ -24,21 +24,22 @@ brew tap omniversion/tap && brew install omniversion
 
 ### How to uninstall
 
+
 ```shell
 omniversion version
 ```
 
 #### Via npm
 ```shell
-npm install -g omniversion
+npm uninstall omniversion
 ```
 
 #### Via pip
 ```shell
-pip install omniversion
+pip uninstall omniversion
 ```
 
 #### Via homebrew
 ```shell
-brew tap omniversion/tap && brew install omniversion
+brew uninstall omniversion
 ```
