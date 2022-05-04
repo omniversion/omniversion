@@ -1,4 +1,0 @@
-- name: test1
-  wanted: 1.1.1
-- name: test2
-  wanted: 0.3.7

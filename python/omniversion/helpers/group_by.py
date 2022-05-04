@@ -9,9 +9,9 @@ InfoType: TypeAlias = PackageInfo | FileInfo
 InfosListType: TypeAlias = UserList[PackageInfo] | UserList[FileInfo]
 
 
-def group_by(data: InfosListType, extractor: Callable[[InfoType], str]) -> list[str, list[InfoType]]:
+def group_by(data: InfosListType, extractor: Callable[[InfoType], str]):
     sorted_data = sorted(data, key=extractor)
-    return list(groupby(sorted_data, extractor))
+    return groupby(sorted_data, extractor)
 
 
 def group_by_host(data: InfosListType) -> [str, str, list[InfoType]]:

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """A generic dependency"""
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from omniversion.package_info.advisory import Advisory
 from omniversion.pretty import pretty
@@ -14,7 +14,7 @@ class PackageInfo:  # pylint: disable=too-many-instance-attributes
     pm: str | None = None  # pylint: disable=invalid-name
     version: str | None = None
 
-    advisories: list[Advisory] | None = None
+    advisories: list[Advisory] = field(default_factory=lambda: [])
     architecture: str | None = None
     author: str | None = None
     description: str | None = None

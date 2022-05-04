@@ -2,10 +2,10 @@
 """Test the data module"""
 import os
 
-from .data import Data
-from ..file_info import FileInfo
-from ..package_info import PackageInfo
-from ..package_info.list.package_infos_list import PackageInfosList
+from omniversion.data.data import Data
+from omniversion.file_info import FileInfo
+from omniversion.package_info import PackageInfo
+from omniversion.package_info.list.package_infos_list import PackageInfosList
 
 
 def test_summary_for_no_data():
@@ -29,7 +29,7 @@ def test_summary_for_multiple_files():
 
 
 def test_load_files():
-    base_path = os.path.join(os.path.dirname(__file__), "./../test/data")
+    base_path = os.path.join(os.path.dirname(__file__), "./../vectors")
     data = Data(base_path=base_path)
     data_as_str = data.__str__()
     assert "2 files loaded" in data_as_str

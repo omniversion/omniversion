@@ -47,7 +47,7 @@ class FileInfo:
                 f"Stale data loaded for {self.package_manager} ({entries_text})", "amber"
             )
         if self.has_data:
-            return pretty.traffic_light(f"No entries found for {self.package_manager}", "amber")
-        return pretty.traffic_light(
-            f"Recent data loaded for {self.package_manager} ({entries_text})"
-        )
+            return pretty.traffic_light(
+                f"Recent data loaded for {self.package_manager} ({entries_text})"
+            )
+        return pretty.traffic_light(f"No entries found for {self.package_manager}", "amber")

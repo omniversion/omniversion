@@ -1,0 +1,6 @@
+- name: test1
+  advisories:
+    - severity: critical
+- name: test2
+  advisories:
+    - severity: medium

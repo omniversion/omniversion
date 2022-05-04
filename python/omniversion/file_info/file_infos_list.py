@@ -22,7 +22,7 @@ class FileInfosList(UserList[FileInfo]):
                 continue
             result += "\n  " + pretty.hostname(host) + "\n"
             for verb, infos_by_verb in group_by_verb(package_infos_by_host):
-                result += "    " + pretty.verb(verb) + "\n"
+                result += "\n    " + pretty.verb(verb)
                 for file in infos_by_verb:
-                    result += "      " + file.__str__() + "\n"
+                    result += "\n      " + file.__str__() + "\n"
         return result

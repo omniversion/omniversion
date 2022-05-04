@@ -1,0 +1,4 @@
+- name: test1
+  version: 1.1.1
+- name: test2
+  version: 0.3.7

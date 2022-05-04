@@ -43,5 +43,5 @@ class PackageInfosList(UserList[PackageInfo]):
 
     @staticmethod
     def from_list(list_data: list[dict[str, Any]]):
-        """Create a list of dependencies from """
+        """Create from a list of package infos"""
         return PackageInfosList([from_dict(data_class=PackageInfo, data=item) for item in list_data])

@@ -4,9 +4,6 @@ import os
 import time
 import re
 
-import __main__
-
-
 from omniversion.package_info import AvailableUpdates, PackageInfo, PackageInfosList, VersionsMatch, Vulnerabilities
 from omniversion.file_info import FileInfo, FileInfosList
 
@@ -108,7 +105,7 @@ class Data:
             self, file_path, regex: str, package: str | None = None
     ):
         """Add dependency meta data from a local file"""
-        script_path = os.path.dirname(os.path.abspath(__main__.__file__))
+        script_path = os.path.dirname(os.path.abspath(__file__))
         absolute_file_path = os.path.realpath(os.path.join(script_path, file_path))
         with open(absolute_file_path, encoding="utf8") as file:
             matches = re.compile(regex).finditer(file.read())

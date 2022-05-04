@@ -2,7 +2,7 @@
 """Test the pretty module"""
 from colorama import Fore, Back, Style
 
-from . import pretty
+from omniversion.pretty import pretty
 
 
 def test_black_on_white():
