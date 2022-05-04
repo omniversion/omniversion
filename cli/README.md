@@ -9,6 +9,36 @@ The omniversion command line tool translates the output of many different versio
 
 #### Via npm
 ```shell
-npm install omniversion
+npm install -g omniversion
 ```
 
+#### Via pip
+```shell
+pip install omniversion
+```
+
+#### Via homebrew
+```shell
+brew tap omniversion/tap && brew install omniversion
+```
+
+### How to uninstall
+
+```shell
+omniversion version
+```
+
+#### Via npm
+```shell
+npm install -g omniversion
+```
+
+#### Via pip
+```shell
+pip install omniversion
+```
+
+#### Via homebrew
+```shell
+brew tap omniversion/tap && brew install omniversion
+```

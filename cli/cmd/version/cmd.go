@@ -2,7 +2,6 @@ package version
 
 import (
 	"fmt"
-	root "github.com/omniversion/omniversion/cli/cmd"
 	"github.com/spf13/cobra"
 	"io"
 	"os"
@@ -25,19 +24,17 @@ var Date = "-"
 // Via is the installation method ("npm"/"brew"/"compiled from source"/...)
 var Via = "compiled from source"
 
-// Cmd implements the version command that outputs information on the current installation as a yaml string map
-func init() {
-	root.RootCmd.AddCommand(&cobra.Command{
-		Use:   "version",
-		Short: "Print the version of the omniversion binary",
-		Long:  `All software has versions, even omniversion. This is the current version of your omniversion installation`,
-		Run: func(cmd *cobra.Command, args []string) {
-			versionCmd(cmd.OutOrStdout())
-		},
-	})
+// implements the version command that outputs information on the current installation as a yaml string map
+var VersionCmd = &cobra.Command{
+	Use:   "version",
+	Short: "Print the version of the omniversion binary",
+	Long:  `All software has versions, even omniversion. This is the current version of your omniversion installation`,
+	Run: func(cmd *cobra.Command, args []string) {
+		runVersionCmd(cmd.OutOrStdout())
+	},
 }
 
-func versionCmd(writer io.Writer) {
+func runVersionCmd(writer io.Writer) {
 	executableLocation, _ := os.Executable()
 	_, _ = writer.Write([]byte(fmt.Sprintln(fmt.Sprintf(
 		`name: omniversion
