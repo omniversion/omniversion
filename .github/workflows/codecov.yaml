@@ -31,15 +31,15 @@ jobs:
 
       - name: Install Python dependencies
         working-directory: python
-        run: pip3 install -r requirements.txt
+        run: python3 -m pip3 install -r requirements.txt
 
       - name: Install test dependencies
         working-directory: python
-        run: pip3 install pytest pytest-cov
+        run: python3 -m pip3 install pytest pytest-cov
 
       - name: Python test
         working-directory: python
-        run: pytest --cov=omniversion --cov-report=xml omniversion
+        run: python3 -m pytest --cov=omniversion --cov-report=xml omniversion
 
       -
         name: Upload coverage
