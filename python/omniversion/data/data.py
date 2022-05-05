@@ -4,7 +4,8 @@ import os
 import time
 import re
 
-from omniversion.package_info import AvailableUpdates, PackageInfo, PackageInfosList, VersionsMatch, Vulnerabilities
+from omniversion.package_metadata import AvailableUpdates, PackageMetadata, PackagesMetadataList, VersionsMatch, \
+    Vulnerabilities
 from omniversion.file_info import FileInfo, FileInfosList
 
 from omniversion.pretty import pretty
@@ -35,7 +36,7 @@ class Data:
             host: str | None = None,
             package_manager: str | None = None,
             package_name: str | list[str] | None = None,
-    ) -> list[PackageInfo]:
+    ) -> list[PackageMetadata]:
         """List all dependencies matching the given criteria"""
         def file_condition(file: FileInfo) -> bool:
             if file.data is None:
@@ -55,7 +56,7 @@ class Data:
             item for file_info in files_with_dependencies_data for item in file_info.data
         ]
 
-        def package_condition(package: PackageInfo) -> bool:
+        def package_condition(package: PackageMetadata) -> bool:
             if package_name is None:
                 return True
             if isinstance(package_name, list):
@@ -80,7 +81,7 @@ class Data:
             package_name: str | list[str] | None = None,
     ):
         """List software packages"""
-        return PackageInfosList(self.items(["list", "version"], host, package_manager, package_name))
+        return PackagesMetadataList(self.items(["list", "version"], host, package_manager, package_name))
 
     def available_updates(
             self,
@@ -96,7 +97,7 @@ class Data:
     ):
         """Match versions of all installations of a particular package"""
         return VersionsMatch(
-            PackageInfosList(self.items(["list", "version"], package_name=package_name)),
+            PackagesMetadataList(self.items(["list", "version"], package_name=package_name)),
             package_name,
             display_name,
         )
@@ -114,15 +115,15 @@ class Data:
                     version = match.group("version")
                     if package_name is None:
                         package_name = match.group("name")
-                    package_info = PackageInfo(
+                    package_metadata = PackageMetadata(
                         host="localhost",
                         name=package_name,
-                        pm="local file",
-                        version=version,
+                        package_manager="local file",
+                        current=version,
                     )
                     file_name = os.path.basename(absolute_file_path)
                     file_info = FileInfo(
-                        PackageInfosList([package_info]),
+                        PackagesMetadataList([package_metadata]),
                         file_name,
                         "localhost",
                         "local file",

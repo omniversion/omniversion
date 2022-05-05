@@ -6,11 +6,11 @@ from typing import Any
 
 from dacite import from_dict
 
-from ..package_info import PackageInfo
+from ..package_metadata import PackageMetadata
 from omniversion.pretty import pretty
 
 
-class PackageInfosList(UserList[PackageInfo]):
+class PackagesMetadataList(UserList[PackageMetadata]):
     """A list of software package mate data infos"""
 
     def __str__(self):
@@ -19,8 +19,8 @@ class PackageInfosList(UserList[PackageInfo]):
         if num_items > 0:
             table_items = [
                 f'\t{(item.host or "").ljust(12)}'
-                + f'\t{(item.version or "").ljust(20)}'
-                + f'\t{(item.pm or "").ljust(12)}'
+                + f'\t{(item.current or "").ljust(20)}'
+                + f'\t{(item.package_manager or "").ljust(12)}'
                 for item in self
             ]
             return (
@@ -31,7 +31,7 @@ class PackageInfosList(UserList[PackageInfo]):
 
     def overview(self):
         """Summary of dependency counts grouped by host"""
-        sorted_dependencies = sorted(self, key=lambda package_info: package_info.host)
+        sorted_dependencies = sorted(self, key=lambda package_metadata: package_metadata.host)
         grouped_dependencies = groupby(
             sorted_dependencies, lambda dependency: dependency.host
         )
@@ -44,4 +44,4 @@ class PackageInfosList(UserList[PackageInfo]):
     @staticmethod
     def from_list(list_data: list[dict[str, Any]]):
         """Create from a list of package infos"""
-        return PackageInfosList([from_dict(data_class=PackageInfo, data=item) for item in list_data])
+        return PackagesMetadataList([from_dict(data_class=PackageMetadata, data=item) for item in list_data])

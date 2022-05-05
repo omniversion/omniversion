@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 """A list of dependencies, optionally containing vulnerability notices"""
-from .package_infos_list import PackageInfosList
+from .packages_metadata_list import PackagesMetadataList
 from omniversion.pretty import pretty
 
 
-class Vulnerabilities(PackageInfosList):
+class Vulnerabilities(PackagesMetadataList):
     """A list of dependencies, optionally containing vulnerability notices"""
     def __str__(self):
         """Human-readable description of the security advisories for each dependency"""

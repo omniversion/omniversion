@@ -25,11 +25,9 @@ def cyan(text: str):
 
 def severity(text: str):
     """Format a vulnerability severity level"""
-    if text == "critical":
+    if text == "critical" or text == "high":
         return f"{Style.BRIGHT}{Back.RED} {text} {Style.RESET_ALL}"
-    if text == "high":
-        return f"{Style.BRIGHT}{Back.RED} {text} {Style.RESET_ALL}"
-    if text == "moderate":
+    if text == "moderate" or text == "medium":
         return f"{Style.BRIGHT}{Back.YELLOW} {text} {Style.RESET_ALL}"
     if text == "low":
         return f"{Style.BRIGHT}{Back.BLUE} {text} {Style.RESET_ALL}"

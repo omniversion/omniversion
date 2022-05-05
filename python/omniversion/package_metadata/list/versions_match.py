@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 """List of installations of one particular package"""
-from .package_infos_list import PackageInfosList
+from .packages_metadata_list import PackagesMetadataList
 from omniversion.pretty import pretty
 
 
-class VersionsMatch(PackageInfosList):
+class VersionsMatch(PackagesMetadataList):
     """List of installations of one particular package"""
     package_name: str
     display_name: str
@@ -13,7 +13,7 @@ class VersionsMatch(PackageInfosList):
 
     def __init__(
             self,
-            data: PackageInfosList,
+            data: PackagesMetadataList,
             package_name: str,
             display_name: str | None = None,
             expected_num: int | None = None,
@@ -39,9 +39,9 @@ class VersionsMatch(PackageInfosList):
     def __str__(self):
         """Human-readable description of the version match"""
         table_items = [
-            f'\t{(item.version or "").ljust(20)}'
+            f'\t{(item.current or "").ljust(20)}'
             + f'\t{(item.host or "").ljust(12)}'
-            + f'\t{(item.pm or "").ljust(12)}'
+            + f'\t{(item.package_manager or "").ljust(12)}'
             + f'\t{item.name or ""}'
             for item in self.data
         ]
@@ -78,4 +78,4 @@ class VersionsMatch(PackageInfosList):
 
     def deduplicated_versions(self):
         """All dependency versions with duplicates removed"""
-        return {dependency.version for dependency in self.data}
+        return {dependency.current for dependency in self.data}

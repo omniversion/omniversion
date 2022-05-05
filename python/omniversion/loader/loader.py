@@ -4,7 +4,7 @@ import os
 from typing import Callable
 import yaml
 
-from omniversion.package_info import PackageInfosList
+from omniversion.package_metadata import PackagesMetadataList
 from omniversion.file_info import FileInfo
 
 AVAILABLE_VERBS = ["audit", "list", "refresh", "outdated", "version"]
@@ -76,7 +76,7 @@ def process_file(
                 item["host"] = host
             add_file(
                 FileInfo(
-                    PackageInfosList.from_list(file_data),
+                    PackagesMetadataList.from_list(file_data),
                     file_name,
                     host,
                     package_manager,

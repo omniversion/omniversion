@@ -5,26 +5,26 @@ import unittest
 
 from omniversion.data.data import Data
 from omniversion.file_info import FileInfo
-from omniversion.package_info import PackageInfo
-from omniversion.package_info.list.package_infos_list import PackageInfosList
+from omniversion.package_metadata import PackageMetadata
+from omniversion.package_metadata.list.packages_metadata_list import PackagesMetadataList
 
 test_file_path = os.path.join(os.path.dirname(__file__), "../vectors/test-env.txt")
 
 
-class InitializationTestCase(unittest.TestCase):
+class SummaryTestCase(unittest.TestCase):
     def test_summary_for_no_data(self):
         data = Data(file_infos=[])
         data_as_str = data.__str__()
         self.assertIn("No files loaded", data_as_str)
 
     def test_summary_for_single_file(self):
-        package_infos = PackageInfosList([PackageInfo(name="package", version="0.1.2", pm="test")])
+        package_infos = PackagesMetadataList([PackageMetadata(name="package", current="0.1.2", package_manager="test")])
         data = Data(file_infos=[FileInfo(data=package_infos, name="test")])
         data_as_str = data.__str__()
         self.assertIn("1 file loaded", data_as_str)
 
     def test_summary_for_multiple_files(self):
-        package_infos = PackageInfosList([PackageInfo(name="package", version="0.1.2", pm="test")])
+        package_infos = PackagesMetadataList([PackageMetadata(name="package", current="0.1.2", package_manager="test")])
         data = Data(file_infos=[FileInfo(data=package_infos, name="test"), FileInfo(data=package_infos, name="test")])
         data_as_str = data.__str__()
         self.assertIn("2 files loaded", data_as_str)

@@ -1,13 +1,13 @@
 import unittest
 
-from omniversion import PackageInfosList, PackageInfo
+from omniversion import PackagesMetadataList, PackageMetadata
 
 
-class InitializationTestCase(unittest.TestCase):
-    def test_package_infos_list_can_be_initialized(self):
-        package_info = PackageInfo(sources=['test1', 'test2'])
-        package_infos_list = PackageInfosList([package_info])
-        self.assertEqual(1, len(package_infos_list))
+class PackageInfosListTestCase(unittest.TestCase):
+    def test_packages_metadata_list_can_be_initialized(self):
+        package_metadata = PackageMetadata(sources=['test1', 'test2'])
+        packages_metadata_list = PackagesMetadataList([package_metadata])
+        self.assertEqual(1, len(packages_metadata_list))
 
 
 if __name__ == '__main__':

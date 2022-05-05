@@ -3,7 +3,7 @@
 import time
 from dataclasses import dataclass
 
-from ..package_info import PackageInfosList
+from ..package_metadata.list.packages_metadata_list import PackagesMetadataList
 from ..pretty import pretty
 
 STALENESS_THRESHOLD_IN_SECS: int = 60 * 60
@@ -12,7 +12,7 @@ STALENESS_THRESHOLD_IN_SECS: int = 60 * 60
 @dataclass
 class FileInfo:
     """An imported file including meta data"""
-    data: PackageInfosList | None = None
+    data: PackagesMetadataList | None = None
     name: str = None
     host: str | None = None
     package_manager: str | None = None

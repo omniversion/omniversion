@@ -2,7 +2,7 @@
 """List of imported files, including meta data"""
 from collections import UserList
 
-from ..helpers.group_by import group_by_host, group_by_verb
+from ..helpers import group_by_host, group_by_verb
 from ..pretty import pretty
 
 from .file_info import FileInfo
