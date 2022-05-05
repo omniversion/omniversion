@@ -384,5 +384,17 @@ func TestEmptyVersionInJsonDependency(t *testing.T) {
 
 	assert.NotNil(t, err)
 	assert.Contains(t, err.Error(), "no version found")
-	assert.Equal(t, 0, len(result))
+	assert.Zero(t, len(result))
+}
+
+func TestInvalidJsonData(t *testing.T) {
+	vector := `{
+	"test": []
+}`
+
+	result, err := parseNpmOutput(vector)
+
+	assert.NotNil(t, err)
+	assert.Contains(t, err.Error(), "unable to interpret this input")
+	assert.Zero(t, len(result))
 }
