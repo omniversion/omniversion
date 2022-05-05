@@ -23,19 +23,19 @@ class FileInfo:
     @property
     def is_stale(self):
         """Data that was fetched a long time ago is considered stale"""
-        return time.time() > STALENESS_THRESHOLD_IN_SECS + self.time
+        return self.time is None or time.time() > STALENESS_THRESHOLD_IN_SECS + self.time
 
     @property
     def has_data(self):
         """Does the file contain any parseable data at all?"""
-        return self.data is not None
+        return self.data is not None and len(self.data) > 0
 
     @property
     def num_entries(self):
         """Number of entries contained in the file"""
         if self.data is None:
             return 0
-        return len(self.data.data)
+        return len(self.data)
 
     def __str__(self):
         """Pretty string representation describing the file"""

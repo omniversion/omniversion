@@ -73,7 +73,7 @@ class Data:
         """List security vulnerabilities"""
         return Vulnerabilities(self.items("audit", host, package_manager, package_name))
 
-    def dependencies(
+    def list_packages(
             self,
             host: str | None = None,
             package_manager: str | None = None,
@@ -102,31 +102,35 @@ class Data:
         )
 
     def add_local_config_value(
-            self, file_path, regex: str, package: str | None = None
+            self, file_path, regex: str, name: str | None = None
     ):
         """Add dependency meta data from a local file"""
         absolute_file_path = os.path.realpath(file_path)
         with open(absolute_file_path, encoding="utf8") as file:
-            matches = re.compile(regex).finditer(file.read())
-            for match in matches:
-                version = match.group("version")
-                package_name = package
-                if package_name is None:
-                    package_name = match.group("name")
-                package_info = PackageInfo(
-                    host="localhost",
-                    name=package_name,
-                    pm="local file",
-                    version=version,
-                )
-                file_name = os.path.basename(absolute_file_path)
-                file_info = FileInfo(
-                    PackageInfosList([package_info]),
-                    file_name,
-                    "localhost",
-                    "local file",
-                    "list",
-                    time.time(),
-                    file_path,
-                )
-                self.files.append(file_info)
+            try:
+                matches = re.compile(regex).finditer(file.read())
+                package_name = name
+                for match in matches:
+                    version = match.group("version")
+                    if package_name is None:
+                        package_name = match.group("name")
+                    package_info = PackageInfo(
+                        host="localhost",
+                        name=package_name,
+                        pm="local file",
+                        version=version,
+                    )
+                    file_name = os.path.basename(absolute_file_path)
+                    file_info = FileInfo(
+                        PackageInfosList([package_info]),
+                        file_name,
+                        "localhost",
+                        "local file",
+                        "list",
+                        time.time(),
+                        file_path,
+                    )
+                    self.files.append(file_info)
+            except IndexError:
+                raise IndexError("Invalid regex. You need to provide a named group called `version` and either a name "
+                                 "parameter or a named group called `name`")

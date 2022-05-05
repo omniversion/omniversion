@@ -13,7 +13,7 @@ class FileInfosList(UserList[FileInfo]):
 
     def hosts(self):
         """Deduplicated list of hosts for which files are present in the list"""
-        return list({file.host for file in self})
+        return sorted(list({file.host for file in self}))
 
     def __str__(self):
         result = ""
