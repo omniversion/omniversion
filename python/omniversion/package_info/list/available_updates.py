@@ -1,23 +1,18 @@
 #!/usr/bin/env python
 """Result of a versions match, i.e. a list of installations with corresponding versions"""
-from itertools import groupby
-
 from .package_infos_list import PackageInfosList
 from omniversion.pretty import pretty
+from ...helpers.group_by import group_by_host, group_by_pm
 
 
 class AvailableUpdates(PackageInfosList):
     """List of packages for which a newer version is available"""
     def __str__(self):
         """Human-readable description of the available update"""
-        sorted_items = sorted(self.data, key=lambda item: item.host)
-        grouped_items = groupby(sorted_items, lambda item: item.host)
         result = ""
-        for host, items in grouped_items:
+        for host, items_for_host in group_by_host(self):
             result += "\n  " + pretty.hostname(host) + "\n"
-            sorted_pms = sorted(items, key=lambda item: item.pm)
-            grouped_pms = groupby(sorted_pms, lambda item: item.pm)
-            for package_manager, items_for_pm in grouped_pms:
+            for package_manager, items_for_pm in group_by_pm(items_for_host):
                 result += "    " + pretty.package_manager(package_manager) + "\n"
                 updates = [item for item in items_for_pm if item.version is not None]
                 not_installed = [item for item in items_for_pm if item.version is None]
