@@ -9,14 +9,15 @@ import (
 	"strings"
 )
 
-func parseAptOutput(input string) ([]Dependency, error) {
+func parseAptOutput(input string) ([]PackageMetadata, error) {
 	compiledRegex := regexp.MustCompile(`(?m)^(?P<name>.*?)/(?P<sources>\S*) (?P<version>\S*) (?P<architecture>\S*)( \[(?P<installed>installed)?(,(?P<automatic>automatic))?(,upgradable to: (?P<latest>.*))?(upgradable from: (?P<outdatedVersion>.*))?])?$`)
 	matches := compiledRegex.FindAllStringSubmatch(input, -1)
-	result := make([]Dependency, 0, len(matches))
+	result := make([]PackageMetadata, 0, len(matches))
 	var allErrors *multierror.Error
 	for _, match := range matches {
-		newDependency := Dependency{
-			Pm: "apt",
+		newDependency := PackageMetadata{}
+		if shared.InjectPackageManager {
+			newDependency.PackageManager = "apt"
 		}
 		version := match[compiledRegex.SubexpIndex("version")]
 		outdatedVersion := match[compiledRegex.SubexpIndex("outdatedVersion")]
@@ -25,8 +26,8 @@ func parseAptOutput(input string) ([]Dependency, error) {
 			latest := match[compiledRegex.SubexpIndex("latest")]
 			newDependency.Latest = latest
 			if isInstalled {
-				newDependency.Version = version
-				newDependency.Installed = []InstalledDependency{{
+				newDependency.Current = version
+				newDependency.Installations = []InstalledPackage{{
 					Version: version,
 				}}
 			} else {
@@ -34,8 +35,8 @@ func parseAptOutput(input string) ([]Dependency, error) {
 			}
 		} else {
 			// we are dealing with the output of an `outdated` command
-			newDependency.Version = outdatedVersion
-			newDependency.Installed = []InstalledDependency{{
+			newDependency.Current = outdatedVersion
+			newDependency.Installations = []InstalledPackage{{
 				Version: outdatedVersion,
 			}}
 			newDependency.Latest = version
@@ -63,6 +64,6 @@ func parseAptOutput(input string) ([]Dependency, error) {
 var ParseCommand = &cobra.Command{
 	Use:   "apt",
 	Short: "Parse the output of apt",
-	Long:  `Transform the output of apt into a common format.`,
+	Long:  `Translate the output of apt into the omniversion format.`,
 	Run:   shared.WrapCommand(parseAptOutput),
 }

@@ -7,34 +7,34 @@ import (
 	"regexp"
 )
 
-func parseRvmOutput(input string) ([]Dependency, error) {
+func parseRvmOutput(input string) ([]PackageMetadata, error) {
 	compiledRegex := regexp.MustCompile("(?m)^(?P<current>=)? ?(?P<default>\\*)?([ >])? *ruby-(?P<version>[^ ]*) \\[ (?P<architecture>.*) ]$")
 	matches := compiledRegex.FindAllStringSubmatch(input, -1)
-	newItem := Dependency{
-		Name: "ruby",
-		Pm:   "rvm",
+	newItem := PackageMetadata{
+		Name:           "ruby",
+		PackageManager: "rvm",
 	}
-	installed := make([]InstalledDependency, 0, len(matches))
+	installed := make([]InstalledPackage, 0, len(matches))
 	for _, match := range matches {
 		isCurrent := len(match[compiledRegex.SubexpIndex("current")]) > 0
 		isDefault := len(match[compiledRegex.SubexpIndex("default")]) > 0
 		version := match[compiledRegex.SubexpIndex("version")]
-		installed = append(installed, InstalledDependency{Version: version})
+		installed = append(installed, InstalledPackage{Version: version})
 		if isCurrent {
-			newItem.Version = version
+			newItem.Current = version
 			newItem.Architecture = match[compiledRegex.SubexpIndex("architecture")]
 		}
 		if isDefault {
 			newItem.Default = version
 		}
 	}
-	newItem.Installed = installed
-	return []Dependency{newItem}, nil
+	newItem.Installations = installed
+	return []PackageMetadata{newItem}, nil
 }
 
 var ParseCommand = &cobra.Command{
 	Use:   "rvm",
 	Short: "Parse the output of rvm",
-	Long:  `Transform the output of rvm into a common format.`,
+	Long:  `Translate the output of rvm into the omniversion format.`,
 	Run:   shared.WrapCommand(parseRvmOutput),
 }

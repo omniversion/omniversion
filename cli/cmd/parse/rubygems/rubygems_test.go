@@ -1,6 +1,7 @@
 package rubygems
 
 import (
+	"github.com/omniversion/omniversion/cli/cmd/parse/shared"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -14,17 +15,20 @@ func TestParseRubygemsSimpleOutput(t *testing.T) {
 
     Prime numbers and factorization library.`
 
+	previousInjectValue := shared.InjectPackageManager
+	shared.InjectPackageManager = true
 	result, err := parseRubygemsOutput(vector)
+	shared.InjectPackageManager = previousInjectValue
 
 	assert.Nil(t, err)
 	assert.Equal(t, 1, len(result))
 
 	assert.Equal(t, `Marc-Andre Lafortune`, result[0].Author)
-
+	assert.Equal(t, "rubygems", result[0].PackageManager)
 	assert.Equal(t, "prime", result[0].Name)
-	assert.Equal(t, 1, len(result[0].Installed))
-	assert.Equal(t, "0.1.2", result[0].Version)
-	assert.Equal(t, "/usr/local/rvm/rubies/ruby-3.1.0/lib/ruby/gems/3.1.0", result[0].Installed[0].Location)
+	assert.Equal(t, 1, len(result[0].Installations))
+	assert.Equal(t, "0.1.2", result[0].Current)
+	assert.Equal(t, "/usr/local/rvm/rubies/ruby-3.1.0/lib/ruby/gems/3.1.0", result[0].Installations[0].Location)
 }
 
 func TestParseRubygemsMultilineOutput(t *testing.T) {
@@ -55,34 +59,82 @@ func TestParseRubygemsMultilineOutput(t *testing.T) {
     Terence Lee, Carl Lerche, Yehuda Katz`, result[0].Author)
 
 	assert.Equal(t, "bundler", result[0].Name)
-	assert.Equal(t, "", result[0].Version)
-	assert.Equal(t, 3, len(result[0].Installed))
+	assert.Equal(t, "", result[0].Current)
+	assert.Equal(t, 3, len(result[0].Installations))
 	assert.Equal(t, "2.3.3", result[0].Default)
-	assert.Equal(t, "2.3.7", result[0].Installed[0].Version)
-	assert.Equal(t, "2.3.3", result[0].Installed[1].Version)
-	assert.Equal(t, "2.1.4", result[0].Installed[2].Version)
+	assert.Equal(t, "2.3.7", result[0].Installations[0].Version)
+	assert.Equal(t, "2.3.3", result[0].Installations[1].Version)
+	assert.Equal(t, "2.1.4", result[0].Installations[2].Version)
 }
 
 func TestParseRubygemsOutdatedOutput(t *testing.T) {
 	vector := `bigdecimal (3.1.1 < 3.1.2)
 bundler (2.3.7 < 2.3.12)`
 
+	previousInjectValue := shared.InjectPackageManager
+	shared.InjectPackageManager = true
 	result, err := parseRubygemsOutput(vector)
+	shared.InjectPackageManager = previousInjectValue
 
 	assert.Nil(t, err)
 	assert.Equal(t, 2, len(result))
 
 	item := result[0]
 	assert.Equal(t, "bigdecimal", item.Name)
-	assert.Equal(t, "3.1.1", item.Version)
-	assert.Equal(t, 1, len(item.Installed))
-	assert.Equal(t, "3.1.1", item.Installed[0].Version)
+	assert.Equal(t, "rubygems", item.PackageManager)
+	assert.Equal(t, "3.1.1", item.Current)
+	assert.Equal(t, 1, len(item.Installations))
+	assert.Equal(t, "3.1.1", item.Installations[0].Version)
 	assert.Equal(t, "3.1.2", item.Latest)
 
 	item = result[1]
 	assert.Equal(t, "bundler", item.Name)
-	assert.Equal(t, "2.3.7", item.Version)
-	assert.Equal(t, 1, len(item.Installed))
-	assert.Equal(t, "2.3.7", item.Installed[0].Version)
+	assert.Equal(t, "2.3.7", item.Current)
+	assert.Equal(t, 1, len(item.Installations))
+	assert.Equal(t, "2.3.7", item.Installations[0].Version)
 	assert.Equal(t, "2.3.12", item.Latest)
+}
+
+func TestParseRubygemsInvalidVersions(t *testing.T) {
+	vector := `test (3.1.1 < 3.1.2 < 4.5.6)`
+
+	result, err := parseRubygemsOutput(vector)
+
+	assert.NotNil(t, err)
+	assert.Contains(t, err.Error(), "unable to parse package description: \"test\"")
+	assert.Zero(t, len(result))
+}
+
+func TestIncompletePackageDescription(t *testing.T) {
+	vector := `test (1.2.3)
+
+    Test description.
+`
+
+	result, err := parseRubygemsOutput(vector)
+
+	assert.NotNil(t, err)
+	assert.Contains(t, err.Error(), "unable to parse package description: \"test\"")
+	assert.Zero(t, len(result))
+}
+
+func TestSingleDefaultVersion(t *testing.T) {
+	vector := `test (2.3.2)
+    Authors: test
+    Homepage: example.com
+    License: MIT
+    Installed at (default): /usr/local/rvm/gems/ruby-3.1.0
+
+    Test description.
+`
+
+	result, err := parseRubygemsOutput(vector)
+
+	assert.Nil(t, err)
+	assert.Equal(t, 1, len(result))
+	assert.Equal(t, 1, len(result[0].Installations))
+
+	assert.Equal(t, "2.3.2", result[0].Current)
+	assert.Equal(t, "2.3.2", result[0].Default)
+	assert.Equal(t, "2.3.2", result[0].Installations[0].Version)
 }

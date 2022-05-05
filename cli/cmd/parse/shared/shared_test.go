@@ -2,51 +2,109 @@ package shared
 
 import (
 	"bytes"
+	"fmt"
+	"github.com/omniversion/omniversion/cli/test"
 	. "github.com/omniversion/omniversion/cli/types"
 	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
-func TestEmptyOutput(t *testing.T) {
-	stdin := new(bytes.Buffer)
-	stdout := new(bytes.Buffer)
-	stderr := new(bytes.Buffer)
-	runParser(func(input string) ([]Dependency, error) {
-		return []Dependency{}, nil
-	})(stdin, stdout, stderr, []string{})
-
-	assert.Equal(t, "", string(stdout.Bytes()))
-	assert.Equal(t, "", string(stderr.Bytes()))
-}
-
 func TestSimpleOutput(t *testing.T) {
 	stdin := new(bytes.Buffer)
 	stdout := new(bytes.Buffer)
-	stderr := new(bytes.Buffer)
-	runParser(func(input string) ([]Dependency, error) {
-		return []Dependency{
+	err := runParser(func(input string) ([]PackageMetadata, error) {
+		return []PackageMetadata{
 			{Name: "test"},
 		}, nil
-	})(stdin, stdout, stderr, []string{})
+	})(stdin, stdout)
 
-	assert.Equal(t, "- name: test\n", string(stdout.Bytes()))
-	assert.Equal(t, "", string(stderr.Bytes()))
+	assert.Nil(t, err)
+	assert.Contains(t, stdout.String(), "- name: test\n")
 }
 
 func TestWrapCommand(t *testing.T) {
 	stdin := new(bytes.Buffer)
 	stdout := new(bytes.Buffer)
-	stderr := new(bytes.Buffer)
 	command := &cobra.Command{Use: "a", Args: cobra.NoArgs, Run: func(cmd *cobra.Command, args []string) {}}
 	command.SetIn(stdin)
 	command.SetOut(stdout)
-	command.SetErr(stderr)
-	WrapCommand(func(input string) ([]Dependency, error) {
-		return []Dependency{
+	WrapCommand(func(input string) ([]PackageMetadata, error) {
+		return []PackageMetadata{
 			{Name: "test"},
 		}, nil
 	})(command, []string{})
 
-	assert.Equal(t, "- name: test\n", stdout.String())
+	assert.Contains(t, stdout.String(), "- name: test\n")
+}
+
+func TestRunParserWithInvalidStdIn(t *testing.T) {
+	stdin := test.ErrorReader{}
+	stdout := new(bytes.Buffer)
+	err := runParser(func(input string) ([]PackageMetadata, error) { return []PackageMetadata{}, nil })(stdin, stdout)
+
+	assert.NotNil(t, err)
+	assert.Contains(t, err.Error(), "test error")
+}
+
+func TestRunParserWithInvalidStdOut(t *testing.T) {
+	stdin := new(bytes.Buffer)
+	stdout := test.ErrorWriter{}
+	err := runParser(func(input string) ([]PackageMetadata, error) { return []PackageMetadata{}, nil })(stdin, stdout)
+
+	assert.NotNil(t, err)
+	assert.Contains(t, err.Error(), "test error")
+}
+
+func TestRunParserWithError(t *testing.T) {
+	stdin := new(bytes.Buffer)
+	stdout := new(bytes.Buffer)
+	err := runParser(func(input string) ([]PackageMetadata, error) { return []PackageMetadata{}, fmt.Errorf("test error") })(stdin, stdout)
+
+	assert.NotNil(t, err)
+	assert.Contains(t, err.Error(), "test error")
+}
+
+func TestInvalidOutputFormat(t *testing.T) {
+	stdin := new(bytes.Buffer)
+	stdout := new(bytes.Buffer)
+	previousOutputFormat := OutputFormat
+	OutputFormat = "invalid"
+	err := runParser(func(input string) ([]PackageMetadata, error) { return []PackageMetadata{}, nil })(stdin, stdout)
+	OutputFormat = previousOutputFormat
+
+	assert.NotNil(t, err)
+	assert.Contains(t, err.Error(), "unknown output format")
+}
+
+func TestInvalidJsonOutput(t *testing.T) {
+	stdin := new(bytes.Buffer)
+	stdout := new(bytes.Buffer)
+	previousOutputFormat := OutputFormat
+	OutputFormat = "json"
+	err := runParser(func(input string) ([]PackageMetadata, error) {
+		return []PackageMetadata{
+			{Name: "test"},
+		}, nil
+	})(stdin, stdout)
+	OutputFormat = previousOutputFormat
+
+	assert.Nil(t, err)
+	assert.Contains(t, stdout.String(), "test")
+}
+
+func TestInvalidTomlOutput(t *testing.T) {
+	stdin := new(bytes.Buffer)
+	stdout := new(bytes.Buffer)
+	previousOutputFormat := OutputFormat
+	OutputFormat = "toml"
+	err := runParser(func(input string) ([]PackageMetadata, error) {
+		return []PackageMetadata{
+			{Name: "test"},
+		}, nil
+	})(stdin, stdout)
+	OutputFormat = previousOutputFormat
+
+	assert.Nil(t, err)
+	assert.Contains(t, stdout.String(), "test")
 }

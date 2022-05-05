@@ -24,17 +24,17 @@ func TestParseRvmSimpleOutput(t *testing.T) {
 
 	item := result[0]
 	assert.Equal(t, "ruby", item.Name)
-	assert.Equal(t, "rvm", item.Pm)
+	assert.Equal(t, "rvm", item.PackageManager)
 
 	assert.Equal(t, "3.1.0", item.Default)
-	assert.Equal(t, "3.1.0", item.Version)
+	assert.Equal(t, "3.1.0", item.Current)
 	assert.Equal(t, "x86_64", item.Architecture)
 
-	assert.Equal(t, 4, len(item.Installed))
-	assert.Equal(t, "2.6.3", item.Installed[0].Version)
-	assert.Equal(t, "2.6.6", item.Installed[1].Version)
-	assert.Equal(t, "2.7.2", item.Installed[2].Version)
-	assert.Equal(t, "3.1.0", item.Installed[3].Version)
+	assert.Equal(t, 4, len(item.Installations))
+	assert.Equal(t, "2.6.3", item.Installations[0].Version)
+	assert.Equal(t, "2.6.6", item.Installations[1].Version)
+	assert.Equal(t, "2.7.2", item.Installations[2].Version)
+	assert.Equal(t, "3.1.0", item.Installations[3].Version)
 }
 
 func TestParseRvmOutputWithNonDefaultCurrent(t *testing.T) {
@@ -56,9 +56,9 @@ func TestParseRvmOutputWithNonDefaultCurrent(t *testing.T) {
 
 	item := result[0]
 	assert.Equal(t, "ruby", item.Name)
-	assert.Equal(t, "rvm", item.Pm)
+	assert.Equal(t, "rvm", item.PackageManager)
 
 	assert.Equal(t, "2.7.2", item.Default)
-	assert.Equal(t, "2.6.6", item.Version)
+	assert.Equal(t, "2.6.6", item.Current)
 	assert.Equal(t, "x86_64", item.Architecture)
 }

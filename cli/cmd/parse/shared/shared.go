@@ -2,6 +2,10 @@ package shared
 
 import (
 	"bytes"
+	"encoding/json"
+	"fmt"
+	"github.com/BurntSushi/toml"
+	"github.com/omniversion/omniversion/cli/cmd/version"
 	. "github.com/omniversion/omniversion/cli/types"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
@@ -11,38 +15,55 @@ import (
 
 var log = logrus.New()
 
-func WrapCommand(parser func(input string) ([]Dependency, error)) func(cmd *cobra.Command, args []string) {
+// InjectPackageManager causes the package manager's name be injected into each package metadata item.
+// This is usually not needed, as it increases the size of output unnecessarily and
+// items for different package managers are stored in separate files.
+var InjectPackageManager = false
+
+// OutputFormat determines how the command's output is formatted
+var OutputFormat = "yaml"
+
+func WrapCommand(parser func(input string) ([]PackageMetadata, error)) func(cmd *cobra.Command, args []string) {
 	return func(cmd *cobra.Command, args []string) {
-		runParser(parser)(cmd.InOrStdin(), cmd.OutOrStdout(), cmd.ErrOrStderr(), args)
+		err := runParser(parser)(cmd.InOrStdin(), cmd.OutOrStdout())
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 }
 
-func runParser(parser func(input string) ([]Dependency, error)) func(stdin io.Reader, stdout io.Writer, stderr io.Writer, args []string) {
-	return func(stdin io.Reader, stdout io.Writer, stderr io.Writer, args []string) {
+func runParser(parser func(input string) ([]PackageMetadata, error)) func(stdin io.Reader, stdout io.Writer) error {
+	return func(stdin io.Reader, stdout io.Writer) error {
 		input, err := io.ReadAll(stdin)
 		if err != nil {
-			log.Fatal(err)
+			return err
 		}
 		result, parseErr := parser(string(input))
 		if parseErr != nil {
-			_, err = io.WriteString(stderr, parseErr.Error())
-			if err != nil {
-				log.Fatal(err)
-			}
+			return parseErr
 		}
-		if len(result) == 0 {
-			// don't output empty arrays as "[]"
-			// it's inconvenient for concatenation
-			return
+		data := map[string]interface{}{
+			"version": version.Version,
+			"items":   result,
 		}
 		buf := new(bytes.Buffer)
-		err = yaml.NewEncoder(buf).Encode(result)
+		switch OutputFormat {
+		case "yaml":
+			err = yaml.NewEncoder(buf).Encode(data)
+		case "toml":
+			err = toml.NewEncoder(buf).Encode(data)
+		case "json":
+			err = json.NewEncoder(buf).Encode(data)
+		default:
+			err = fmt.Errorf("unknown output format: %q. valid values are `yaml` (default), `toml` and `json`", OutputFormat)
+		}
 		if err != nil {
-			log.Fatal(err)
+			return err
 		}
 		_, err = stdout.Write(buf.Bytes())
 		if err != nil {
-			log.Fatal(err)
+			return err
 		}
+		return nil
 	}
 }

@@ -25,13 +25,17 @@ var Date = "-"
 var Via = "compiled from source"
 
 // implements the version command that outputs information on the current installation as a yaml string map
-var VersionCmd = &cobra.Command{
+var Cmd = &cobra.Command{
 	Use:   "version",
 	Short: "Print the version of the omniversion binary",
 	Long:  `All software has versions, even omniversion. This is the current version of your omniversion installation`,
 	Run: func(cmd *cobra.Command, args []string) {
 		runVersionCmd(cmd.OutOrStdout())
 	},
+}
+
+func InitSubcommand(rootCommand *cobra.Command) {
+	rootCommand.AddCommand(Cmd)
 }
 
 func runVersionCmd(writer io.Writer) {

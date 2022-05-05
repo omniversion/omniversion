@@ -12,8 +12,8 @@ import (
 	"strings"
 )
 
-func parseNpmOutput(input string) ([]Dependency, error) {
-	result := make([]Dependency, 0, 100)
+func parseNpmOutput(input string) ([]PackageMetadata, error) {
+	result := make([]PackageMetadata, 0, 100)
 	// remove problems that might appear in stderr
 	// and would prevent us from parsing the content as JSON
 	// this is relevant if stdout and stderr have been merged,
@@ -24,7 +24,7 @@ func parseNpmOutput(input string) ([]Dependency, error) {
 		allErrors = multierror.Append(allErrors, err)
 	}
 
-	// we might have a list of strings in npm's `--parseable` format
+	// we might have a list of strings in npm `--parseable` format
 	// or valid JSON - so we try to unmarshall it
 	dependenciesAsJson := &NpmJson{}
 	jsonUnmarshallErr := json.Unmarshal([]byte(input), &dependenciesAsJson)
@@ -38,13 +38,14 @@ func parseNpmOutput(input string) ([]Dependency, error) {
 	}
 }
 
-func parseAsList(input string, result *[]Dependency) *multierror.Error {
+func parseAsList(input string, result *[]PackageMetadata) *multierror.Error {
 	listRegex := regexp.MustCompile(`(?m)^(?P<location>[^\n:]*):(?P<wantedPackage>[^\n:]*)@(?P<wantedVersion>[^\n:]*):((?P<currentPackage>[^\n:]*)@(?P<currentVersion>[^\n:]*)|MISSING):(?P<latestPackage>[^\n:]*)@(?P<latestVersion>[^\n:]*)(:(?P<dir>.*))?$`)
 	items := listRegex.FindAllStringSubmatch(input, -1)
 	var allErrors *multierror.Error = nil
 	for _, foundItem := range items {
-		newItem := Dependency{
-			Pm: "npm",
+		newItem := PackageMetadata{}
+		if shared.InjectPackageManager {
+			newItem.PackageManager = "npm"
 		}
 		currentVersion := foundItem[listRegex.SubexpIndex("currentVersion")]
 		for groupIndex, groupName := range listRegex.SubexpNames() {
@@ -57,12 +58,12 @@ func parseAsList(input string, result *[]Dependency) *multierror.Error {
 					case "wantedVersion":
 						newItem.Wanted = value
 					case "currentVersion":
-						newItem.Version = value
+						newItem.Current = value
 					case "latestVersion":
 						newItem.Latest = strings.Trim(value, "\n")
 					case "location":
 						if currentVersion != "" {
-							newItem.Installed = []InstalledDependency{{Location: value, Version: currentVersion}}
+							newItem.Installations = []InstalledPackage{{Location: value, Version: currentVersion}}
 						}
 					}
 				}
@@ -73,13 +74,14 @@ func parseAsList(input string, result *[]Dependency) *multierror.Error {
 	return allErrors
 }
 
-func stripProblems(input string, result *[]Dependency) (string, *multierror.Error) {
-	problemRegex := regexp.MustCompile(`(?m)npm ERR! (?P<problem>[^:]*): (?P<name>\S*)@(?P<version>[^\s,]*)(, required by (?P<requiredBy>[^\s]*))?( (?P<location>.*))?`)
+func stripProblems(input string, result *[]PackageMetadata) (string, *multierror.Error) {
+	problemRegex := regexp.MustCompile(`(?m)npm ERR! (?P<problem>[^:]*): (?P<name>\S*)@(?P<version>[^\s,]*)(, required by (?P<requiredBy>\S*))?( (?P<location>.*))?`)
 	var allErrors *multierror.Error
 	foundProblems := problemRegex.FindAllStringSubmatch(input, -1)
 	for _, foundProblem := range foundProblems {
-		newItem := Dependency{
-			Pm: "npm",
+		newItem := PackageMetadata{}
+		if shared.InjectPackageManager {
+			newItem.PackageManager = "npm"
 		}
 		problemKind := foundProblem[problemRegex.SubexpIndex("problem")]
 		for groupIndex, groupName := range problemRegex.SubexpNames() {
@@ -94,12 +96,12 @@ func stripProblems(input string, result *[]Dependency) (string, *multierror.Erro
 						case "missing":
 							newItem.Wanted = value
 						case "extraneous":
-							newItem.Version = value
+							newItem.Current = value
 						default:
 							allErrors = multierror.Append(allErrors, fmt.Errorf("unknown npm problem kind: %q", problemKind))
 						}
 					case "location":
-						newItem.Installed = []InstalledDependency{{Location: value}}
+						newItem.Installations = []InstalledPackage{{Location: value}}
 					}
 				}
 			}
@@ -111,7 +113,7 @@ func stripProblems(input string, result *[]Dependency) (string, *multierror.Erro
 	return strippedInput, allErrors
 }
 
-func parseAsJson(input string, dependenciesAsJson NpmJson, result *[]Dependency) *multierror.Error {
+func parseAsJson(input string, dependenciesAsJson NpmJson, result *[]PackageMetadata) *multierror.Error {
 	if len(dependenciesAsJson.Dependencies) > 0 {
 		return parseJsonDependencies(dependenciesAsJson.Dependencies, result)
 	}
@@ -135,7 +137,7 @@ func parseAsJson(input string, dependenciesAsJson NpmJson, result *[]Dependency)
 	return multierror.Append(multiError, fmt.Errorf("unable to interpret this input: %q", input))
 }
 
-func parseJsonDependencies(dependencyData map[string]NpmDependency, result *[]Dependency) *multierror.Error {
+func parseJsonDependencies(dependencyData map[string]NpmDependency, result *[]PackageMetadata) *multierror.Error {
 	var allErrors *multierror.Error = nil
 	for name, dependency := range dependencyData {
 		version := dependency.Version
@@ -143,66 +145,72 @@ func parseJsonDependencies(dependencyData map[string]NpmDependency, result *[]De
 			allErrors = multierror.Append(allErrors, fmt.Errorf("no version found: %q", name))
 			continue
 		}
-		newResult := Dependency{
+		newResult := PackageMetadata{
 			Name:    name,
-			Version: version,
-			Pm:      "npm",
+			Current: version,
+		}
+		if shared.InjectPackageManager {
+			newResult.PackageManager = "npm"
 		}
 		*result = append(*result, newResult)
 	}
 	return allErrors
 }
 
-func parseJsonAdvisories(advisoryData map[string]NpmAdvisory, result *[]Dependency) *multierror.Error {
+func parseJsonAdvisories(advisoryData map[string]NpmAdvisory, result *[]PackageMetadata) *multierror.Error {
 	var allErrors *multierror.Error = nil
 	for _, advisory := range advisoryData {
-		newDependency := Dependency{
+		newDependency := PackageMetadata{
 			Name: advisory.ModuleName,
-			Pm:   "npm",
 			Advisories: []Advisory{{
-				Access:             advisory.Access,
 				CVSSScore:          advisory.CVSS.Score,
-				Id:                 advisory.Id,
+				Identifier:         fmt.Sprintf("%v", advisory.Id),
 				Overview:           advisory.Overview,
 				PatchedVersions:    advisory.PatchedVersions,
 				Recommendation:     advisory.Recommendation,
-				References:         advisory.References,
 				Severity:           advisory.Severity,
 				Title:              advisory.Title,
 				Url:                advisory.Url,
 				VulnerableVersions: advisory.VulnerableVersions,
 			}},
 		}
+		if shared.InjectPackageManager {
+			newDependency.PackageManager = "npm"
+		}
 		if len(advisory.Findings) > 0 {
-			newDependency.Version = advisory.Findings[0].Version
+			newDependency.Current = advisory.Findings[0].Version
 		}
 		*result = append(*result, newDependency)
 	}
 	return allErrors
 }
 
-func parseAsNpmJson(dependenciesAsNpmVersionJson NpmVersionJson, result *[]Dependency) *multierror.Error {
+func parseAsNpmJson(dependenciesAsNpmVersionJson NpmVersionJson, result *[]PackageMetadata) *multierror.Error {
 	var allErrors *multierror.Error = nil
 	for packageName, version := range dependenciesAsNpmVersionJson {
-		newResult := Dependency{
+		newResult := PackageMetadata{
 			Name:    packageName,
-			Version: version,
-			Pm:      "npm",
+			Current: version,
+		}
+		if shared.InjectPackageManager {
+			newResult.PackageManager = "npm"
 		}
 		*result = append(*result, newResult)
 	}
 	return allErrors
 }
 
-func parseAsFlatJson(dependenciesAsJson NpmFlatJson, result *[]Dependency) *multierror.Error {
+func parseAsFlatJson(dependenciesAsJson NpmFlatJson, result *[]PackageMetadata) *multierror.Error {
 	var allErrors *multierror.Error = nil
 	for packageName, details := range dependenciesAsJson {
-		newResult := Dependency{
+		newResult := PackageMetadata{
 			Name:    packageName,
-			Version: details.Current,
+			Current: details.Current,
 			Wanted:  details.Wanted,
 			Latest:  details.Latest,
-			Pm:      "npm",
+		}
+		if shared.InjectPackageManager {
+			newResult.PackageManager = "npm"
 		}
 		*result = append(*result, newResult)
 	}
@@ -212,6 +220,6 @@ func parseAsFlatJson(dependenciesAsJson NpmFlatJson, result *[]Dependency) *mult
 var ParseCommand = &cobra.Command{
 	Use:   "npm",
 	Short: "Parse the output of npm",
-	Long:  `Transform the output of npm into a common format.`,
+	Long:  `Translate the output of npm into the omniversion format.`,
 	Run:   shared.WrapCommand(parseNpmOutput),
 }

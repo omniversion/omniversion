@@ -1,6 +1,7 @@
 package npm
 
 import (
+	"github.com/omniversion/omniversion/cli/cmd/parse/shared"
 	"github.com/stretchr/testify/assert"
 	"strings"
 	"testing"
@@ -18,60 +19,69 @@ func TestLockfileVersionMismatchWarning(t *testing.T) {
 func TestMissingWarning(t *testing.T) {
 	vector := `npm ERR! missing: test@1.5.8, required by foo/bar@13.1.1
 npm ERR! missing: test2@2.3.1, required by @some/other@13.1.1`
+	previousInjectValue := shared.InjectPackageManager
+	shared.InjectPackageManager = true
 	result, err := parseNpmOutput(vector)
+	shared.InjectPackageManager = previousInjectValue
 
 	assert.Nil(t, err)
 	assert.Equal(t, 2, len(result))
 
 	item := result[0]
-	assert.Equal(t, "npm", item.Pm)
+	assert.Equal(t, "npm", item.PackageManager)
 	assert.Equal(t, "test", item.Name)
-	assert.Equal(t, "", item.Version)
+	assert.Equal(t, "", item.Current)
 	assert.Equal(t, "1.5.8", item.Wanted)
 
 	item = result[1]
-	assert.Equal(t, "npm", item.Pm)
+	assert.Equal(t, "npm", item.PackageManager)
 	assert.Equal(t, "test2", item.Name)
-	assert.Equal(t, "", item.Version)
+	assert.Equal(t, "", item.Current)
 	assert.Equal(t, "2.3.1", item.Wanted)
 }
 
 func TestExtraneousWarning(t *testing.T) {
 	vector := `npm ERR! extraneous: foo/bar@2.0.0-beta.16 /srv/foobar/releases/20220420102847/frontend/node_modules/test/parent1
 npm ERR! extraneous: foo/bar2@2.0.0-beta.13 /srv/foobar/releases/20220420102847/frontend/node_modules/test/parent2`
+	previousInjectValue := shared.InjectPackageManager
+	shared.InjectPackageManager = true
 	result, err := parseNpmOutput(vector)
+	shared.InjectPackageManager = previousInjectValue
 
 	assert.Nil(t, err)
 	assert.Equal(t, 2, len(result))
 
 	item := result[0]
-	assert.Equal(t, "npm", item.Pm)
+	assert.Equal(t, "npm", item.PackageManager)
 	assert.Equal(t, "foo/bar", item.Name)
-	assert.Equal(t, "2.0.0-beta.16", item.Version)
-	assert.Equal(t, 1, len(item.Installed))
-	assert.Equal(t, "/srv/foobar/releases/20220420102847/frontend/node_modules/test/parent1", item.Installed[0].Location)
+	assert.Equal(t, "2.0.0-beta.16", item.Current)
+	assert.Equal(t, 1, len(item.Installations))
+	assert.Equal(t, "/srv/foobar/releases/20220420102847/frontend/node_modules/test/parent1", item.Installations[0].Location)
 
 	item = result[1]
-	assert.Equal(t, "npm", item.Pm)
+	assert.Equal(t, "npm", item.PackageManager)
 	assert.Equal(t, "foo/bar2", item.Name)
-	assert.Equal(t, "2.0.0-beta.13", item.Version)
-	assert.Equal(t, 1, len(item.Installed))
-	assert.Equal(t, "/srv/foobar/releases/20220420102847/frontend/node_modules/test/parent2", item.Installed[0].Location)
+	assert.Equal(t, "2.0.0-beta.13", item.Current)
+	assert.Equal(t, 1, len(item.Installations))
+	assert.Equal(t, "/srv/foobar/releases/20220420102847/frontend/node_modules/test/parent2", item.Installations[0].Location)
 }
 
 func TestParseNpmOutputWithAt(t *testing.T) {
 	vector := `npm ERR! missing: @foo/bar@2.0.0-beta.13 /srv/foobar/releases/20220420102847/frontend/node_modules/test/parent`
+	previousInjectValue := shared.InjectPackageManager
+	shared.InjectPackageManager = true
 	result, err := parseNpmOutput(vector)
+	shared.InjectPackageManager = previousInjectValue
 
 	assert.Nil(t, err)
 	assert.Equal(t, 1, len(result))
 
 	item := result[0]
-	assert.Equal(t, "npm", item.Pm)
+	assert.Equal(t, "npm", item.PackageManager)
 	assert.Equal(t, "@foo/bar", item.Name)
 	assert.Equal(t, "2.0.0-beta.13", item.Wanted)
-	assert.Equal(t, 1, len(item.Installed))
-	assert.Equal(t, "/srv/foobar/releases/20220420102847/frontend/node_modules/test/parent", item.Installed[0].Location)
+	assert.Equal(t, 1, len(item.Installations))
+	assert.Equal(t, "/srv/foobar/releases/20220420102847/frontend/node_modules/test/parent", item.Installations[0].Location)
 }
 
 func TestParseNpmKeyedDependencies(t *testing.T) {
@@ -85,15 +95,18 @@ func TestParseNpmKeyedDependencies(t *testing.T) {
     }
   }
 }`
+	previousInjectValue := shared.InjectPackageManager
+	shared.InjectPackageManager = true
 	result, err := parseNpmOutput(vector)
+	shared.InjectPackageManager = previousInjectValue
 
 	assert.Nil(t, err)
 	assert.Equal(t, 1, len(result))
 
 	item := result[0]
-	assert.Equal(t, "npm", item.Pm)
+	assert.Equal(t, "npm", item.PackageManager)
 	assert.Equal(t, "test/dep", item.Name)
-	assert.Equal(t, "0.1301.2", item.Version)
+	assert.Equal(t, "0.1301.2", item.Current)
 }
 
 func TestParseNpmFlatJson(t *testing.T) {
@@ -106,15 +119,18 @@ func TestParseNpmFlatJson(t *testing.T) {
     "location": "/Users/me/Documents/Repositories/covfefe/frontend/node_modules/foobar"
   }
 }`
+	previousInjectValue := shared.InjectPackageManager
+	shared.InjectPackageManager = true
 	result, err := parseNpmOutput(vector)
+	shared.InjectPackageManager = previousInjectValue
 
 	assert.Nil(t, err)
 	assert.Equal(t, 1, len(result))
 
 	item := result[0]
-	assert.Equal(t, "npm", item.Pm)
+	assert.Equal(t, "npm", item.PackageManager)
 	assert.Equal(t, "foobar", item.Name)
-	assert.Equal(t, "9.1.1", item.Version)
+	assert.Equal(t, "9.1.1", item.Current)
 	assert.Equal(t, "9.1.1", item.Wanted)
 	assert.Equal(t, "10.7.0", item.Latest)
 }
@@ -127,18 +143,21 @@ func TestParseNpmListWithMissing(t *testing.T) {
 /srv/foobar/releases/20220420102847/frontend:test5@13.3.4:MISSING:test5@13.3.4
 /srv/foobar/releases/20220420102847/frontend:test6@13.3.3:MISSING:test6@13.3.3
 `
+	previousInjectValue := shared.InjectPackageManager
+	shared.InjectPackageManager = true
 	result, err := parseNpmOutput(vector)
+	shared.InjectPackageManager = previousInjectValue
 
 	assert.Nil(t, err)
 	assert.Equal(t, 6, len(result))
 
 	item := result[0]
-	assert.Equal(t, "npm", item.Pm)
+	assert.Equal(t, "npm", item.PackageManager)
 	assert.Equal(t, "test1", item.Name)
-	assert.Equal(t, "", item.Version)
+	assert.Equal(t, "", item.Current)
 	assert.Equal(t, "10.0.0", item.Wanted)
 	assert.Equal(t, "10.0.1", item.Latest)
-	assert.Equal(t, 0, len(item.Installed))
+	assert.Equal(t, 0, len(item.Installations))
 
 	assert.Equal(t, "test2", result[1].Name)
 	assert.Equal(t, "@test/test3", result[2].Name)
@@ -148,6 +167,7 @@ func TestParseNpmListWithMissing(t *testing.T) {
 }
 
 func TestParseNpmList(t *testing.T) {
+	shared.InjectPackageManager = true
 	vector := `/Users/testor/Documents/Repositories/foobar/frontend/node_modules/@angular-eslint/template-parser:@angular-eslint/template-parser@13.2.1:@angular-eslint/template-parser@13.0.1:@angular-eslint/template-parser@13.2.4:frontend`
 
 	result, err := parseNpmOutput(vector)
@@ -156,13 +176,13 @@ func TestParseNpmList(t *testing.T) {
 	assert.Equal(t, 1, len(result))
 
 	item := result[0]
-	assert.Equal(t, "npm", item.Pm)
+	assert.Equal(t, "npm", item.PackageManager)
 	assert.Equal(t, "@angular-eslint/template-parser", item.Name)
-	assert.Equal(t, "13.0.1", item.Version)
+	assert.Equal(t, "13.0.1", item.Current)
 	assert.Equal(t, "13.2.1", item.Wanted)
 	assert.Equal(t, "13.2.4", item.Latest)
-	assert.Equal(t, "13.0.1", item.Installed[0].Version)
-	assert.Equal(t, "/Users/testor/Documents/Repositories/foobar/frontend/node_modules/@angular-eslint/template-parser", item.Installed[0].Location)
+	assert.Equal(t, "13.0.1", item.Installations[0].Version)
+	assert.Equal(t, "/Users/testor/Documents/Repositories/foobar/frontend/node_modules/@angular-eslint/template-parser", item.Installations[0].Location)
 }
 
 func TestParseNpmAuditJson(t *testing.T) {
@@ -210,26 +230,26 @@ func TestParseNpmAuditJson(t *testing.T) {
   }
 }
 `
-
+	previousInjectValue := shared.InjectPackageManager
+	shared.InjectPackageManager = true
 	result, err := parseNpmOutput(vector)
+	shared.InjectPackageManager = previousInjectValue
 
 	assert.Nil(t, err)
 	assert.Equal(t, 1, len(result))
 
 	item := result[0]
-	assert.Equal(t, "npm", item.Pm)
+	assert.Equal(t, "npm", item.PackageManager)
 	assert.Equal(t, "node-forge", item.Name)
-	assert.Equal(t, "1.2.0", item.Version)
+	assert.Equal(t, "1.2.0", item.Current)
 	assert.Equal(t, 1, len(item.Advisories))
 
 	advisory := item.Advisories[0]
-	assert.Equal(t, "public", advisory.Access)
 	assert.Equal(t, 7.5, advisory.CVSSScore)
-	assert.Equal(t, 1067323, advisory.Id)
+	assert.Equal(t, "1067323", advisory.Identifier)
 	assert.True(t, strings.HasPrefix(advisory.Overview, "### Impact"))
 	assert.Equal(t, ">=1.3.0", advisory.PatchedVersions)
 	assert.Equal(t, "Upgrade to version 1.3.0 or later", advisory.Recommendation)
-	assert.True(t, strings.HasPrefix(advisory.References, "- https://github.com/digitalbazaar/forge/security/advisories/GHSA-x4jg-mjrx-434g"))
 	assert.Equal(t, "high", advisory.Severity)
 	assert.Equal(t, "Improper Verification of Cryptographic Signature in node-forge", advisory.Title)
 	assert.Equal(t, "https://github.com/advisories/GHSA-x4jg-mjrx-434g", advisory.Url)
@@ -286,26 +306,26 @@ func TestParseNpmAuditJson2(t *testing.T) {
   }
 }
 `
-
+	previousInjectValue := shared.InjectPackageManager
+	shared.InjectPackageManager = true
 	result, err := parseNpmOutput(vector)
+	shared.InjectPackageManager = previousInjectValue
 
 	assert.Nil(t, err)
 	assert.Equal(t, 1, len(result))
 
 	item := result[0]
-	assert.Equal(t, "npm", item.Pm)
+	assert.Equal(t, "npm", item.PackageManager)
 	assert.Equal(t, "minimist", item.Name)
-	assert.Equal(t, "1.2.5", item.Version)
+	assert.Equal(t, "1.2.5", item.Current)
 	assert.Equal(t, 1, len(item.Advisories))
 
 	advisory := item.Advisories[0]
-	assert.Equal(t, "public", advisory.Access)
 	assert.Equal(t, 9.8, advisory.CVSSScore)
-	assert.Equal(t, 1067342, advisory.Id)
+	assert.Equal(t, "1067342", advisory.Identifier)
 	assert.True(t, strings.HasPrefix(advisory.Overview, "Minimist <=1.2.5"))
 	assert.Equal(t, ">=1.2.6", advisory.PatchedVersions)
 	assert.Equal(t, "Upgrade to version 1.2.6 or later", advisory.Recommendation)
-	assert.True(t, strings.HasPrefix(advisory.References, "- https://nvd.nist.gov/vuln/detail/CVE-2021-44906"))
 	assert.Equal(t, "critical", advisory.Severity)
 	assert.Equal(t, "Prototype Pollution in minimist", advisory.Title)
 	assert.Equal(t, "https://github.com/advisories/GHSA-xvch-5gv4-984h", advisory.Url)
