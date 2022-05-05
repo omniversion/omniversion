@@ -38,6 +38,23 @@ func TestWrapCommand(t *testing.T) {
 	assert.Contains(t, stdout.String(), "- name: test\n")
 }
 
+func TestWrapCommandWithError(t *testing.T) {
+	defer func() { log.ExitFunc = nil }()
+	var fatal bool
+	log.ExitFunc = func(int) { fatal = true }
+
+	stdin := new(bytes.Buffer)
+	stdout := new(bytes.Buffer)
+	command := &cobra.Command{Use: "a", Args: cobra.NoArgs, Run: func(cmd *cobra.Command, args []string) {}}
+	command.SetIn(stdin)
+	command.SetOut(stdout)
+	WrapCommand(func(input string) ([]PackageMetadata, error) {
+		return []PackageMetadata{}, fmt.Errorf("test error")
+	})(command, []string{})
+
+	assert.True(t, fatal)
+}
+
 func TestRunParserWithInvalidStdIn(t *testing.T) {
 	stdin := test.ErrorReader{}
 	stdout := new(bytes.Buffer)
