@@ -7,14 +7,14 @@
   ansible.builtin.file:
     path: "{{ var_omniversion_full_output_dir }}"
     state: directory
-    mode: '644'
+    mode: '777'
   delegate_to: localhost
 
 - name: Remove previous results
   ansible.builtin.copy:
     dest: "{{ var_omniversion_full_output_dir }}/{{ var_omniversion_verb }}.omniversion.yaml"
     content: ""
-    mode: '644'
+    mode: '777'
   delegate_to: localhost
 
 - name: Parse output
@@ -35,5 +35,5 @@
   ansible.builtin.copy:
     dest: "{{ var_omniversion_full_output_dir }}/{{ var_omniversion_verb }}.omniversion.yaml"
     content: "{{ omniversion_result.stdout }}"
-    mode: '644'
+    mode: '777'
   delegate_to: localhost
