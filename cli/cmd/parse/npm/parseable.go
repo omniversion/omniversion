@@ -41,5 +41,23 @@ func parseAsList(input string, result *[]PackageMetadata) *multierror.Error {
 		}
 		*result = append(*result, newItem)
 	}
+	// dirty check for the rather inconvenient `npm list --parseable` format
+	// it is just a list of locations (!)
+	if strings.HasPrefix(input, "/") && len(*result) == 0 {
+		for _, line := range strings.Split(input, "\n") {
+			if line == "" {
+				continue
+			}
+			newItem := PackageMetadata{
+				Installations: []InstalledPackage{{
+					Location: line,
+				}},
+			}
+			if shared.InjectPackageManager {
+				newItem.PackageManager = "npm"
+			}
+			*result = append(*result, newItem)
+		}
+	}
 	return allErrors
 }

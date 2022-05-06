@@ -16,16 +16,9 @@ func parseAsJson(input string, dependenciesAsJson NpmJson, result *[]PackageMeta
 	if len(dependenciesAsJson.Advisories) > 0 {
 		return parseJsonAdvisories(dependenciesAsJson.Advisories, result)
 	}
-	npmVersionData := &NpmVersionJson{}
-	jsonUnmarshallErr := json.Unmarshal([]byte(input), &npmVersionData)
-	if jsonUnmarshallErr == nil {
-		if _, ok := (*npmVersionData)["npm"]; ok {
-			return parseAsNpmJson(*npmVersionData, result)
-		}
-	}
 
 	flatJsonData := &NpmFlatJson{}
-	jsonUnmarshallErr = json.Unmarshal([]byte(input), &flatJsonData)
+	jsonUnmarshallErr := json.Unmarshal([]byte(input), &flatJsonData)
 	if jsonUnmarshallErr == nil {
 		return parseAsFlatJson(*flatJsonData, result)
 	}

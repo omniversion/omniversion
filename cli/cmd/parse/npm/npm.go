@@ -7,6 +7,7 @@ import (
 	"github.com/omniversion/omniversion/cli/cmd/parse/shared"
 	. "github.com/omniversion/omniversion/cli/types"
 	"github.com/spf13/cobra"
+	"gopkg.in/yaml.v3"
 	"sort"
 )
 
@@ -20,6 +21,14 @@ func parseNpmOutput(input string) ([]PackageMetadata, error) {
 	input, err := stripProblems(input, &result)
 	if err != nil {
 		allErrors = multierror.Append(allErrors, err)
+	}
+
+	if isInDefaultAuditFormat(input) {
+		err = parseAsDefaultAuditOutput(input, &result)
+		sort.Slice(result, func(i, j int) bool {
+			return result[i].Name < result[j].Name
+		})
+		return result, multierror.Append(allErrors, err).ErrorOrNil()
 	}
 
 	if isInTreeFormat(input) {
@@ -49,6 +58,20 @@ func parseNpmOutput(input string) ([]PackageMetadata, error) {
 			return result[i].Name < result[j].Name
 		})
 		return result, multierror.Append(allErrors, err).ErrorOrNil()
+	}
+
+	// the keys in the default `npm version` output are unquoted,
+	// but the yaml parser can deal with this
+	npmVersionData := &NpmVersionJson{}
+	yamlUnmarshallErr := yaml.Unmarshal([]byte(input), &npmVersionData)
+	if yamlUnmarshallErr == nil {
+		if _, ok := (*npmVersionData)["npm"]; ok {
+			err = parseAsNpmJson(*npmVersionData, &result)
+			sort.Slice(result, func(i, j int) bool {
+				return result[i].Name < result[j].Name
+			})
+			return result, multierror.Append(allErrors, err).ErrorOrNil()
+		}
 	}
 
 	// we might have a list of strings in npm `--parseable` format
