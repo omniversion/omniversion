@@ -2,6 +2,7 @@ package parse
 
 import (
 	"github.com/omniversion/omniversion/cli/cmd/parse/apt"
+	"github.com/omniversion/omniversion/cli/cmd/parse/homebrew"
 	"github.com/omniversion/omniversion/cli/cmd/parse/npm"
 	"github.com/omniversion/omniversion/cli/cmd/parse/rubygems"
 	"github.com/omniversion/omniversion/cli/cmd/parse/rvm"
@@ -15,6 +16,7 @@ func InitSubcommand(rootCommand *cobra.Command) {
 
 	rootCommand.AddCommand(Cmd)
 	Cmd.AddCommand(apt.ParseCommand)
+	Cmd.AddCommand(homebrew.ParseCommand)
 	Cmd.AddCommand(npm.ParseCommand)
 	Cmd.AddCommand(rubygems.ParseCommand)
 	Cmd.AddCommand(rvm.ParseCommand)
