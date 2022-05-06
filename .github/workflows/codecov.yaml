@@ -42,7 +42,18 @@ jobs:
         run: python3 -m pytest --cov=omniversion --cov-report=xml test_omniversion
 
       -
-        name: Upload coverage
+        name: Upload go coverage
         uses: codecov/codecov-action@v2
         with:
-          files: ./cli/test/coverage.out,./python/coverage.xml
+          files: ./cli/test/coverage.out
+          flags: go
+          name: omniversion/cli
+
+      -
+        name: Upload python coverage
+        uses: codecov/codecov-action@v2
+        with:
+          files: ./python/coverage.xml
+          flags: python
+          name: omniversion/python
+

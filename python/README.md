@@ -1,4 +1,5 @@
 [![Software License](https://img.shields.io/badge/license-AGPL--3.0-green.svg?style=for-the-badge)](../LICENSE)
+[![Documentation](https://img.shields.io/badge/pydoc-reference-blue?style=for-the-badge)](https://omniversion.github.io/omniversion/python/omniversion)
 
 <!--suppress HtmlDeprecatedAttribute -->
 <div align="center">
