@@ -7,10 +7,10 @@ def show_dashboard(data: Data):
     print(data.files)
 
     print(pretty.header("Dependency count"))
-    print(data.dependencies().overview())
+    print(data.list_packages().summary())
 
     print(pretty.header("App versions"))
-    print(data.dependencies(package_name="test1"))
+    print(data.list_packages(package_name="test1"))
 
     print(pretty.header("Version consistency"))
     print(data.match_versions(["test1"], "Test"))

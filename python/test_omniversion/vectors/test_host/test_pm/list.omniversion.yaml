@@ -1,4 +1,6 @@
-- name: test1
-  version: 1.1.1
-- name: test2
-  version: 0.3.7
+version: 0.0.1
+items:
+  - name: test1
+    version: 1.1.1
+  - name: test2
+    version: 0.3.7

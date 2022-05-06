@@ -6,7 +6,7 @@ import unittest
 import pytest
 
 from omniversion.data.data import Data
-from omniversion.file_info import FileInfo
+from omniversion.file_info import FileMetadata
 from omniversion.package_metadata import PackageMetadata
 from omniversion.package_metadata.list.packages_metadata_list import PackagesMetadataList
 
@@ -17,7 +17,7 @@ class LocalConfigValuesTestCase(unittest.TestCase):
     def test_add_named_local_config_value(self):
         package_metadata = PackageMetadata(name="test")
         package_infos = PackagesMetadataList([package_metadata])
-        data = Data(file_infos=[FileInfo(data=package_infos, verb="list")])
+        data = Data(file_infos=[FileMetadata(data=package_infos, verb="list")])
         data.add_local_config_value(test_file_path, regex="^TEST=(?P<version>.*)$", name="package1")
         local_package_infos = PackageMetadata(host="localhost", name="package1", current="1.0.0",
                                               package_manager="local file")
@@ -26,7 +26,7 @@ class LocalConfigValuesTestCase(unittest.TestCase):
     def test_add_unnamed_local_config_value(self):
         package_metadata = PackageMetadata(name="test")
         package_infos = PackagesMetadataList([package_metadata])
-        data = Data(file_infos=[FileInfo(data=package_infos, verb="list")])
+        data = Data(file_infos=[FileMetadata(data=package_infos, verb="list")])
         data.add_local_config_value(test_file_path, regex="^(?P<name>.*)=(?P<version>.*)$", name="package1")
         local_package_infos = PackageMetadata(host="localhost", name="package1", current="1.0.0",
                                               package_manager="local file")

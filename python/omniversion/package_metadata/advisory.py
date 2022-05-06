@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 """A vulnerability notice"""
 from dataclasses import dataclass
-from omniversion.pretty import pretty
 
 
 @dataclass
@@ -18,9 +17,3 @@ class Advisory:  # pylint: disable=too-many-instance-attributes
     title: str | None = None
     url: str | None = None
     vulnerable_versions: str | None = None
-
-    def __str__(self):
-        """Human-readable description of the security advisory"""
-        severity = pretty.severity(self.severity)
-        version = pretty.bright_on_lightblack(self.patched_versions)
-        return f"a known vulnerability of severity {severity} and should be updated to {version}"

@@ -5,10 +5,10 @@ from collections import UserList
 from ..helpers import group_by_host, group_by_verb
 from ..pretty import pretty
 
-from .file_info import FileInfo
+from .file_info import FileMetadata
 
 
-class FileInfosList(UserList[FileInfo]):
+class FileInfosList(UserList[FileMetadata]):
     """List of imported files, including meta data"""
 
     def hosts(self):

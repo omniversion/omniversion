@@ -1,13 +1,10 @@
 #!/usr/bin/env python
 """A list of dependencies, i.e. software packages"""
 from collections import UserList
-from itertools import groupby
-from typing import Any
-
-from dacite import from_dict
 
 from ..package_metadata import PackageMetadata
 from omniversion.pretty import pretty
+from ...helpers import group_by_host
 
 
 class PackagesMetadataList(UserList[PackageMetadata]):
@@ -29,19 +26,10 @@ class PackagesMetadataList(UserList[PackageMetadata]):
             )
         return pretty.traffic_light("No versions found", "red")
 
-    def overview(self):
+    def summary(self):
         """Summary of dependency counts grouped by host"""
-        sorted_dependencies = sorted(self, key=lambda package_metadata: package_metadata.host)
-        grouped_dependencies = groupby(
-            sorted_dependencies, lambda dependency: dependency.host
-        )
         result = ""
-        for host, items in grouped_dependencies:
+        for host, items in group_by_host(self):
             result += "\n  " + pretty.hostname(host) + "\n"
             result += "    " + pretty.dependency_count(len(list(items)))
         return result
-
-    @staticmethod
-    def from_list(list_data: list[dict[str, Any]]):
-        """Create from a list of package infos"""
-        return PackagesMetadataList([from_dict(data_class=PackageMetadata, data=item) for item in list_data])

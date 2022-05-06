@@ -8,7 +8,6 @@ class VersionsMatch(PackagesMetadataList):
     """List of installations of one particular package"""
     package_name: str
     display_name: str
-    match: bool
     expected_num: int | None
 
     def __init__(
@@ -45,9 +44,9 @@ class VersionsMatch(PackagesMetadataList):
             + f'\t{item.name or ""}'
             for item in self.data
         ]
-        if len(self.deduplicated_versions()) == 0:
+        if len(self.versions()) == 0:
             return pretty.traffic_light(f"No {self.display_name} versions found", "red")
-        if len(self.deduplicated_versions()) == 1:
+        if len(self.versions()) == 1:
             return pretty.traffic_light(
                 f"Only one {self.display_name} version found\n"
                 + "\n".join(table_items),
@@ -75,6 +74,10 @@ class VersionsMatch(PackagesMetadataList):
             + "\n".join(table_items),
             "red",
         )
+
+    def versions(self):
+        """All dependency versions with duplicates removed"""
+        return [dependency.current for dependency in self.data if dependency.current is not None]
 
     def deduplicated_versions(self):
         """All dependency versions with duplicates removed"""

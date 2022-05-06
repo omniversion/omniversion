@@ -4,7 +4,7 @@ import os
 import unittest
 
 from omniversion.data.data import Data
-from omniversion.file_info import FileInfo
+from omniversion.file_info import FileMetadata
 from omniversion.package_metadata import PackageMetadata
 from omniversion.package_metadata.list.packages_metadata_list import PackagesMetadataList
 
@@ -19,26 +19,26 @@ class SummaryTestCase(unittest.TestCase):
 
     def test_summary_for_single_file(self):
         package_infos = PackagesMetadataList([PackageMetadata(name="package", current="0.1.2", package_manager="test")])
-        data = Data(file_infos=[FileInfo(data=package_infos, name="test")])
+        data = Data(file_infos=[FileMetadata(data=package_infos, name="test")])
         data_as_str = data.__str__()
         self.assertIn("1 file loaded", data_as_str)
 
     def test_summary_for_multiple_files(self):
         package_infos = PackagesMetadataList([PackageMetadata(name="package", current="0.1.2", package_manager="test")])
-        data = Data(file_infos=[FileInfo(data=package_infos, name="test"), FileInfo(data=package_infos, name="test")])
+        data = Data(file_infos=[FileMetadata(data=package_infos, name="test"), FileMetadata(data=package_infos, name="test")])
         data_as_str = data.__str__()
         self.assertIn("2 files loaded", data_as_str)
 
     def test_load_files(self):
         base_path = "test_omniversion/vectors"
-        data = Data(base_path=base_path)
+        data = Data(base_path=base_path, hosts=["test_host"], package_managers=["test_pm"])
         data_as_str = data.__str__()
-        self.assertIn("5 files loaded", data_as_str)
+        self.assertIn("4 files loaded", data_as_str)
 
     def test_collect_hosts(self):
-        data = Data(file_infos=[FileInfo(name="1", host="test1"),
-                                FileInfo(name="2", host="test2"),
-                                FileInfo(name="3", host="test1")])
+        data = Data(file_infos=[FileMetadata(name="1", host="test1"),
+                                FileMetadata(name="2", host="test2"),
+                                FileMetadata(name="3", host="test1")])
         self.assertListEqual(["test1", "test2"], data.hosts())
 
 

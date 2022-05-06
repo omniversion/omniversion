@@ -1,6 +1,8 @@
-- name: test1
-  advisories:
-    - severity: critical
-- name: test2
-  advisories:
-    - severity: medium
+version: 0.0.1
+items:
+  - name: test1
+    advisories:
+      - severity: critical
+  - name: test2
+    advisories:
+      - severity: medium

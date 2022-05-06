@@ -3,7 +3,6 @@
 from dataclasses import dataclass, field
 
 from .advisory import Advisory
-from omniversion.pretty import pretty
 from .installed_package import InstalledPackage
 
 
@@ -42,11 +41,3 @@ will depend on the configured repositories, firewall settings etc.
     license: str | None = None
     sources: list[str] = field(default_factory=lambda: [])
     advisories: list[Advisory] = field(default_factory=lambda: [])
-
-    def __str__(self):
-        """Human-readable description of the package metadata"""
-        name = pretty.black_on_white(self.name)
-        version = pretty.white(self.current)
-        if self.advisories is not None and len(self.advisories) > 0:
-            return f"package {name} has version {version} with {self.advisories[0]}"
-        return f"package {name} has version {version}"

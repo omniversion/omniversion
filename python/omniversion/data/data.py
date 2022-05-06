@@ -6,7 +6,7 @@ import re
 
 from omniversion.package_metadata import AvailableUpdates, PackageMetadata, PackagesMetadataList, VersionsMatch, \
     Vulnerabilities
-from omniversion.file_info import FileInfo, FileInfosList
+from omniversion.file_info import FileMetadata, FileInfosList
 
 from omniversion.pretty import pretty
 from omniversion.loader import load_data
@@ -16,11 +16,15 @@ class Data:
     """Root class used to load and extract all omniversion data"""
     files: FileInfosList
 
-    def __init__(self, base_path: str | None = None, file_infos: FileInfosList | list[FileInfo] | None = None):
+    def __init__(self,
+                 base_path: str | None = None,
+                 file_infos: FileInfosList | list[FileMetadata] | None = None,
+                 package_managers: list[str] | None = None,
+                 hosts: list[str] | None = None):
         """Initialize the root class"""
         self.files = FileInfosList() if file_infos is None else FileInfosList(file_infos)
         if base_path is not None:
-            load_data(base_path, self.files.append)
+            load_data(base_path, self.files.append, package_managers=package_managers, hosts=hosts)
 
     def __str__(self):
         """Human-readable summary of the data, counting loaded files"""
@@ -38,7 +42,7 @@ class Data:
             package_name: str | list[str] | None = None,
     ) -> list[PackageMetadata]:
         """List all dependencies matching the given criteria"""
-        def file_condition(file: FileInfo) -> bool:
+        def file_condition(file: FileMetadata) -> bool:
             if file.data is None:
                 return False
             if host is not None and file.host != host:
@@ -49,7 +53,7 @@ class Data:
                 return file.verb in verb
             return file.verb == verb
 
-        files_with_dependencies_data: list[FileInfo] = [
+        files_with_dependencies_data: list[FileMetadata] = [
             file for file in self.files if file_condition(file)
         ]
         all_items = [
@@ -122,14 +126,15 @@ class Data:
                         current=version,
                     )
                     file_name = os.path.basename(absolute_file_path)
-                    file_info = FileInfo(
+                    file_info = FileMetadata(
                         PackagesMetadataList([package_metadata]),
-                        file_name,
-                        "localhost",
-                        "local file",
-                        "list",
-                        time.time(),
-                        file_path,
+                        version=None,
+                        name=file_name,
+                        host="localhost",
+                        package_manager="local file",
+                        verb="list",
+                        time=time.time(),
+                        path=file_path,
                     )
                     self.files.append(file_info)
             except IndexError:

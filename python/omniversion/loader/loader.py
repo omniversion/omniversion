@@ -5,25 +5,14 @@ from typing import Callable
 import yaml
 
 from omniversion.package_metadata import PackagesMetadataList
-from omniversion.file_info import FileInfo
+from omniversion.file_info import FileMetadata
 
 AVAILABLE_VERBS = ["audit", "list", "refresh", "outdated", "version"]
 
 
-def load_file(file_path: str) -> tuple[any, float]:
-    """load an omniversion file containing yaml data"""
-    try:
-        with open(file_path, encoding="utf8") as file:
-            return yaml.safe_load(file), os.stat(file_path).st_ctime
-    except yaml.YAMLError:
-        return None, 0
-    except FileNotFoundError:
-        return None, 0
-
-
 def load_data(
         base_path: str,
-        add_file: Callable[[FileInfo], None],
+        add_file: Callable[[FileMetadata], None],
         hosts: list[str] | None = None,
         package_managers: list[str] | None = None,
         verbs: list[str] | None = None,
@@ -44,12 +33,13 @@ def load_data(
             if os.path.isdir(os.path.join(host_path, directory))
         ]
         for package_manager in package_manager_dirs:
+            dir_path = os.path.join(host_path, package_manager)
             if package_managers is not None and package_manager not in package_managers:
                 continue
             for verb in AVAILABLE_VERBS:
                 if verbs is not None and verb not in verbs:
                     continue
-                process_file(verb, host, host_path, package_manager, add_file)
+                process_file(verb, host, dir_path, package_manager, add_file)
 
 
 def process_file(
@@ -57,26 +47,27 @@ def process_file(
         host: str,
         host_path: str,
         package_manager: str,
-        add_file: Callable[[FileInfo], None]
+        add_file: Callable[[FileMetadata], None]
 ) -> None:
-    """load the file data and hand an `FileInfo` object to the callback"""
+    """load the file data and hand `FileMetadata` object to the callback"""
     file_name = verb + ".omniversion.yaml"
-    file_path = os.path.join(host_path, package_manager, file_name)
+    file_path = os.path.join(host_path, file_name)
     if os.path.exists(file_path):
-        file_data, time = load_file(file_path)
-        if file_data is None:
+        version, packages_data, time = extract_yaml_data(file_path)
+        if packages_data is None:
             add_file(
-                FileInfo(
-                    None, file_name, host, package_manager, verb, time, file_path
+                FileMetadata(
+                    None, version, file_name, host, package_manager, verb, time, file_path
                 )
             )
         else:
-            for item in file_data:
-                item["pm"] = package_manager
-                item["host"] = host
+            for package_data in packages_data:
+                package_data["package_manager"] = package_manager
+                package_data["host"] = host
             add_file(
-                FileInfo(
-                    PackagesMetadataList.from_list(file_data),
+                FileMetadata(
+                    PackagesMetadataList(packages_data),
+                    version,
                     file_name,
                     host,
                     package_manager,
@@ -85,3 +76,19 @@ def process_file(
                     file_path,
                 )
             )
+
+
+def extract_yaml_data(file_path: str) -> tuple[str | None, list[any] | None, float | None]:
+    """load an omniversion file containing yaml data"""
+    time = None
+    try:
+        time = os.stat(file_path).st_ctime
+        with open(file_path, encoding="utf8") as file:
+            file_data = yaml.safe_load(file)
+            return file_data["version"], file_data["items"], time
+    except TypeError:
+        return None, None, time
+    except yaml.YAMLError:
+        return None, None, time
+    except FileNotFoundError:
+        return None, None, time
