@@ -7,4 +7,3 @@
     <h2 align="center">omniversion python integration</h2>
     <br />
 </div>
-
