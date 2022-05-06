@@ -13,7 +13,7 @@ class LoaderTestCase(unittest.TestCase):
         version, file_data, time = extract_yaml_data(invalid_yaml_file_path)
         self.assertIsNone(version)
         self.assertIsNone(file_data)
-        self.assertAlmostEqual(1651763459, time, -1)
+        self.assertTrue(time > 0)
 
     def test_load_non_existent_file(self):
         version, file_data, time = extract_yaml_data("i_do_not_exist.dat")
