@@ -14,7 +14,8 @@
   },
   "files": [],
   "scripts": {
-    "test": "go test src",
+    "test": "cd cli && go test ./... -coverprofile=test/coverage.out && cd ../python && python3 -m pytest --cov=omniversion --cov-report=xml test_omniversion",
+    "docs": "rm -r docs/python && cd python && pdoc omniversion --html --output-dir ../docs/python",
     "postinstall": "go-npm install",
     "preuninstall": "go-npm uninstall"
   },

@@ -18,10 +18,6 @@ jobs:
         working-directory: python
         run: pip3 install -r requirements.txt
 
-      - name: Generate documentation
-        working-directory: python
-        run: pdoc omniversion --html --output-dir docs
-
       - name: Extract version from tag (e.g. `/refs/tags/v0.1.2` -> `0.1.2`)
         id: get_version
         run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/v}
