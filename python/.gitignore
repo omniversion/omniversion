@@ -3,5 +3,6 @@
 .pytest_cache
 coverage.xml
 dist
+docs
 env
 omniversion.egg-info

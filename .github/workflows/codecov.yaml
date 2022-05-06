@@ -35,7 +35,7 @@ jobs:
 
       - name: Install test dependencies
         working-directory: python
-        run: pip3 install pytest pytest-cov
+        run: pip3 install -r test-requirements.txt
 
       - name: Python test
         working-directory: python

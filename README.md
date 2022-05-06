@@ -7,7 +7,7 @@
 
 <!--suppress HtmlDeprecatedAttribute -->
 <div align="center">
-    <img src="docs/assets/omniversion.png" width="256" height="172" alt="omniversion logo" />
+    <img src="docs/assets/omniversion.png" width="128" height="86" alt="omniversion logo" />
     <h2 align="center">dependency management toolbox</h2>
     <br />
 </div>
