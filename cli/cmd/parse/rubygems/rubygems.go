@@ -22,9 +22,16 @@ func parseRubygemsOutput(input string) ([]PackageMetadata, error) {
 		content := item[extractionRegex.SubexpIndex("content")]
 
 		if content == "" {
-			err := parseListItem(name, versions, &result)
-			if err != nil {
-				allErrors = multierror.Append(allErrors, *err)
+			if strings.Contains(versions, " < ") {
+				err := parseOutdatedListItem(name, versions, &result)
+				if err != nil {
+					allErrors = multierror.Append(allErrors, *err)
+				}
+			} else {
+				err := parseListItem(name, versions, &result)
+				if err != nil {
+					allErrors = multierror.Append(allErrors, *err)
+				}
 			}
 		} else {
 			err := parseDetails(name, versions, content, &result)
@@ -36,7 +43,7 @@ func parseRubygemsOutput(input string) ([]PackageMetadata, error) {
 	return result, allErrors.ErrorOrNil()
 }
 
-func parseListItem(name string, versions string, dependencies *[]PackageMetadata) *error {
+func parseOutdatedListItem(name string, versions string, dependencies *[]PackageMetadata) *error {
 	versionComponents := strings.Split(versions, " < ")
 	if len(versionComponents) != 2 {
 		err := fmt.Errorf("unable to parse package description: %q", name)
@@ -51,6 +58,41 @@ func parseListItem(name string, versions string, dependencies *[]PackageMetadata
 		Current:       currentVersion,
 		Latest:        latestVersion,
 		Installations: []InstalledPackage{{Version: currentVersion}},
+	}
+	if shared.InjectPackageManager {
+		newResult.PackageManager = "rubygems"
+	}
+	*dependencies = append(*dependencies, newResult)
+	return nil
+}
+
+func parseListItem(name string, versionsString string, dependencies *[]PackageMetadata) *error {
+	versions := strings.Split(versionsString, ", ")
+
+	newResult := PackageMetadata{
+		Name: name,
+	}
+
+	for _, version := range versions {
+		if strings.HasPrefix(version, "default: ") {
+			rawVersion := strings.Split(version, ": ")[1]
+			newResult.Default = rawVersion
+			newResult.Installations = append(newResult.Installations, InstalledPackage{
+				Version: rawVersion,
+			})
+			if len(versions) == 1 {
+				newResult.Current = rawVersion
+			}
+
+		} else {
+			newResult.Installations = append(newResult.Installations, InstalledPackage{
+				Version: version,
+			})
+			if len(versions) == 1 {
+				newResult.Current = version
+			}
+
+		}
 	}
 	if shared.InjectPackageManager {
 		newResult.PackageManager = "rubygems"
@@ -142,8 +184,9 @@ func parseDescription(descriptionData string) string {
 }
 
 var ParseCommand = &cobra.Command{
-	Use:   "rubygems",
-	Short: "Parse the output of rubygems",
-	Long:  `Translate the output of rubygems into the omniversion format.`,
-	Run:   shared.WrapCommand(parseRubygemsOutput),
+	Use:     "rubygems",
+	Short:   "Parse the output of rubygems",
+	Long:    `Translate the output of rubygems into the omniversion format.`,
+	Run:     shared.WrapCommand(parseRubygemsOutput),
+	Aliases: []string{"gems", "gem", "rubygem", "bundler", "bundle", "bundle-audit"},
 }

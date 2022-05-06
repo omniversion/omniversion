@@ -62,3 +62,20 @@ func TestParseRvmOutputWithNonDefaultCurrent(t *testing.T) {
 	assert.Equal(t, "2.6.6", item.Current)
 	assert.Equal(t, "x86_64", item.Architecture)
 }
+
+func TestParseRvmVersionOutput(t *testing.T) {
+	vector := `rvm 1.29.12 (latest) by Michal Papis, Piotr Kuczynski, Wayne E. Seguin [https://rvm.io]
+`
+
+	result, err := parseRvmOutput(vector)
+
+	assert.Nil(t, err)
+	assert.Equal(t, 1, len(result))
+
+	item := result[0]
+	assert.Equal(t, "rvm", item.Name)
+	assert.Equal(t, "1.29.12", item.Current)
+	assert.Equal(t, "1.29.12", item.Latest)
+	assert.Equal(t, "Michal Papis, Piotr Kuczynski, Wayne E. Seguin", item.Author)
+	assert.Equal(t, "https://rvm.io", item.Homepage)
+}

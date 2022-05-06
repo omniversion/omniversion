@@ -106,7 +106,8 @@ func TestParseNpmKeyedDependencies(t *testing.T) {
 	item := result[0]
 	assert.Equal(t, "npm", item.PackageManager)
 	assert.Equal(t, "test/dep", item.Name)
-	assert.Equal(t, "0.1301.2", item.Current)
+	assert.Equal(t, "0.1301.2", item.Wanted)
+	assert.Equal(t, "", item.Current)
 }
 
 func TestParseNpmFlatJson(t *testing.T) {
@@ -138,10 +139,10 @@ func TestParseNpmFlatJson(t *testing.T) {
 func TestParseNpmListWithMissing(t *testing.T) {
 	vector := `/srv/foobar/releases/20220420102847/frontend:test1@10.0.0:MISSING:test1@10.0.1
 /srv/foobar/releases/20220420102847/frontend:test2@10.0.0:MISSING:test2@10.0.0
-/srv/foobar/releases/20220420102847/frontend:@test/test3@10.0.0:MISSING:@test/test3@10.0.0
+/srv/foobar/releases/20220420102847/frontend:@test/test3@10.0.0:MISSING:@test/test3@10.0.1
 /srv/foobar/releases/20220420102847/frontend:test4@13.3.4:MISSING:test4@13.3.4
-/srv/foobar/releases/20220420102847/frontend:test5@13.3.4:MISSING:test5@13.3.4
 /srv/foobar/releases/20220420102847/frontend:test6@13.3.3:MISSING:test6@13.3.3
+/srv/foobar/releases/20220420102847/frontend:test5@13.3.4:MISSING:test5@13.3.4
 `
 	previousInjectValue := shared.InjectPackageManager
 	shared.InjectPackageManager = true
@@ -153,14 +154,14 @@ func TestParseNpmListWithMissing(t *testing.T) {
 
 	item := result[0]
 	assert.Equal(t, "npm", item.PackageManager)
-	assert.Equal(t, "test1", item.Name)
+	assert.Equal(t, "@test/test3", item.Name)
 	assert.Equal(t, "", item.Current)
 	assert.Equal(t, "10.0.0", item.Wanted)
 	assert.Equal(t, "10.0.1", item.Latest)
 	assert.Equal(t, 0, len(item.Installations))
 
-	assert.Equal(t, "test2", result[1].Name)
-	assert.Equal(t, "@test/test3", result[2].Name)
+	assert.Equal(t, "test1", result[1].Name)
+	assert.Equal(t, "test2", result[2].Name)
 	assert.Equal(t, "test4", result[3].Name)
 	assert.Equal(t, "test5", result[4].Name)
 	assert.Equal(t, "test6", result[5].Name)
@@ -371,22 +372,6 @@ npm ERR! covfefe: name@version
 	assert.Equal(t, 1, len(result))
 }
 
-func TestEmptyVersionInJsonDependency(t *testing.T) {
-	vector := `{
-	"dependencies": {
-		"test": {
-			"version": ""
-		}
-	}
-}`
-
-	result, err := parseNpmOutput(vector)
-
-	assert.NotNil(t, err)
-	assert.Contains(t, err.Error(), "no version found")
-	assert.Zero(t, len(result))
-}
-
 func TestInvalidJsonData(t *testing.T) {
 	vector := `{
 	"test": []
@@ -397,4 +382,193 @@ func TestInvalidJsonData(t *testing.T) {
 	assert.NotNil(t, err)
 	assert.Contains(t, err.Error(), "unable to interpret this input")
 	assert.Zero(t, len(result))
+}
+
+func TestListJsonOutputWithProblems(t *testing.T) {
+	vector := `{
+	"version": "3.12.0",
+	"name": "foobar",
+	"problems": [
+		"extraneous: __ngcc_entry_points__.json@ /Users/testortestington/Documents/Repositories/foobar/frontend/node_modules/__ngcc_entry_points__.json"
+	],
+	"dependencies": {
+		"__ngcc_entry_points__.json": {
+			"extraneous": true,
+			"problems": [
+				"extraneous: __ngcc_entry_points__.json@ /Users/test/testortestington/Repositories/foobar/frontend/node_modules/__ngcc_entry_points__.json"
+			]
+		},
+		"test": {
+			"version": "0.1301.2",
+			"resolved": "https://registry.npmjs.org/test/test/-/test-0.1301.2.tgz"
+		}
+	}
+}`
+
+	result, err := parseNpmOutput(vector)
+
+	assert.Nil(t, err)
+	assert.Equal(t, 2, len(result))
+	assert.Equal(t, "__ngcc_entry_points__.json", result[0].Name)
+	assert.Equal(t, "", result[0].Wanted)
+	assert.Equal(t, "", result[0].Current)
+	assert.Equal(t, "test", result[1].Name)
+	assert.Equal(t, "0.1301.2", result[1].Wanted)
+	assert.Equal(t, "", result[1].Current)
+}
+
+func TestParseListOutput(t *testing.T) {
+	vector := `foobar@3.12.0 /Users/testortestington/Documents/Repositories/foobar/frontend
+├── covfefe@ extraneous
+├── @test/test1@0.1301.2
+├── test/test2@13.1.2
+└── test3.js@0.11.4
+`
+
+	result, err := parseNpmOutput(vector)
+
+	assert.Nil(t, err)
+	assert.Equal(t, 4, len(result))
+
+	item := result[0]
+	assert.Equal(t, "@test/test1", item.Name)
+	assert.Equal(t, "0.1301.2", item.Wanted)
+	assert.Equal(t, "", item.Current)
+
+	item = result[1]
+	assert.Equal(t, "covfefe", item.Name)
+	assert.Equal(t, "", item.Wanted)
+	assert.Equal(t, "", item.Current)
+
+	item = result[2]
+	assert.Equal(t, "test/test2", item.Name)
+	assert.Equal(t, "13.1.2", item.Wanted)
+	assert.Equal(t, "", item.Current)
+
+	item = result[3]
+	assert.Equal(t, "test3.js", item.Name)
+	assert.Equal(t, "0.11.4", item.Wanted)
+	assert.Equal(t, "", item.Current)
+}
+
+func TestParseNpmOutdatedOutput(t *testing.T) {
+	vector :=
+		`Package                                        Current          Wanted          Latest  Location                                             Depended by
+@angular-devkit/architect                     0.1301.2        0.1301.4        0.1303.5  node_modules/@angular-devkit/architect               frontend
+@angular-devkit/build-angular                   13.1.2          13.3.5          13.3.5  node_modules/@angular-devkit/build-angular           frontend
+@tiptap/core                            2.0.0-beta.162  2.0.0-beta.175  2.0.0-beta.176  node_modules/@tiptap/core                            frontend
+selenium-webdriver                        4.0.0-beta.3           4.1.2           4.1.2  node_modules/selenium-webdriver                      frontend
+`
+
+	result, err := parseNpmOutput(vector)
+
+	assert.Nil(t, err)
+	assert.Equal(t, 4, len(result))
+
+	item := result[0]
+	assert.Equal(t, "@angular-devkit/architect", item.Name)
+	assert.Equal(t, "0.1301.2", item.Current)
+	assert.Equal(t, "0.1301.4", item.Wanted)
+	assert.Equal(t, "0.1303.5", item.Latest)
+
+	assert.Equal(t, 1, len(item.Installations))
+	assert.Equal(t, "0.1301.2", item.Installations[0].Version)
+	assert.Equal(t, "node_modules/@angular-devkit/architect", item.Installations[0].Location)
+
+	item = result[1]
+	assert.Equal(t, "@angular-devkit/build-angular", item.Name)
+	assert.Equal(t, "13.1.2", item.Current)
+	assert.Equal(t, "13.3.5", item.Wanted)
+	assert.Equal(t, "13.3.5", item.Latest)
+
+	item = result[2]
+	assert.Equal(t, "@tiptap/core", item.Name)
+	assert.Equal(t, "2.0.0-beta.162", item.Current)
+	assert.Equal(t, "2.0.0-beta.175", item.Wanted)
+	assert.Equal(t, "2.0.0-beta.176", item.Latest)
+
+	item = result[3]
+	assert.Equal(t, "selenium-webdriver", item.Name)
+	assert.Equal(t, "4.0.0-beta.3", item.Current)
+	assert.Equal(t, "4.1.2", item.Wanted)
+	assert.Equal(t, "4.1.2", item.Latest)
+}
+
+func TestParsePackageJson(t *testing.T) {
+	vector :=
+		`{
+  "name": "foobar",
+  "version": "3.12.0",
+  "license": "MIT",
+  "angular-cli": {},
+  "lint-staged": {
+    "*.ts": [
+      "npm run lint:fix",
+      "git add"
+    ]
+  },
+  "browser": {
+    "fs": false
+  },
+  "scripts": {
+    "ng": "ng",
+    "build": "ng build --configuration production --progress=false --configuration=production",
+    "start": "ng serve --host 0.0.0.0",
+    "test": "ng test",
+    "style": "prettier --write 'src/**/*.ts'",
+    "lint": "ng lint",
+    "lint:fix": "ng lint --fix",
+    "pree2e": "./node_modules/protractor/bin/webdriver-manager update",
+    "e2e": "ng e2e",
+    "aot": "node --max-old-space-size=8192 ./node_modules/@angular/cli/bin/ng build --configuration production --aot",
+    "checkin": "git add dist",
+    "pre-commit": "run-s lint test build checkin"
+  },
+  "private": true,
+  "dependencies": {
+    "@angular-redux/router": "^10.0.0",
+    "zone.js": "~0.11.4"
+  },
+  "devDependencies": {
+    "@angular-devkit/architect": "^0.1301.2",
+    "@angular-devkit/build-angular": "^13.1.2",
+    "selenium-webdriver": "^4.0.0-alpha.7"
+  },
+  "husky": {
+    "hooks": {}
+  }
+}
+`
+
+	result, err := parseNpmOutput(vector)
+
+	assert.Nil(t, err)
+	assert.Equal(t, 5, len(result))
+
+	item := result[0]
+	assert.Equal(t, "@angular-devkit/architect", item.Name)
+	assert.Equal(t, "", item.Current)
+	assert.Equal(t, "^0.1301.2", item.Wanted)
+
+	assert.Equal(t, 0, len(item.Installations))
+
+	item = result[1]
+	assert.Equal(t, "@angular-devkit/build-angular", item.Name)
+	assert.Equal(t, "", item.Current)
+	assert.Equal(t, "^13.1.2", item.Wanted)
+
+	item = result[2]
+	assert.Equal(t, "@angular-redux/router", item.Name)
+	assert.Equal(t, "", item.Current)
+	assert.Equal(t, "^10.0.0", item.Wanted)
+
+	item = result[3]
+	assert.Equal(t, "selenium-webdriver", item.Name)
+	assert.Equal(t, "", item.Current)
+	assert.Equal(t, "^4.0.0-alpha.7", item.Wanted)
+
+	item = result[4]
+	assert.Equal(t, "zone.js", item.Name)
+	assert.Equal(t, "", item.Current)
+	assert.Equal(t, "~0.11.4", item.Wanted)
 }

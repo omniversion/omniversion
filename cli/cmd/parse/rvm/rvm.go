@@ -1,6 +1,7 @@
 package rvm
 
 import (
+	"fmt"
 	"github.com/omniversion/omniversion/cli/cmd/parse/shared"
 	. "github.com/omniversion/omniversion/cli/types"
 	"github.com/spf13/cobra"
@@ -8,6 +9,11 @@ import (
 )
 
 func parseRvmOutput(input string) ([]PackageMetadata, error) {
+	result, err := parseAsRvmVersionOutput(input)
+	if err == nil {
+		return result, nil
+	}
+
 	compiledRegex := regexp.MustCompile("(?m)^(?P<current>=)? ?(?P<default>\\*)?([ >])? *ruby-(?P<version>[^ ]*) \\[ (?P<architecture>.*) ]$")
 	matches := compiledRegex.FindAllStringSubmatch(input, -1)
 	newItem := PackageMetadata{
@@ -30,6 +36,32 @@ func parseRvmOutput(input string) ([]PackageMetadata, error) {
 	}
 	newItem.Installations = installed
 	return []PackageMetadata{newItem}, nil
+}
+
+func parseAsRvmVersionOutput(input string) ([]PackageMetadata, error) {
+	compiledRegex := regexp.MustCompile(`(?m)^rvm (?P<version>\S*)(?P<latest> \(latest\))? by (?P<author>.*) \[(?P<url>.*)]$`)
+	match := compiledRegex.FindStringSubmatch(input)
+	if match == nil {
+		// if the input is actually `rvm version` output,
+		// we need to adapt the regex
+		// if not, we don't need to worry about it and can keep trying to parse it in other formats
+		return []PackageMetadata{}, fmt.Errorf("unexpected input format")
+	} else {
+		version := match[compiledRegex.SubexpIndex("version")]
+		latest := match[compiledRegex.SubexpIndex("latest")]
+		author := match[compiledRegex.SubexpIndex("author")]
+		url := match[compiledRegex.SubexpIndex("url")]
+		newItem := PackageMetadata{
+			Name:     "rvm",
+			Author:   author,
+			Current:  version,
+			Homepage: url,
+		}
+		if latest != "" {
+			newItem.Latest = version
+		}
+		return []PackageMetadata{newItem}, nil
+	}
 }
 
 var ParseCommand = &cobra.Command{

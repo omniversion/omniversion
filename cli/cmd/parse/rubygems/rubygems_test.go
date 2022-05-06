@@ -138,3 +138,50 @@ func TestSingleDefaultVersion(t *testing.T) {
 	assert.Equal(t, "2.3.2", result[0].Default)
 	assert.Equal(t, "2.3.2", result[0].Installations[0].Version)
 }
+
+func TestParseGemListOutput(t *testing.T) {
+	vector := `
+*** LOCAL GEMS ***
+
+abbrev (default: 0.1.0)
+actioncable (7.0.2.3, 7.0.2, 6.1.0)
+actionmailbox (7.0.2.3, 7.0.2)
+addressable (2.8.0)
+`
+
+	result, err := parseRubygemsOutput(vector)
+
+	assert.Nil(t, err)
+	assert.Equal(t, 4, len(result))
+
+	item := result[0]
+	assert.Equal(t, "abbrev", item.Name)
+	assert.Equal(t, "0.1.0", item.Current)
+	assert.Equal(t, "0.1.0", item.Default)
+	assert.Equal(t, 1, len(item.Installations))
+	assert.Equal(t, "0.1.0", item.Installations[0].Version)
+
+	item = result[1]
+	assert.Equal(t, "actioncable", item.Name)
+	assert.Equal(t, "", item.Current)
+	assert.Equal(t, "", item.Default)
+	assert.Equal(t, 3, len(item.Installations))
+	assert.Equal(t, "7.0.2.3", item.Installations[0].Version)
+	assert.Equal(t, "7.0.2", item.Installations[1].Version)
+	assert.Equal(t, "6.1.0", item.Installations[2].Version)
+
+	item = result[2]
+	assert.Equal(t, "actionmailbox", item.Name)
+	assert.Equal(t, "", item.Current)
+	assert.Equal(t, "", item.Default)
+	assert.Equal(t, 2, len(item.Installations))
+	assert.Equal(t, "7.0.2.3", item.Installations[0].Version)
+	assert.Equal(t, "7.0.2", item.Installations[1].Version)
+
+	item = result[3]
+	assert.Equal(t, "addressable", item.Name)
+	assert.Equal(t, "2.8.0", item.Current)
+	assert.Equal(t, "", item.Default)
+	assert.Equal(t, 1, len(item.Installations))
+	assert.Equal(t, "2.8.0", item.Installations[0].Version)
+}
