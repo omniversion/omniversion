@@ -113,14 +113,14 @@ func parseDetails(name string, versions string, content string, dependencies *[]
 	if shared.InjectPackageManager {
 		newResult.PackageManager = "rubygems"
 	}
-	if !strings.Contains(versions, ",") {
-		// if there is only a single, this must be the current installation
-		newResult.Current = versions
-	}
 
 	if parsedContent == nil {
 		err := fmt.Errorf("unable to parse package description: %q", name)
 		return &err
+	}
+	if !strings.Contains(versions, ",") {
+		// if there is only a single, this must be the current installation
+		newResult.Current = versions
 	}
 
 	for j, group := range groupNames {
@@ -139,6 +139,7 @@ func parseDetails(name string, versions string, content string, dependencies *[]
 			}
 		}
 	}
+
 	*dependencies = append(*dependencies, newResult)
 	return nil
 }
@@ -154,6 +155,7 @@ func parseLocations(locationsData string, dependency *PackageMetadata) {
 		newInstallation.Location = installedLocation[locationsRegex.SubexpIndex("location")]
 		installations = append(installations, newInstallation)
 	}
+
 	dependency.Installations = installations
 }
 
@@ -167,6 +169,9 @@ func parseVersion(versionData string, dependency *PackageMetadata, installedDepe
 	}
 	if len(versionComponents) == 1 && versionComponents[0] == "default" {
 		dependency.Default = dependency.Current
+		installedDependency.Version = dependency.Current
+	}
+	if versionString == "" {
 		installedDependency.Version = dependency.Current
 	}
 }

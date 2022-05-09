@@ -185,3 +185,26 @@ addressable (2.8.0)
 	assert.Equal(t, 1, len(item.Installations))
 	assert.Equal(t, "2.8.0", item.Installations[0].Version)
 }
+
+func TestVersionWithoutDefault(t *testing.T) {
+	vector := `net-telnet (0.2.0)
+    Author: SHIBATA Hiroshi
+    Homepage: https://github.com/ruby/net-telnet
+    License: ruby
+    Installed at: /usr/local/rvm/rubies/ruby-2.6.6/lib/ruby/gems/2.6.0
+
+    Provides telnet client functionality.
+`
+
+	result, err := parseRubygemsOutput(vector)
+
+	assert.Nil(t, err)
+	assert.Equal(t, 1, len(result))
+
+	item := result[0]
+	assert.Equal(t, "net-telnet", item.Name)
+	assert.Equal(t, "0.2.0", item.Current)
+	assert.Equal(t, "", item.Default)
+	assert.Equal(t, 1, len(item.Installations))
+	assert.Equal(t, "0.2.0", item.Installations[0].Version)
+}

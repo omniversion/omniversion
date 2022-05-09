@@ -1,7 +1,7 @@
 ---
 - name: Determine output directory
   ansible.builtin.set_fact:
-    var_omniversion_full_output_dir: "{{ var_omniversion_output_dir | default('.') }}/{{ inventory_hostname }}/{{ var_omniversion_pm }}"
+    var_omniversion_full_output_dir: "{{ var_omniversion_output_dir | default('/tmp/omniversion') }}/{{ inventory_hostname }}/{{ var_omniversion_pm }}"
 
 - name: Ensure output directory exists
   ansible.builtin.file:
