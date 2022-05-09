@@ -20,7 +20,7 @@ type PackageMetadata struct {
 	// PackageManager is the package manager through which the package can be installed.
 	// If a package is available through multiple package managers, we should use separate
 	// PackageMetadata objects to track them.
-	PackageManager string `json:",omitempty" toml:",omitempty" yaml:",omitempty"`
+	PackageManager string `json:"packageManager,omitempty" toml:"package_manager,omitempty" yaml:"package_manager,omitempty"`
 	// Host is the name of the machine to which this metadata refers.
 	// This may be `localhost`, a hostname (with or without schema) or the name of a docker container.
 	// While the naming is flexible, care should be taken to keep these identifiers unique.
@@ -31,9 +31,9 @@ type PackageMetadata struct {
 	Installations []InstalledPackage `json:",omitempty" toml:",omitempty" yaml:",omitempty"`
 
 	// DependencyType is the kind of dependency (`prod`, `dev`, `peer`)
-	Type DependencyType
+	Type DependencyType `json:",omitempty" toml:",omitempty" yaml:",omitempty"`
 	// Optional is true if the dependency need not be installed
-	Optional bool
+	Optional *bool `json:",omitempty" toml:",omitempty" yaml:",omitempty"`
 
 	// Current is the currently installed version of the package as reported by the package manager.
 	// E.g. what is reported by `npm ls <package>`, `rvm info` `pip show <package>`.
@@ -51,18 +51,18 @@ type PackageMetadata struct {
 	// E.g. the version defined in `package-lock.json` or `npm-shrinkwrap.json`.
 	Locked string `json:",omitempty" toml:",omitempty" yaml:",omitempty"`
 	// Extraneous is true if the package is not required, but installed.
-	Extraneous bool
+	Extraneous *bool `json:",omitempty" toml:",omitempty" yaml:",omitempty"`
 	// Missing is true if the package is required, but not installed.
-	Missing bool
+	Missing *bool `json:",omitempty" toml:",omitempty" yaml:",omitempty"`
 
 	// Dependencies are packages directly required by this package at runtime.
-	Dependencies []string
+	Dependencies []string `json:",omitempty" toml:",omitempty" yaml:",omitempty"`
 	// DevDependencies are packages directly required by this package during development.
-	DevDependencies []string
+	DevDependencies []string `json:"devDependencies,omitempty" toml:"dev_dependencies,omitempty" yaml:"dev_dependencies,omitempty"`
 	// PeerDependencies are packages directly required, but not managed by this package.
 	// E.g. a plugin might add functionality to another package
 	// which is assumed to be installed independently of the plugin.
-	PeerDependencies []string
+	PeerDependencies []string `json:"peerDependencies,omitempty" toml:"peer_dependencies,omitempty" yaml:"peer_dependencies,omitempty"`
 
 	// Architecture is the architecture for which the package was compiled.
 	// E.g. the architecture field reported by `rvm ls` or `apt list`.
