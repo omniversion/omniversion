@@ -1,7 +1,7 @@
 ---
 - name: Refresh apt cache
   when: var_omniversion.apt is defined
-  ansible.builtin.command: 'apt update'
+  ansible.builtin.command: 'apt update 2> /dev/null || true'
   become: true
   changed_when: true
   tags:
