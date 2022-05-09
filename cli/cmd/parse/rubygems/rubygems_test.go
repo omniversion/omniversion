@@ -16,9 +16,9 @@ func TestParseRubygemsSimpleOutput(t *testing.T) {
     Prime numbers and factorization library.`
 
 	previousInjectValue := shared.InjectPackageManager
+	defer func() { shared.InjectPackageManager = previousInjectValue }()
 	shared.InjectPackageManager = true
 	result, err := parseRubygemsOutput(vector)
-	shared.InjectPackageManager = previousInjectValue
 
 	assert.Nil(t, err)
 	assert.Equal(t, 1, len(result))
@@ -72,9 +72,9 @@ func TestParseRubygemsOutdatedOutput(t *testing.T) {
 bundler (2.3.7 < 2.3.12)`
 
 	previousInjectValue := shared.InjectPackageManager
+	defer func() { shared.InjectPackageManager = previousInjectValue }()
 	shared.InjectPackageManager = true
 	result, err := parseRubygemsOutput(vector)
-	shared.InjectPackageManager = previousInjectValue
 
 	assert.Nil(t, err)
 	assert.Equal(t, 2, len(result))

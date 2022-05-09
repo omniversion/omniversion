@@ -86,9 +86,9 @@ func TestInvalidOutputFormat(t *testing.T) {
 	stdin := new(bytes.Buffer)
 	stdout := new(bytes.Buffer)
 	previousOutputFormat := OutputFormat
+	defer func() { OutputFormat = previousOutputFormat }()
 	OutputFormat = "invalid"
 	err := runParser(func(input string) ([]PackageMetadata, error) { return []PackageMetadata{}, nil })(stdin, stdout)
-	OutputFormat = previousOutputFormat
 
 	assert.NotNil(t, err)
 	assert.Contains(t, err.Error(), "unknown output format")
@@ -98,13 +98,13 @@ func TestInvalidJsonOutput(t *testing.T) {
 	stdin := new(bytes.Buffer)
 	stdout := new(bytes.Buffer)
 	previousOutputFormat := OutputFormat
+	defer func() { OutputFormat = previousOutputFormat }()
 	OutputFormat = "json"
 	err := runParser(func(input string) ([]PackageMetadata, error) {
 		return []PackageMetadata{
 			{Name: "test"},
 		}, nil
 	})(stdin, stdout)
-	OutputFormat = previousOutputFormat
 
 	assert.Nil(t, err)
 	assert.Contains(t, stdout.String(), "test")
@@ -114,13 +114,13 @@ func TestInvalidTomlOutput(t *testing.T) {
 	stdin := new(bytes.Buffer)
 	stdout := new(bytes.Buffer)
 	previousOutputFormat := OutputFormat
+	defer func() { OutputFormat = previousOutputFormat }()
 	OutputFormat = "toml"
 	err := runParser(func(input string) ([]PackageMetadata, error) {
 		return []PackageMetadata{
 			{Name: "test"},
 		}, nil
 	})(stdin, stdout)
-	OutputFormat = previousOutputFormat
 
 	assert.Nil(t, err)
 	assert.Contains(t, stdout.String(), "test")

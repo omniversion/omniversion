@@ -69,9 +69,9 @@ mde-netfilter/insiders-fast 100.69.45 amd64 [upgradable from: 100.69.32]
 N: There are 4 additional versions. Please use the '-a' switch to see them.`
 
 	previousInjectValue := shared.InjectPackageManager
+	defer func() { shared.InjectPackageManager = previousInjectValue }()
 	shared.InjectPackageManager = true
 	result, err := parseAptOutput(vector)
-	shared.InjectPackageManager = previousInjectValue
 
 	assert.Nil(t, err)
 	assert.Equal(t, 1, len(result))

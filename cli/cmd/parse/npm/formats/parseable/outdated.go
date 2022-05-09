@@ -1,22 +1,20 @@
-package npm
+package parseable
 
 import (
-	"github.com/hashicorp/go-multierror"
-	"github.com/omniversion/omniversion/cli/cmd/parse/shared"
+	"github.com/omniversion/omniversion/cli/cmd/parse/npm/item"
+	"github.com/omniversion/omniversion/cli/cmd/parse/npm/stderr"
 	. "github.com/omniversion/omniversion/cli/types"
 	"regexp"
 	"strings"
 )
 
-func parseAsList(input string, result *[]PackageMetadata) *multierror.Error {
+func ParseOutdatedOutput(input string, _ stderr.Output) ([]PackageMetadata, error) {
+	var result []PackageMetadata
 	listRegex := regexp.MustCompile(`(?m)^(?P<location>[^\n:]*):(?P<wantedPackage>[^\n:]*)@(?P<wantedVersion>[^\n:]*):((?P<currentPackage>[^\n:]*)@(?P<currentVersion>[^\n:]*)|MISSING):(?P<latestPackage>[^\n:]*)@(?P<latestVersion>[^\n:]*)(:(?P<dir>.*))?$`)
 	items := listRegex.FindAllStringSubmatch(input, -1)
-	var allErrors *multierror.Error = nil
 	for _, foundItem := range items {
-		newItem := PackageMetadata{}
-		if shared.InjectPackageManager {
-			newItem.PackageManager = "npm"
-		}
+		name := foundItem[listRegex.SubexpIndex("latestPackage")]
+		newItem := item.New(name)
 		currentVersion := foundItem[listRegex.SubexpIndex("currentVersion")]
 		for groupIndex, groupName := range listRegex.SubexpNames() {
 			if groupIndex != 0 && groupName != "" {
@@ -36,28 +34,14 @@ func parseAsList(input string, result *[]PackageMetadata) *multierror.Error {
 							newItem.Installations = []InstalledPackage{{Location: value, Version: currentVersion}}
 						}
 					}
+				} else {
+					if groupName == "currentVersion" {
+						newItem.Missing = true
+					}
 				}
 			}
 		}
-		*result = append(*result, newItem)
+		result = append(result, *newItem)
 	}
-	// dirty check for the rather inconvenient `npm list --parseable` format
-	// it is just a list of locations (!)
-	if strings.HasPrefix(input, "/") && len(*result) == 0 {
-		for _, line := range strings.Split(input, "\n") {
-			if line == "" {
-				continue
-			}
-			newItem := PackageMetadata{
-				Installations: []InstalledPackage{{
-					Location: line,
-				}},
-			}
-			if shared.InjectPackageManager {
-				newItem.PackageManager = "npm"
-			}
-			*result = append(*result, newItem)
-		}
-	}
-	return allErrors
+	return result, nil
 }

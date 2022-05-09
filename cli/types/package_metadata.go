@@ -30,6 +30,11 @@ type PackageMetadata struct {
 	// Installations contains metadata on versions of the package installed on the current machine.
 	Installations []InstalledPackage `json:",omitempty" toml:",omitempty" yaml:",omitempty"`
 
+	// DependencyType is the kind of dependency (`prod`, `dev`, `peer`)
+	Type DependencyType
+	// Optional is true if the dependency need not be installed
+	Optional bool
+
 	// Current is the currently installed version of the package as reported by the package manager.
 	// E.g. what is reported by `npm ls <package>`, `rvm info` `pip show <package>`.
 	Current string `json:",omitempty" toml:",omitempty" yaml:",omitempty"`
@@ -45,6 +50,19 @@ type PackageMetadata struct {
 	// Locked is the version specified in the relevant lock file for this package manager.
 	// E.g. the version defined in `package-lock.json` or `npm-shrinkwrap.json`.
 	Locked string `json:",omitempty" toml:",omitempty" yaml:",omitempty"`
+	// Extraneous is true if the package is not required, but installed.
+	Extraneous bool
+	// Missing is true if the package is required, but not installed.
+	Missing bool
+
+	// Dependencies are packages directly required by this package at runtime.
+	Dependencies []string
+	// DevDependencies are packages directly required by this package during development.
+	DevDependencies []string
+	// PeerDependencies are packages directly required, but not managed by this package.
+	// E.g. a plugin might add functionality to another package
+	// which is assumed to be installed independently of the plugin.
+	PeerDependencies []string
 
 	// Architecture is the architecture for which the package was compiled.
 	// E.g. the architecture field reported by `rvm ls` or `apt list`.
@@ -65,3 +83,11 @@ type PackageMetadata struct {
 	// E.g. the information contained in the output of `npm audit`.
 	Advisories []Advisory `json:",omitempty" toml:",omitempty" yaml:",omitempty"`
 }
+
+type DependencyType string
+
+const (
+	ProdDependency DependencyType = "prod"
+	DevDependency  DependencyType = "dev"
+	PeerDependency DependencyType = "peer"
+)
