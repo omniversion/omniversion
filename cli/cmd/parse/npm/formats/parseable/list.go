@@ -27,7 +27,8 @@ func ParseListOutput(input string, stderrOutput stderr.Output) ([]PackageMetadat
 	for _, stderrError := range stderrOutput.Errors {
 		if stderrError.Problem == "missing" {
 			newItem := item.New(stderrError.Name)
-			newItem.Missing = true
+			isMissing := true
+			newItem.Missing = &isMissing
 			newItem.Wanted = stderrError.Version
 			result = append(result, *newItem)
 		}

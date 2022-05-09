@@ -25,7 +25,7 @@ func TestParseListOutput_NotInstalled(t *testing.T) {
 	assert.Equal(t, "", item.Current)
 	assert.Equal(t, "2.1.1", item.Wanted)
 	assert.Zero(t, len(item.Installations))
-	assert.True(t, item.Missing)
+	assert.True(t, *item.Missing)
 
 	item = result[1]
 	assert.Equal(t, "moment", item.Name)

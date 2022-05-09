@@ -30,7 +30,7 @@ func TestParseOutdatedOutput_NotInstalled(t *testing.T) {
 	assert.Equal(t, "1.13.3", item.Wanted)
 	assert.Equal(t, "1.13.3", item.Latest)
 	assert.Zero(t, len(item.Installations))
-	assert.True(t, item.Missing)
+	assert.True(t, *item.Missing)
 }
 
 func TestParseOutdatedOutput(t *testing.T) {

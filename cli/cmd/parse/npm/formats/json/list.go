@@ -38,14 +38,16 @@ func ParseListOutput(input string, stderrOutput stderr.Output) ([]PackageMetadat
 		newItem.Wanted = dependency.Version
 		if dependency.Version == "" {
 			if dependency.Extraneous {
-				newItem.Extraneous = true
+				isExtraneous := true
+				newItem.Extraneous = &isExtraneous
 			} else {
 				// missing (i.e. wanted, but not installed) packages don't always report a version,
 				// but we can get it from the stderr output
 				for _, stderrError := range stderrOutput.Errors {
 					if stderrError.Problem == "missing" && stderrError.Name == name {
 						newItem.Wanted = stderrError.Version
-						newItem.Missing = true
+						isMissing := true
+						newItem.Missing = &isMissing
 					}
 				}
 			}

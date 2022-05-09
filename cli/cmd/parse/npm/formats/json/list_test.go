@@ -29,25 +29,24 @@ func TestParseListOutput_NotInstalled(t *testing.T) {
 	assert.Equal(t, "async", item.Name)
 	assert.Equal(t, "", item.Current)
 	assert.Equal(t, "2.1.1", item.Wanted)
-	assert.True(t, item.Missing)
+	assert.True(t, *item.Missing)
 
 	item = result[1]
 	assert.Equal(t, "moment", item.Name)
 	assert.Equal(t, "", item.Current)
 	assert.Equal(t, "2.21.0", item.Wanted)
-	assert.True(t, item.Missing)
+	assert.True(t, *item.Missing)
 
 	item = result[2]
 	assert.Equal(t, "test", item.Name)
 	assert.Equal(t, "1.0.0", item.Current)
 	assert.Equal(t, "", item.Wanted)
-	assert.False(t, item.Missing)
 
 	item = result[3]
 	assert.Equal(t, "underscore", item.Name)
 	assert.Equal(t, "", item.Current)
 	assert.Equal(t, "^1.0.3", item.Wanted)
-	assert.True(t, item.Missing)
+	assert.True(t, *item.Missing)
 }
 
 func TestParseListOutput(t *testing.T) {
@@ -70,8 +69,6 @@ func TestParseListOutput(t *testing.T) {
 	assert.Equal(t, "async", item.Name)
 	assert.Equal(t, "2.1.1", item.Current)
 	assert.Equal(t, "2.1.1", item.Wanted)
-	assert.False(t, item.Extraneous)
-	assert.False(t, item.Missing)
 	assert.Equal(t, []string{"lodash"}, item.Dependencies)
 
 	item = result[1]
@@ -110,7 +107,7 @@ func TestParseListOutput_WithProblems(t *testing.T) {
 	assert.Equal(t, "", item.PackageManager)
 	assert.Equal(t, "", item.Wanted)
 	assert.Equal(t, "", item.Current)
-	assert.True(t, item.Extraneous)
+	assert.True(t, *item.Extraneous)
 
 	item = result[1]
 	assert.Equal(t, "foobar", item.Name)

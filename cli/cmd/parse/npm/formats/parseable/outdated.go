@@ -36,7 +36,8 @@ func ParseOutdatedOutput(input string, _ stderr.Output) ([]PackageMetadata, erro
 					}
 				} else {
 					if groupName == "currentVersion" {
-						newItem.Missing = true
+						isMissing := true
+						newItem.Missing = &isMissing
 					}
 				}
 			}
