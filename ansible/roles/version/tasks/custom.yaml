@@ -1,0 +1,11 @@
+- name: Get custom command output
+  ansible.builtin.shell: '{{ item.command }}'
+  args:
+    chdir: '{{ item.dir | default("/") }}'
+  register: custom_result
+  changed_when: true
+
+- include_tasks: ../../shared/save.yaml
+  vars:
+    omniversion_items: "items:\n  - name: {{ item.name }}\n  - version: {{ custom_result.stdout }}"
+    var_omniversion_pm: custom

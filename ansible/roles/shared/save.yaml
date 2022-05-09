@@ -25,11 +25,12 @@
   register: omniversion_result
   changed_when: true
   ignore_errors: true
+  when: omniversion_result.stdout is defined
 
 - name: Log error
   ansible.builtin.debug:
     msg: "{{ omniversion_result.stderr }}"
-  when: omniversion_result.stderr
+  when: omniversion_result.stderr is defined and omniversion_result.stderr
 
 - name: Store parsed result
   ansible.builtin.copy:
@@ -37,3 +38,12 @@
     content: "{{ omniversion_result.stdout }}"
     mode: '777'
   delegate_to: localhost
+  when: omniversion_result.stdout is defined
+
+- name: Store custom items
+  ansible.builtin.copy:
+    dest: "{{ var_omniversion_full_output_dir }}/{{ var_omniversion_verb }}.omniversion.yaml"
+    content: "{{ omniversion_items }}"
+    mode: '777'
+  delegate_to: localhost
+  when: omniversion_items is defined

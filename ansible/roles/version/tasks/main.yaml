@@ -25,16 +25,5 @@
   when: var_omniversion.custom is defined
   tags:
     - custom
-  block:
-    - name: Get custom command output
-      ansible.builtin.command: '{{ item.command }}'
-      args:
-        chdir: '{{ item.dir | default("/") }}'
-      register: custom_results
-      with_items: var_omniversion.custom
-      changed_when: true
-
-    - include_tasks: ../../shared/save.yaml
-      vars:
-        omniversion_result: '{{ custom_results.results }}'
-        var_omniversion_pm: custom
+  with_items: '{{ var_omniversion.custom }}'
+  include_tasks: custom.yaml
