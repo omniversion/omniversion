@@ -1,11 +1,12 @@
 ---
 - name: Ensure omniversion binary is installed
-  shell: "omniversion version"
+  ansible.builtin.command: "omniversion version"
   register: omniversion_check_result
   ignore_errors: true
   delegate_to: localhost
   changed_when: false
 
-- fail:
-    msg: "The `omniversion` binary is not installed. Please follow this advice to install it: https://github.com/omniversion/omniversion/cli"
+- name: Fail if `omniversion` binary is not installed in localhost
+  ansible.builtin.fail:
+    msg: "The `omniversion` binary is not installed in your localhost. Please follow this advice to install it: https://github.com/omniversion/omniversion/cli"
   when: omniversion_check_result.rc != 0

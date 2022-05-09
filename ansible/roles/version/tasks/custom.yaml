@@ -1,11 +1,20 @@
 - name: Get custom command output
-  ansible.builtin.shell: '{{ item.command }}'
+  ansible.builtin.shell: '{{ item.command }}' # noqa command-instead-of-shell
   args:
     chdir: '{{ item.dir | default("/") }}'
   register: custom_result
   changed_when: true
+  tags:
+    - custom
+
+- name: Append result to output items
+  ansible.builtin.set_fact:
+    omniversion_items: "{{ omniversion_items | default('items:\n') }}  - name: {{ item.name }}\n    version: {{ custom_result.stdout }}\n"
+  tags:
+    - custom
 
 - include_tasks: ../../shared/save.yaml
   vars:
-    omniversion_items: "items:\n  - name: {{ item.name }}\n  - version: {{ custom_result.stdout }}"
     var_omniversion_pm: custom
+  tags:
+    - custom
