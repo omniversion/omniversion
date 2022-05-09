@@ -27,3 +27,9 @@ ansible-galaxy collection install layer9gmbh.omniversion
 ```shell
 ansible-playbook layer9gmbh.omniversion.all
 ```
+
+### Update
+
+```shell
+ansible-galaxy collection install layer9gmbh.omniversion --force
+```
