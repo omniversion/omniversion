@@ -3,6 +3,10 @@
   ansible.builtin.set_fact:
     var_omniversion_full_output_dir: "{{ var_omniversion_output_dir | default('/tmp/omniversion') }}/{{ inventory_hostname }}/{{ var_omniversion_pm }}"
 
+- name: Determine output file
+  set_fact:
+    var_omniversion_output_file: "{{ var_omniversion_full_output_dir }}/{{ var_omniversion_verb }}{{ var_omniversion_result_index | default('') }}.omniversion.yaml"
+
 - name: Ensure output directory exists
   ansible.builtin.file:
     path: "{{ var_omniversion_full_output_dir }}"
@@ -12,7 +16,7 @@
 
 - name: Remove previous results
   ansible.builtin.copy:
-    dest: "{{ var_omniversion_full_output_dir }}/{{ var_omniversion_verb }}.omniversion.yaml"
+    dest: '{{ var_omniversion_output_file }}'
     content: ""
     mode: '777'
   delegate_to: localhost
@@ -20,7 +24,7 @@
 - name: Parse output
   ansible.builtin.command: "omniversion parse {{ var_omniversion_pm }}"
   args:
-    stdin: "{{ omniversion_result.stdout | string }}"
+    stdin: "{{ omniversion_result.stdout }}"
   delegate_to: localhost
   register: omniversion_result
   changed_when: true
@@ -34,16 +38,22 @@
 
 - name: Store parsed result
   ansible.builtin.copy:
-    dest: "{{ var_omniversion_full_output_dir }}/{{ var_omniversion_verb }}.omniversion.yaml"
-    content: "{{ omniversion_result.stdout }}"
+    dest: "{{ var_omniversion_output_file }}"
+    content: '{{ omniversion_result.stdout | string }}'
     mode: '777'
   delegate_to: localhost
   when: omniversion_result.stdout is defined
 
 - name: Store custom items
   ansible.builtin.copy:
-    dest: "{{ var_omniversion_full_output_dir }}/{{ var_omniversion_verb }}.omniversion.yaml"
+    dest: "{{ var_omniversion_output_file }}"
     content: "{{ omniversion_items }}"
     mode: '777'
   delegate_to: localhost
-  when: omniversion_items is defined
+  when: omniversion_items is defined and omniversion_items
+
+- name: Clear results
+  set_fact:
+    omniversion_result: null
+    omniversion_items: null
+    var_omniversion_result_index: null

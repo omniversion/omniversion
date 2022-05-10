@@ -1,0 +1,15 @@
+- name: List local `npm` updates
+  ansible.builtin.shell: 'npm ls --parseable --all 2>&1 || true'
+  args:
+    chdir: '{{ var_omniversion_dir }}'
+  register: omniversion_result
+  changed_when: true
+  tags:
+    - npm
+
+- name: Save result
+  include_tasks: ../../shared/save.yaml
+  tags:
+    - npm
+  vars:
+    var_omniversion_pm: npm

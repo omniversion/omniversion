@@ -1,0 +1,22 @@
+---
+- name: 'Check for presence of package manager `{{ var_omniversion_pm }}`'
+  tags:
+    - always
+  ansible.builtin.command: "which {{ var_omniversion_pm }}"
+  register: omniversion_check_result
+  ignore_errors: true
+  when: var_omniversion[item] is not defined
+
+- name: 'Activate package manager `{{ var_omniversion_pm }}`'
+  tags:
+    - always
+  set_fact:
+    var_omniversion: '{{ var_omniversion | combine({ var_omniversion_pm: true }) }}'
+  when: omniversion_check_result.rc == 0
+
+- name: 'Deactivate package manager `{{ var_omniversion_pm }}`'
+  tags:
+    - always
+  set_fact:
+    var_omniversion: '{{ var_omniversion | combine({ var_omniversion_pm: false }) }}'
+  when: omniversion_check_result.rc != 0

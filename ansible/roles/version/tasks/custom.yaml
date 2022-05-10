@@ -7,9 +7,15 @@
   tags:
     - custom
 
+- name: Set `omniversion` version
+  run_once: true
+  delegate_to: localhost
+  ansible.builtin.shell: "omniversion version | grep version | sed 's/version: //"
+
+
 - name: Append result to output items
   ansible.builtin.set_fact:
-    omniversion_items: "{{ omniversion_items | default('items:\n') }}  - name: {{ item.name }}\n    version: {{ custom_result.stdout }}\n"
+    omniversion_items: "{{ omniversion_items | default('version: {{  }}\nitems:\n') }}  - name: {{ item.name }}\n    version: {{ custom_result.stdout }}\n"
   tags:
     - custom
 

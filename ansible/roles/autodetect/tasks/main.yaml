@@ -1,0 +1,22 @@
+---
+- name: Set default `var_omniversion` value
+  tags:
+    - always
+  ansible.builtin.set_fact:
+    var_omniversion: "{{ var_omniversion | default({ 'auto': true }) }}"
+
+- name: Check for presence of package managers
+  tags:
+    - always
+  include_tasks: detect.yaml
+  with_items: ['apt', 'brew', 'npm', 'gem', 'rvm']
+  when: var_omniversion.auto is defined and var_omniversion.auto and var_omniversion[item] is not defined
+  vars:
+    var_omniversion_pm: '{{ item }}'
+
+- name: Output complete configuration after auto-detection
+  tags:
+    - always
+  when: var_omniversion.auto is defined and var_omniversion.auto
+  debug:
+    msg: '{{ var_omniversion }}'

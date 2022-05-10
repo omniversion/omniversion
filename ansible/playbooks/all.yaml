@@ -3,6 +3,7 @@
   hosts: webservers
   roles:
     - ../roles/check
+    - ../roles/autodetect
     - ../roles/refresh
     - ../roles/list
     - ../roles/outdated
