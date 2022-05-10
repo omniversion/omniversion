@@ -11,36 +11,56 @@
     <br />
 </div>
 
-## Dependency management toolbox
+> ### 🚧 **Status: proof of concept**
+> Feedback much appreciated
 
-`omniversion` simplifies dependency management in complex projects by streamlining common tasks:
+
+`omniversion` is a **dependency management toolbox** streamlining common maintenance tasks.
 
 ### Collection
 [omniversion/ansible](ansible) collects versions and dependencies from servers orchestrated via Ansible.
 
 ### Aggregation
-[omniversion/cli](cli) translates the output of many different version managers into a single, coherent list.
+[omniversion/cli](cli) translates the output of many different version managers into a single, unified list.
 
 ### Analysis
 [omniversion/python](python) adds convenience methods to create dashboards and reports in a few lines of code.
 
 ## Why?
 
-Maintaining a code base with a 
+### The problem
 
-* Every self-respecting programming language has its own package manager, for some reason.
+Maintaining a modern software stack across deployments is hard work.
+
+Given the manual effort needed just to keep dependencies up-to-date, avoid version conflicts and patch vulnerabilities, it is no surprise that these tasks are often neglected.
+
+Version control systems, package managers and vulnerability scanners offer partial solutions, but they leave a lot to be desired:
+
+* There is no obvious way of ensuring version consistency across package managers, e.g. when an `apt` package and an `npm` dependency need to be in sync.
+* Multiple package managers need to be called in turn to answer simple questions like "Is there anything to patch?".
+* Repeating this for each version currently deployed on a server is time-consuming and error-prone.
+* Many software versions are not actually controlled by package managers, including - more often than not - the package managers themselves.
+* Versions kept in configuration files are also frequently unmanaged, leading to hidden inconsistencies.
 * Package managers differ greatly in their syntax, features, terminology and underlying model.
-* Many versions are not actually controlled by package managers. More often than not, this includes the package manager itself.
-* Versions checked into source control 
-* Running commands on remote servers is time-consuming and error-prone.
-* 
 
+### The solution
+
+For our daily maintenance work, we wanted a single dashboard containing all relevant information - across package managers, across servers and even across projects.
+
+Given that we perform maintenance fairly frequently, we found that the added complexity of automation was worthwhile, saving time and preventing human error.
+
+This is why we built the `omniversion` toolbox.
+
+We make it available as Free Open Source Software in the hope that it might benefit other people as well.
 
 ## Quick start
 
-Prerequisites: You should have Ansible, npm and Python installed.
+### Prerequisites
+You should have `Ansible` installed and some hosts set up. You will also need `Python` and `npm` (or `homebrew`).
 
-1. Install the Ansible collection, the CLI and the Python module on your machine:
+### Steps
+
+1. Install the Ansible collection, the CLI and the Python module:
     ```shell
     ansible-galaxy collection install layer9gmbh.omniversion
     npm install -g omniversion
@@ -62,9 +82,15 @@ Prerequisites: You should have Ansible, npm and Python installed.
 
 ## Support
 
-Mac & linux
+### Operating systems
 
-| Package manager  | Supported    |
+This _proof of concept_ has been built and tested on a MacOS control node and linux hosts in mind, but we do aim to support linux control nodes as well.
+
+Since Ansible does not support Windows control nodes, the same is currently true for `omniversion`. We might create a dedicated task runner to overcome this limitation at some point in the future, if there is demand.
+
+### Package managers
+
+| Name             | Supported    |
 |------------------|--------------|
 | `ansible-galaxy` | 🕙 planned   |
 | `apt`            | ✅ yes        |
