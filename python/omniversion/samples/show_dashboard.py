@@ -1,5 +1,4 @@
-from omniversion import Omniversion
-from omniversion import pretty
+from omniversion import Omniversion, pretty
 
 
 def show_dashboard(omniversion: Omniversion):

@@ -1,5 +1,5 @@
 from omniversion import Omniversion
-from .dashboard import show_dashboard
+from .. import show_dashboard
 
 data = Omniversion("/tmp/omniversion")
 
