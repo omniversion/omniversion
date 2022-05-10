@@ -4,8 +4,8 @@
   roles:
     - ../roles/check
     - ../roles/autodetect
-    - ../roles/refresh
+    - ../roles/audit
     - ../roles/list
     - ../roles/outdated
-    - ../roles/audit
+    - ../roles/refresh
     - ../roles/version

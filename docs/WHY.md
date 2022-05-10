@@ -1,4 +1,4 @@
-## Use case
+## Why use `omniversion`?
 
 ### The problem
 

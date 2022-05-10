@@ -127,16 +127,20 @@ playbook or simply run a playbook directly:
 ansible-playbook layer9gmbh.omniversion.all
 ```
 
-The following roles and playbooks are available:
+The following are available as both roles and playbooks of the same name:
 
-| Role/playbook name                | Description                                                                                                                                                 |
-|-----------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `layer9gmbh.omniversion.all`      | Collects all available data by executing all other `omniversion` roles in turn.                                                                             |
-| `layer9gmbh.omniversion.audit`    | Collects security notices by running the `audit` (or equivalent) command on each host (only applicable for package managers that offer this functionality). |
-| `layer9gmbh.omniversion.list`     | Collects currently installed dependencies by running the `list` (or equivalent) command on each host.                                                       |
-| `layer9gmbh.omniversion.outdated` | Collects available updates by running the `outdated` (or equivalent) command on each host.                                                                  |
-| `layer9gmbh.omniversion.refresh`  | Updates the package manager caches by running the `update` (or equivalent) command on each host.                                                            |
-| `layer9gmbh.omniversion.version`  | Collects versions not controlled by any package manager (including versions of package managers themselves) on each host.                                   |
+| Role/playbook name                                                    | Description                                                                                                                                                 |
+|-----------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [`layer9gmbh.omniversion.all`](ansible/roles/all/README.md)           | Collects all available data by executing all other `omniversion` roles in turn.                                                                             |
+| [`layer9gmbh.omniversion.audit`](ansible/roles/audit/README.md)       | Collects security notices by running the `audit` (or equivalent) command on each host (only applicable for package managers that offer this functionality). |
+| [`layer9gmbh.omniversion.list`](ansible/roles/list/README.md)         | Collects currently installed dependencies by running the `list` (or equivalent) command on each host.                                                       |
+| [`layer9gmbh.omniversion.outdated`](ansible/roles/outdated/README.md) | Collects available updates by running the `outdated` (or equivalent) command on each host.                                                                  |
+| [`layer9gmbh.omniversion.refresh`](ansible/roles/refresh/README.md)   | Updates the package manager caches by running the `update` (or equivalent) command on each host.                                                            |
+| [`layer9gmbh.omniversion.version`](ansible/roles/version/README.md)   | Collects versions not controlled by any package manager (including versions of package managers themselves) on each host.                                   |
+
+In addition, two internally used roles do not have an associated playbook, as you usually don't need to call them individually:
+* [`layer9gmbh.omniversion.check`](ansible/roles/check/README.md) verifies that the `omniversion` CLI is installed on the control node.
+* [`layer9gmbh.omniversion.autodetect`](ansible/roles/autodetect/README.md) determines which package managers are available on each host.
 
 ## Update
 
