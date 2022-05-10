@@ -27,7 +27,7 @@
 [omniversion/python](python) adds convenience methods to create dashboards and reports in a few lines of code.
 
 ## Use cases
-The `omniversion` tools are pretty flexible. [Here is what we use them for](docs/WHY.md).
+The `omniversion` tools are pretty flexible. [Here is how and why we use them](docs/WHY.md).
 
 ## Quick start
 
