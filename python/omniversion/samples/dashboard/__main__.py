@@ -1,6 +1,6 @@
-from omniversion import Data
+from omniversion import Omniversion
 from .dashboard import show_dashboard
 
-data = Data("/tmp/omniversion")
+data = Omniversion("/tmp/omniversion")
 
 show_dashboard(data)

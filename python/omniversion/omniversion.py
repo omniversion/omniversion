@@ -12,7 +12,7 @@ from omniversion.pretty import pretty
 from omniversion.loader import load_data
 
 
-class Data:
+class Omniversion:
     """Root class used to load and extract all omniversion data"""
     files: FileInfosList
 
@@ -33,6 +33,41 @@ class Data:
     def hosts(self):
         """Deduplicated list of hosts for which files are present in the list"""
         return sorted(list({file.host for file in self.files}))
+
+    def add_local_config_value(
+            self, file_path, regex: str, name: str | None = None
+    ):
+        """Add dependency meta data from a local file"""
+        absolute_file_path = os.path.realpath(file_path)
+        with open(absolute_file_path, encoding="utf8") as file:
+            try:
+                matches = re.compile(regex).finditer(file.read())
+                package_name = name
+                for match in matches:
+                    version = match.group("version")
+                    if package_name is None:
+                        package_name = match.group("name")
+                    package_metadata = PackageMetadata(
+                        host="localhost",
+                        name=package_name,
+                        package_manager="local file",
+                        current=version,
+                    )
+                    file_name = os.path.basename(absolute_file_path)
+                    file_info = FileMetadata(
+                        PackagesMetadataList([package_metadata]),
+                        version=None,
+                        name=file_name,
+                        host="localhost",
+                        package_manager="local file",
+                        verb="list",
+                        time=time.time(),
+                        path=file_path,
+                    )
+                    self.files.append(file_info)
+            except IndexError:
+                raise IndexError("Invalid regex. You need to provide a named group called `version` and either a name "
+                                 "parameter or a named group called `name`")
 
     def items(
             self,
@@ -69,7 +104,7 @@ class Data:
 
         return [item for item in all_items if package_condition(item)]
 
-    def vulnerabilities(
+    def audit(
             self,
             host: str | None = None,
             package_manager: str | None = None,
@@ -78,7 +113,7 @@ class Data:
         """List security vulnerabilities"""
         return Vulnerabilities(self.items("audit", host, package_manager, package_name))
 
-    def list_packages(
+    def ls(
             self,
             host: str | None = None,
             package_manager: str | None = None,
@@ -87,7 +122,7 @@ class Data:
         """List software packages"""
         return PackagesMetadataList(self.items(["list", "version"], host, package_manager, package_name))
 
-    def available_updates(
+    def outdated(
             self,
             host: str | None = None,
             package_manager: str | None = None,
@@ -96,7 +131,7 @@ class Data:
         """List available updates"""
         return AvailableUpdates(self.items("outdated", host, package_manager, package_name))
 
-    def match_versions(
+    def show(
             self, package_name: str | list[str], display_name: str | None = None
     ):
         """Match versions of all installations of a particular package"""
@@ -105,38 +140,3 @@ class Data:
             package_name,
             display_name,
         )
-
-    def add_local_config_value(
-            self, file_path, regex: str, name: str | None = None
-    ):
-        """Add dependency meta data from a local file"""
-        absolute_file_path = os.path.realpath(file_path)
-        with open(absolute_file_path, encoding="utf8") as file:
-            try:
-                matches = re.compile(regex).finditer(file.read())
-                package_name = name
-                for match in matches:
-                    version = match.group("version")
-                    if package_name is None:
-                        package_name = match.group("name")
-                    package_metadata = PackageMetadata(
-                        host="localhost",
-                        name=package_name,
-                        package_manager="local file",
-                        current=version,
-                    )
-                    file_name = os.path.basename(absolute_file_path)
-                    file_info = FileMetadata(
-                        PackagesMetadataList([package_metadata]),
-                        version=None,
-                        name=file_name,
-                        host="localhost",
-                        package_manager="local file",
-                        verb="list",
-                        time=time.time(),
-                        path=file_path,
-                    )
-                    self.files.append(file_info)
-            except IndexError:
-                raise IndexError("Invalid regex. You need to provide a named group called `version` and either a name "
-                                 "parameter or a named group called `name`")

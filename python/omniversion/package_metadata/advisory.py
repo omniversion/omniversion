@@ -8,7 +8,7 @@ class Advisory:  # pylint: disable=too-many-instance-attributes
     """A vulnerability notice"""
     access: str | None = None
     cvss_score: float | None = None
-    identifier: int | None = None
+    identifier: str | None = None
     overview: str | None = None
     patched_versions: str | None = None
     recommendation: str | None = None

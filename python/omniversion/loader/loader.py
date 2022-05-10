@@ -3,8 +3,9 @@
 import os
 from typing import Callable
 import yaml
+from dacite import from_dict
 
-from omniversion.package_metadata import PackagesMetadataList
+from omniversion.package_metadata import PackageMetadata, PackagesMetadataList
 from omniversion.file_info import FileMetadata
 
 AVAILABLE_VERBS = ["audit", "list", "refresh", "outdated", "version"]
@@ -64,9 +65,10 @@ def process_file(
             for package_data in packages_data:
                 package_data["package_manager"] = package_manager
                 package_data["host"] = host
+            packages = [from_dict(data_class=PackageMetadata, data=package_data) for package_data in packages_data]
             add_file(
                 FileMetadata(
-                    PackagesMetadataList(packages_data),
+                    PackagesMetadataList(packages),
                     version,
                     file_name,
                     host,
@@ -85,7 +87,9 @@ def extract_yaml_data(file_path: str) -> tuple[str | None, list[any] | None, flo
         time = os.stat(file_path).st_ctime
         with open(file_path, encoding="utf8") as file:
             file_data = yaml.safe_load(file)
-            return file_data["version"], file_data["items"], time
+            version = file_data["version"] if "version" in file_data else None
+            items = file_data["items"] if "items" in file_data else None
+            return version, items, time
     except TypeError:
         return None, None, time
     except yaml.YAMLError:

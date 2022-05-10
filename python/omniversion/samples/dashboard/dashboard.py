@@ -1,22 +1,22 @@
-from omniversion.data import Data
+from omniversion import Omniversion
 from omniversion import pretty
 
 
-def show_dashboard(data: Data):
+def show_dashboard(omniversion: Omniversion):
     print(pretty.header("Data sources"))
-    print(data.files)
+    print(omniversion.files)
 
     print(pretty.header("Dependency count"))
-    print(data.list_packages().summary())
+    print(omniversion.ls().summary())
 
     print(pretty.header("App versions"))
-    print(data.list_packages(package_name="test1"))
+    print(omniversion.ls(package_name="test1"))
 
     print(pretty.header("Version consistency"))
-    print(data.match_versions(["test1"], "Test"))
+    print(omniversion.show(["test1"], "Test"))
 
     print(pretty.header("Available updates"))
-    print(data.available_updates())
+    print(omniversion.outdated())
 
     print(pretty.header("Security audit"))
-    print(data.vulnerabilities())
+    print(omniversion.audit())
