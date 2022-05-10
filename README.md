@@ -71,9 +71,9 @@
 
 ## Documentation
 
-[Ansible documentation](ansible/README.md)
-[CLI documentation](https://pkg.go.dev/github.com/omniversion/omniversion/cli)
-[Python documentation](https://omniversion.github.io/omniversion/python/omniversion/)
+* [Ansible documentation](ansible/README.md)
+* [CLI documentation](https://pkg.go.dev/github.com/omniversion/omniversion/cli)
+* [Python documentation](https://omniversion.github.io/omniversion/python/omniversion/)
 
 ## Supported platforms
 
@@ -81,7 +81,7 @@
 
 `omniversion` has been built and tested on a macOS control node with linux hosts, but we do aim to support linux control nodes as well.
 
-Since Ansible does not support Windows control nodes, the same is currently true for the `omniversion/ansible` tool. We might create a dedicated task runner to overcome this limitation at some point in the future, if there is demand.
+Like Ansible, we not support Windows control nodes, but this might change in the future, if there is demand.
 
 ### Package managers
 
@@ -91,6 +91,7 @@ Since Ansible does not support Windows control nodes, the same is currently true
 | `apt`            | ✅ yes        |
 | `brew`           | ✅ yes        |
 | `Composer`       | 🕙 planned   |
+| `go mod`         | 🕙 planned   |
 | `maven`          | 🕙 planned   |
 | `npm`            | ✅ yes        |
 | `pip`            | 🕙 planned   |

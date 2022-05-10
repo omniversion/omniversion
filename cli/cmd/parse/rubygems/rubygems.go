@@ -102,7 +102,7 @@ func parseListItem(name string, versionsString string, dependencies *[]PackageMe
 }
 
 func parseDetails(name string, versions string, content string, dependencies *[]PackageMetadata) *error {
-	parseRegex := regexp.MustCompile(`(?m)\s+Authors?: (?P<authors>(.+\n)+)\s+Homepage: (?P<homepage>.+)\n\s+Licenses?: (?P<license>.+)\n\s+Installed at ?(?P<locations>(.+\n)+)\n(?P<description>(\n?.+)+)`)
+	parseRegex := regexp.MustCompile(`(?m)\s+Authors?: (?P<authors>(.+\n)+)\s+Homepage: (?P<homepage>.+)\n(\s+Licenses?: (?P<license>.+)\n)?\s+Installed at ?(?P<locations>(.+\n)+)\n(?P<description>(\n?.+)+)`)
 	groupNames := parseRegex.SubexpNames()
 
 	parsedContent := parseRegex.FindStringSubmatch(content)
