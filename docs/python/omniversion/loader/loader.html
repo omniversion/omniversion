@@ -32,8 +32,9 @@
 import os
 from typing import Callable
 import yaml
+from dacite import from_dict
 
-from omniversion.package_metadata import PackagesMetadataList
+from omniversion.package_metadata import PackageMetadata, PackagesMetadataList
 from omniversion.file_info import FileMetadata
 
 AVAILABLE_VERBS = [&#34;audit&#34;, &#34;list&#34;, &#34;refresh&#34;, &#34;outdated&#34;, &#34;version&#34;]
@@ -93,9 +94,10 @@ def process_file(
             for package_data in packages_data:
                 package_data[&#34;package_manager&#34;] = package_manager
                 package_data[&#34;host&#34;] = host
+            packages = [from_dict(data_class=PackageMetadata, data=package_data) for package_data in packages_data]
             add_file(
                 FileMetadata(
-                    PackagesMetadataList(packages_data),
+                    PackagesMetadataList(packages),
                     version,
                     file_name,
                     host,
@@ -113,8 +115,18 @@ def extract_yaml_data(file_path: str) -&gt; tuple[str | None, list[any] | None, 
     try:
         time = os.stat(file_path).st_ctime
         with open(file_path, encoding=&#34;utf8&#34;) as file:
-            file_data = yaml.safe_load(file)
-            return file_data[&#34;version&#34;], file_data[&#34;items&#34;], time
+            # a yaml file may contain multiple documents
+            # we want to extract all
+            documents = yaml.safe_load_all(file)
+            # the version of omniversion
+            version = None
+            items = []
+            for document in documents:
+                # we assume that all documents within the same file were written by the same omniversion version
+                if version is None and &#34;version&#34; in document:
+                    version = document[&#34;version&#34;]
+                items += document[&#34;items&#34;] if &#34;items&#34; in document else None
+            return version, items if len(items) &gt; 0 else None, time
     except TypeError:
         return None, None, time
     except yaml.YAMLError:
@@ -145,8 +157,18 @@ def extract_yaml_data(file_path: str) -&gt; tuple[str | None, list[any] | None, 
     try:
         time = os.stat(file_path).st_ctime
         with open(file_path, encoding=&#34;utf8&#34;) as file:
-            file_data = yaml.safe_load(file)
-            return file_data[&#34;version&#34;], file_data[&#34;items&#34;], time
+            # a yaml file may contain multiple documents
+            # we want to extract all
+            documents = yaml.safe_load_all(file)
+            # the version of omniversion
+            version = None
+            items = []
+            for document in documents:
+                # we assume that all documents within the same file were written by the same omniversion version
+                if version is None and &#34;version&#34; in document:
+                    version = document[&#34;version&#34;]
+                items += document[&#34;items&#34;] if &#34;items&#34; in document else None
+            return version, items if len(items) &gt; 0 else None, time
     except TypeError:
         return None, None, time
     except yaml.YAMLError:
@@ -227,9 +249,10 @@ def extract_yaml_data(file_path: str) -&gt; tuple[str | None, list[any] | None, 
             for package_data in packages_data:
                 package_data[&#34;package_manager&#34;] = package_manager
                 package_data[&#34;host&#34;] = host
+            packages = [from_dict(data_class=PackageMetadata, data=package_data) for package_data in packages_data]
             add_file(
                 FileMetadata(
-                    PackagesMetadataList(packages_data),
+                    PackagesMetadataList(packages),
                     version,
                     file_name,
                     host,

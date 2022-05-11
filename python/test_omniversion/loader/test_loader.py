@@ -48,8 +48,15 @@ class LoaderTestCase(unittest.TestCase):
                      package_manager="test_pm",
                      add_file=files.append)
         self.assertEqual(1, len(files))
-        self.assertIsNotNone(1, files[0].data)
+        self.assertIsNotNone(files[0].data)
         self.assertEqual(2, len(files[0].data))
+
+    def test_load_multiple_documents_in_same_file(self):
+        version, packages_data, time = extract_yaml_data(
+            os.path.join(os.path.dirname(__file__), "../vectors/test_host3/test_pm4/list.omniversion.yaml"))
+        self.assertIsNotNone(version)
+        self.assertIsNotNone(time)
+        self.assertEqual(3, len(packages_data))
 
 
 if __name__ == '__main__':

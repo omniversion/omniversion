@@ -86,10 +86,18 @@ def extract_yaml_data(file_path: str) -> tuple[str | None, list[any] | None, flo
     try:
         time = os.stat(file_path).st_ctime
         with open(file_path, encoding="utf8") as file:
-            file_data = yaml.safe_load(file)
-            version = file_data["version"] if "version" in file_data else None
-            items = file_data["items"] if "items" in file_data else None
-            return version, items, time
+            # a yaml file may contain multiple documents
+            # we want to extract all
+            documents = yaml.safe_load_all(file)
+            # the version of omniversion
+            version = None
+            items = []
+            for document in documents:
+                # we assume that all documents within the same file were written by the same omniversion version
+                if version is None and "version" in document:
+                    version = document["version"]
+                items += document["items"] if "items" in document else None
+            return version, items if len(items) > 0 else None, time
     except TypeError:
         return None, None, time
     except yaml.YAMLError:

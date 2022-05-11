@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
-<title>omniversion.types.package_manager API documentation</title>
-<meta name="description" content="Common types used by other modules" />
+<title>omniversion.package_manager API documentation</title>
+<meta name="description" content="" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -19,61 +19,32 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>omniversion.types.package_manager</code></h1>
+<h1 class="title">Module <code>omniversion.package_manager</code></h1>
 </header>
 <section id="section-intro">
-<p>Common types used by other modules</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">#!/usr/bin/env python
-&#34;&#34;&#34;Common types used by other modules&#34;&#34;&#34;
-from enum import Enum
+<pre><code class="python">__all__ = [&#34;package_manager&#34;]
 
-PackageManager = Enum(&#34;PackageManager&#34;, &#34;apt npm rubygems rvm&#34;)</code></pre>
+from .package_manager import PackageManager</code></pre>
 </details>
 </section>
 <section>
-</section>
-<section>
-</section>
-<section>
-</section>
-<section>
-<h2 class="section-title" id="header-classes">Classes</h2>
+<h2 class="section-title" id="header-submodules">Sub-modules</h2>
 <dl>
-<dt id="omniversion.types.package_manager.PackageManager"><code class="flex name class">
-<span>class <span class="ident">PackageManager</span></span>
-<span>(</span><span>value, names=None, *, module=None, qualname=None, type=None, start=1)</span>
-</code></dt>
+<dt><code class="name"><a title="omniversion.package_manager.package_manager" href="package_manager.html">omniversion.package_manager.package_manager</a></code></dt>
 <dd>
-<div class="desc"><p>An enumeration.</p></div>
-<h3>Ancestors</h3>
-<ul class="hlist">
-<li>enum.Enum</li>
-</ul>
-<h3>Class variables</h3>
-<dl>
-<dt id="omniversion.types.package_manager.PackageManager.apt"><code class="name">var <span class="ident">apt</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="omniversion.types.package_manager.PackageManager.npm"><code class="name">var <span class="ident">npm</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="omniversion.types.package_manager.PackageManager.rubygems"><code class="name">var <span class="ident">rubygems</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="omniversion.types.package_manager.PackageManager.rvm"><code class="name">var <span class="ident">rvm</span></code></dt>
-<dd>
-<div class="desc"></div>
+<div class="desc"><p>Common types used by other modules</p></div>
 </dd>
 </dl>
-</dd>
-</dl>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
 </section>
 </article>
 <nav id="sidebar">
@@ -84,20 +55,12 @@ PackageManager = Enum(&#34;PackageManager&#34;, &#34;apt npm rubygems rvm&#34;)<
 <ul id="index">
 <li><h3>Super-module</h3>
 <ul>
-<li><code><a title="omniversion.types" href="index.html">omniversion.types</a></code></li>
+<li><code><a title="omniversion" href="../index.html">omniversion</a></code></li>
 </ul>
 </li>
-<li><h3><a href="#header-classes">Classes</a></h3>
+<li><h3><a href="#header-submodules">Sub-modules</a></h3>
 <ul>
-<li>
-<h4><code><a title="omniversion.types.package_manager.PackageManager" href="#omniversion.types.package_manager.PackageManager">PackageManager</a></code></h4>
-<ul class="">
-<li><code><a title="omniversion.types.package_manager.PackageManager.apt" href="#omniversion.types.package_manager.PackageManager.apt">apt</a></code></li>
-<li><code><a title="omniversion.types.package_manager.PackageManager.npm" href="#omniversion.types.package_manager.PackageManager.npm">npm</a></code></li>
-<li><code><a title="omniversion.types.package_manager.PackageManager.rubygems" href="#omniversion.types.package_manager.PackageManager.rubygems">rubygems</a></code></li>
-<li><code><a title="omniversion.types.package_manager.PackageManager.rvm" href="#omniversion.types.package_manager.PackageManager.rvm">rvm</a></code></li>
-</ul>
-</li>
+<li><code><a title="omniversion.package_manager.package_manager" href="package_manager.html">omniversion.package_manager.package_manager</a></code></li>
 </ul>
 </li>
 </ul>

@@ -29,21 +29,19 @@
 </summary>
 <pre><code class="python">#!/usr/bin/env python
 &#34;&#34;&#34;Omniversion Python integration&#34;&#34;&#34;
-from omniversion.data import Data
-from omniversion.package_metadata import Advisory, AvailableUpdates, PackageMetadata, PackagesMetadataList, VersionsMatch, \
-    Vulnerabilities
+from .omniversion import Omniversion
+from .package_metadata import Advisory, AvailableUpdates, PackageMetadata, PackagesMetadataList,\
+    VersionsMatch, Vulnerabilities
 import omniversion.pretty
-import omniversion.samples
-import omniversion.types</code></pre>
+import omniversion.helpers
+
+__all__ = [&#34;Advisory&#34;, &#34;AvailableUpdates&#34;, &#34;helpers&#34;, &#34;Omniversion&#34;, &#34;PackageMetadata&#34;, &#34;PackagesMetadataList&#34;,
+           &#34;pretty&#34;, &#34;VersionsMatch&#34;, &#34;Vulnerabilities&#34;]</code></pre>
 </details>
 </section>
 <section>
 <h2 class="section-title" id="header-submodules">Sub-modules</h2>
 <dl>
-<dt><code class="name"><a title="omniversion.data" href="data/index.html">omniversion.data</a></code></dt>
-<dd>
-<div class="desc"><p>Root class used to load and extract all omniversion data</p></div>
-</dd>
 <dt><code class="name"><a title="omniversion.file_info" href="file_info/index.html">omniversion.file_info</a></code></dt>
 <dd>
 <div class="desc"><p>These files contain the omniversion dependencies</p></div>
@@ -55,6 +53,14 @@ import omniversion.types</code></pre>
 <dt><code class="name"><a title="omniversion.loader" href="loader/index.html">omniversion.loader</a></code></dt>
 <dd>
 <div class="desc"><p>Helper for loading omniversion files</p></div>
+</dd>
+<dt><code class="name"><a title="omniversion.omniversion" href="omniversion.html">omniversion.omniversion</a></code></dt>
+<dd>
+<div class="desc"><p>Root class used to load and extract all omniversion data</p></div>
+</dd>
+<dt><code class="name"><a title="omniversion.package_manager" href="package_manager/index.html">omniversion.package_manager</a></code></dt>
+<dd>
+<div class="desc"></div>
 </dd>
 <dt><code class="name"><a title="omniversion.package_metadata" href="package_metadata/index.html">omniversion.package_metadata</a></code></dt>
 <dd>
@@ -68,10 +74,6 @@ import omniversion.types</code></pre>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt><code class="name"><a title="omniversion.types" href="types/index.html">omniversion.types</a></code></dt>
-<dd>
-<div class="desc"><p>Common types used by other modules</p></div>
-</dd>
 </dl>
 </section>
 <section>
@@ -79,6 +81,924 @@ import omniversion.types</code></pre>
 <section>
 </section>
 <section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="omniversion.Advisory"><code class="flex name class">
+<span>class <span class="ident">Advisory</span></span>
+<span>(</span><span>access: str | None = None, cvss_score: float | None = None, identifier: str | None = None, overview: str | None = None, patched_versions: str | None = None, recommendation: str | None = None, references: str | None = None, severity: str | None = None, title: str | None = None, url: str | None = None, vulnerable_versions: str | None = None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>A vulnerability notice</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class Advisory:  # pylint: disable=too-many-instance-attributes
+    &#34;&#34;&#34;A vulnerability notice&#34;&#34;&#34;
+    access: str | None = None
+    cvss_score: float | None = None
+    identifier: str | None = None
+    overview: str | None = None
+    patched_versions: str | None = None
+    recommendation: str | None = None
+    references: str | None = None
+    severity: str | None = None
+    title: str | None = None
+    url: str | None = None
+    vulnerable_versions: str | None = None</code></pre>
+</details>
+<h3>Class variables</h3>
+<dl>
+<dt id="omniversion.Advisory.access"><code class="name">var <span class="ident">access</span> : str | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="omniversion.Advisory.cvss_score"><code class="name">var <span class="ident">cvss_score</span> : float | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="omniversion.Advisory.identifier"><code class="name">var <span class="ident">identifier</span> : str | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="omniversion.Advisory.overview"><code class="name">var <span class="ident">overview</span> : str | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="omniversion.Advisory.patched_versions"><code class="name">var <span class="ident">patched_versions</span> : str | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="omniversion.Advisory.recommendation"><code class="name">var <span class="ident">recommendation</span> : str | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="omniversion.Advisory.references"><code class="name">var <span class="ident">references</span> : str | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="omniversion.Advisory.severity"><code class="name">var <span class="ident">severity</span> : str | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="omniversion.Advisory.title"><code class="name">var <span class="ident">title</span> : str | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="omniversion.Advisory.url"><code class="name">var <span class="ident">url</span> : str | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="omniversion.Advisory.vulnerable_versions"><code class="name">var <span class="ident">vulnerable_versions</span> : str | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="omniversion.AvailableUpdates"><code class="flex name class">
+<span>class <span class="ident">AvailableUpdates</span></span>
+<span>(</span><span>initlist=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>List of packages for which a newer version is available</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class AvailableUpdates(PackagesMetadataList):
+    &#34;&#34;&#34;List of packages for which a newer version is available&#34;&#34;&#34;
+
+    def __str__(self):
+        &#34;&#34;&#34;Human-readable description of the available update&#34;&#34;&#34;
+        result = &#34;&#34;
+        for host, items_for_host in group_by_host(self):
+            result += &#34;\n  &#34; + pretty.hostname(host) + &#34;\n&#34;
+            for package_manager, items_for_pm in group_by_pm(items_for_host):
+                result += &#34;    &#34; + pretty.package_manager(package_manager) + &#34;\n&#34;
+                items = list(items_for_pm)
+                updates = [item for item in items if item.current is not None]
+                not_installed = [item for item in items if item.current is None]
+                if len(not_installed) &gt; 0:
+                    result += (
+                            &#34;      &#34;
+                            + pretty.traffic_light(
+                                f&#34;{len(not_installed)} dependencies not installed&#34;, &#34;amber&#34;,
+                            )
+                            + &#34;\n&#34;
+                    )
+                if len(updates) &gt; 0:
+                    result += (
+                            &#34;      &#34;
+                            + pretty.traffic_light(&#34;updates available&#34;, &#34;red&#34;)
+                            + &#34;\n&#34;
+                    )
+                    for item in updates:
+                        result += (
+                                &#34;        &#34;
+                                + f&#34;update for {pretty.black_on_white(item.name)} available:&#34;
+                                + f&#34; {pretty.white(item.current)} -&gt; {pretty.white(item.latest)}&#34;
+                                + &#34;\n&#34;
+                        )
+        return result</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="omniversion.package_metadata.list.packages_metadata_list.PackagesMetadataList" href="package_metadata/list/packages_metadata_list.html#omniversion.package_metadata.list.packages_metadata_list.PackagesMetadataList">PackagesMetadataList</a></li>
+<li>collections.UserList</li>
+<li>collections.abc.MutableSequence</li>
+<li>collections.abc.Sequence</li>
+<li>collections.abc.Reversible</li>
+<li>collections.abc.Collection</li>
+<li>collections.abc.Sized</li>
+<li>collections.abc.Iterable</li>
+<li>collections.abc.Container</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="omniversion.package_metadata.list.packages_metadata_list.PackagesMetadataList" href="package_metadata/list/packages_metadata_list.html#omniversion.package_metadata.list.packages_metadata_list.PackagesMetadataList">PackagesMetadataList</a></b></code>:
+<ul class="hlist">
+<li><code><a title="omniversion.package_metadata.list.packages_metadata_list.PackagesMetadataList.summary" href="package_metadata/list/packages_metadata_list.html#omniversion.package_metadata.list.packages_metadata_list.PackagesMetadataList.summary">summary</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="omniversion.Omniversion"><code class="flex name class">
+<span>class <span class="ident">Omniversion</span></span>
+<span>(</span><span>base_path: str | None = None, file_infos: <a title="omniversion.file_info.file_infos_list.FileInfosList" href="file_info/file_infos_list.html#omniversion.file_info.file_infos_list.FileInfosList">FileInfosList</a> | list[<a title="omniversion.file_info.file_info.FileMetadata" href="file_info/file_info.html#omniversion.file_info.file_info.FileMetadata">FileMetadata</a>] | None = None, package_managers: list[str] | None = None, hosts: list[str] | None = None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Root class used to load and extract all omniversion data</p>
+<p>Initialize the root class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Omniversion:
+    &#34;&#34;&#34;Root class used to load and extract all omniversion data&#34;&#34;&#34;
+    files: FileInfosList
+
+    def __init__(self,
+                 base_path: str | None = None,
+                 file_infos: FileInfosList | list[FileMetadata] | None = None,
+                 package_managers: list[str] | None = None,
+                 hosts: list[str] | None = None):
+        &#34;&#34;&#34;Initialize the root class&#34;&#34;&#34;
+        self.files = FileInfosList() if file_infos is None else FileInfosList(file_infos)
+        if base_path is not None:
+            load_data(base_path, self.files.append, package_managers=package_managers, hosts=hosts)
+
+    def __str__(self):
+        &#34;&#34;&#34;Human-readable summary of the data, counting loaded files&#34;&#34;&#34;
+        return pretty.file_count(len(self.files))
+
+    def hosts(self):
+        &#34;&#34;&#34;Deduplicated list of hosts for which files are present in the list&#34;&#34;&#34;
+        return sorted(list({file.host for file in self.files}))
+
+    def add_local_config_value(
+            self, file_path, regex: str, name: str | None = None
+    ):
+        &#34;&#34;&#34;Add dependency meta data from a local file&#34;&#34;&#34;
+        absolute_file_path = os.path.realpath(file_path)
+        with open(absolute_file_path, encoding=&#34;utf8&#34;) as file:
+            try:
+                matches = re.compile(regex).finditer(file.read())
+                package_name = name
+                for match in matches:
+                    version = match.group(&#34;version&#34;)
+                    if package_name is None:
+                        package_name = match.group(&#34;name&#34;)
+                    package_metadata = PackageMetadata(
+                        host=&#34;localhost&#34;,
+                        name=package_name,
+                        package_manager=&#34;local file&#34;,
+                        current=version,
+                    )
+                    file_name = os.path.basename(absolute_file_path)
+                    file_info = FileMetadata(
+                        PackagesMetadataList([package_metadata]),
+                        version=None,
+                        name=file_name,
+                        host=&#34;localhost&#34;,
+                        package_manager=&#34;local file&#34;,
+                        verb=&#34;list&#34;,
+                        time=time.time(),
+                        path=file_path,
+                    )
+                    self.files.append(file_info)
+            except IndexError:
+                raise IndexError(&#34;Invalid regex. You need to provide a named group called `version` and either a name &#34;
+                                 &#34;parameter or a named group called `name`&#34;)
+
+    def items(
+            self,
+            verb: str | list[str] = &#34;list&#34;,
+            host: str | None = None,
+            package_manager: str | None = None,
+            package_name: str | list[str] | None = None,
+    ) -&gt; list[PackageMetadata]:
+        &#34;&#34;&#34;List all dependencies matching the given criteria&#34;&#34;&#34;
+        def file_condition(file: FileMetadata) -&gt; bool:
+            if file.data is None:
+                return False
+            if host is not None and file.host != host:
+                return False
+            if package_manager is not None and file.package_manager != package_manager:
+                return False
+            if isinstance(verb, list):
+                return file.verb in verb
+            return file.verb == verb
+
+        files_with_dependencies_data: list[FileMetadata] = [
+            file for file in self.files if file_condition(file)
+        ]
+        all_items = [
+            item for file_info in files_with_dependencies_data for item in file_info.data
+        ]
+
+        def package_condition(package: PackageMetadata) -&gt; bool:
+            if package_name is None:
+                return True
+            if isinstance(package_name, list):
+                return package.name in package_name
+            return package.name == package_name
+
+        return [item for item in all_items if package_condition(item)]
+
+    def audit(
+            self,
+            host: str | None = None,
+            package_manager: str | None = None,
+            package_name: str | list[str] | None = None,
+    ):
+        &#34;&#34;&#34;List security vulnerabilities&#34;&#34;&#34;
+        return Vulnerabilities(self.items(&#34;audit&#34;, host, package_manager, package_name))
+
+    def ls(
+            self,
+            host: str | None = None,
+            package_manager: str | None = None,
+            package_name: str | list[str] | None = None,
+    ):
+        &#34;&#34;&#34;List software packages&#34;&#34;&#34;
+        return PackagesMetadataList(self.items([&#34;list&#34;, &#34;version&#34;], host, package_manager, package_name))
+
+    def outdated(
+            self,
+            host: str | None = None,
+            package_manager: str | None = None,
+            package_name: str | list[str] | None = None,
+    ):
+        &#34;&#34;&#34;List available updates&#34;&#34;&#34;
+        return AvailableUpdates(self.items(&#34;outdated&#34;, host, package_manager, package_name))
+
+    def show(
+            self, package_name: str | list[str], display_name: str | None = None
+    ):
+        &#34;&#34;&#34;Match versions of all installations of a particular package&#34;&#34;&#34;
+        return VersionsMatch(
+            PackagesMetadataList(self.items([&#34;list&#34;, &#34;version&#34;], package_name=package_name)),
+            package_name,
+            display_name,
+        )</code></pre>
+</details>
+<h3>Class variables</h3>
+<dl>
+<dt id="omniversion.Omniversion.files"><code class="name">var <span class="ident">files</span> : <a title="omniversion.file_info.file_infos_list.FileInfosList" href="file_info/file_infos_list.html#omniversion.file_info.file_infos_list.FileInfosList">FileInfosList</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="omniversion.Omniversion.add_local_config_value"><code class="name flex">
+<span>def <span class="ident">add_local_config_value</span></span>(<span>self, file_path, regex: str, name: str | None = None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Add dependency meta data from a local file</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def add_local_config_value(
+        self, file_path, regex: str, name: str | None = None
+):
+    &#34;&#34;&#34;Add dependency meta data from a local file&#34;&#34;&#34;
+    absolute_file_path = os.path.realpath(file_path)
+    with open(absolute_file_path, encoding=&#34;utf8&#34;) as file:
+        try:
+            matches = re.compile(regex).finditer(file.read())
+            package_name = name
+            for match in matches:
+                version = match.group(&#34;version&#34;)
+                if package_name is None:
+                    package_name = match.group(&#34;name&#34;)
+                package_metadata = PackageMetadata(
+                    host=&#34;localhost&#34;,
+                    name=package_name,
+                    package_manager=&#34;local file&#34;,
+                    current=version,
+                )
+                file_name = os.path.basename(absolute_file_path)
+                file_info = FileMetadata(
+                    PackagesMetadataList([package_metadata]),
+                    version=None,
+                    name=file_name,
+                    host=&#34;localhost&#34;,
+                    package_manager=&#34;local file&#34;,
+                    verb=&#34;list&#34;,
+                    time=time.time(),
+                    path=file_path,
+                )
+                self.files.append(file_info)
+        except IndexError:
+            raise IndexError(&#34;Invalid regex. You need to provide a named group called `version` and either a name &#34;
+                             &#34;parameter or a named group called `name`&#34;)</code></pre>
+</details>
+</dd>
+<dt id="omniversion.Omniversion.audit"><code class="name flex">
+<span>def <span class="ident">audit</span></span>(<span>self, host: str | None = None, package_manager: str | None = None, package_name: str | list[str] | None = None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>List security vulnerabilities</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def audit(
+        self,
+        host: str | None = None,
+        package_manager: str | None = None,
+        package_name: str | list[str] | None = None,
+):
+    &#34;&#34;&#34;List security vulnerabilities&#34;&#34;&#34;
+    return Vulnerabilities(self.items(&#34;audit&#34;, host, package_manager, package_name))</code></pre>
+</details>
+</dd>
+<dt id="omniversion.Omniversion.hosts"><code class="name flex">
+<span>def <span class="ident">hosts</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Deduplicated list of hosts for which files are present in the list</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def hosts(self):
+    &#34;&#34;&#34;Deduplicated list of hosts for which files are present in the list&#34;&#34;&#34;
+    return sorted(list({file.host for file in self.files}))</code></pre>
+</details>
+</dd>
+<dt id="omniversion.Omniversion.items"><code class="name flex">
+<span>def <span class="ident">items</span></span>(<span>self, verb: str | list[str] = 'list', host: str | None = None, package_manager: str | None = None, package_name: str | list[str] | None = None) ‑> list[<a title="omniversion.package_metadata.package_metadata.PackageMetadata" href="package_metadata/package_metadata.html#omniversion.package_metadata.package_metadata.PackageMetadata">PackageMetadata</a>]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>List all dependencies matching the given criteria</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def items(
+        self,
+        verb: str | list[str] = &#34;list&#34;,
+        host: str | None = None,
+        package_manager: str | None = None,
+        package_name: str | list[str] | None = None,
+) -&gt; list[PackageMetadata]:
+    &#34;&#34;&#34;List all dependencies matching the given criteria&#34;&#34;&#34;
+    def file_condition(file: FileMetadata) -&gt; bool:
+        if file.data is None:
+            return False
+        if host is not None and file.host != host:
+            return False
+        if package_manager is not None and file.package_manager != package_manager:
+            return False
+        if isinstance(verb, list):
+            return file.verb in verb
+        return file.verb == verb
+
+    files_with_dependencies_data: list[FileMetadata] = [
+        file for file in self.files if file_condition(file)
+    ]
+    all_items = [
+        item for file_info in files_with_dependencies_data for item in file_info.data
+    ]
+
+    def package_condition(package: PackageMetadata) -&gt; bool:
+        if package_name is None:
+            return True
+        if isinstance(package_name, list):
+            return package.name in package_name
+        return package.name == package_name
+
+    return [item for item in all_items if package_condition(item)]</code></pre>
+</details>
+</dd>
+<dt id="omniversion.Omniversion.ls"><code class="name flex">
+<span>def <span class="ident">ls</span></span>(<span>self, host: str | None = None, package_manager: str | None = None, package_name: str | list[str] | None = None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>List software packages</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def ls(
+        self,
+        host: str | None = None,
+        package_manager: str | None = None,
+        package_name: str | list[str] | None = None,
+):
+    &#34;&#34;&#34;List software packages&#34;&#34;&#34;
+    return PackagesMetadataList(self.items([&#34;list&#34;, &#34;version&#34;], host, package_manager, package_name))</code></pre>
+</details>
+</dd>
+<dt id="omniversion.Omniversion.outdated"><code class="name flex">
+<span>def <span class="ident">outdated</span></span>(<span>self, host: str | None = None, package_manager: str | None = None, package_name: str | list[str] | None = None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>List available updates</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def outdated(
+        self,
+        host: str | None = None,
+        package_manager: str | None = None,
+        package_name: str | list[str] | None = None,
+):
+    &#34;&#34;&#34;List available updates&#34;&#34;&#34;
+    return AvailableUpdates(self.items(&#34;outdated&#34;, host, package_manager, package_name))</code></pre>
+</details>
+</dd>
+<dt id="omniversion.Omniversion.show"><code class="name flex">
+<span>def <span class="ident">show</span></span>(<span>self, package_name: str | list[str], display_name: str | None = None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Match versions of all installations of a particular package</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def show(
+        self, package_name: str | list[str], display_name: str | None = None
+):
+    &#34;&#34;&#34;Match versions of all installations of a particular package&#34;&#34;&#34;
+    return VersionsMatch(
+        PackagesMetadataList(self.items([&#34;list&#34;, &#34;version&#34;], package_name=package_name)),
+        package_name,
+        display_name,
+    )</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="omniversion.PackageMetadata"><code class="flex name class">
+<span>class <span class="ident">PackageMetadata</span></span>
+<span>(</span><span>name: str | None = None, aliases: list[str] | None = &lt;factory&gt;, package_manager: str | None = None, host: str | None = None, installations: list[<a title="omniversion.package_metadata.installed_package.InstalledPackage" href="package_metadata/installed_package.html#omniversion.package_metadata.installed_package.InstalledPackage">InstalledPackage</a>] = &lt;factory&gt;, current: str | None = None, default: str | None = None, latest: str | None = None, wanted: str | None = None, locked: str | None = None, architecture: str | None = None, author: str | None = None, description: str | None = None, homepage: str | None = None, license: str | None = None, sources: list[str] = &lt;factory&gt;, advisories: list[<a title="omniversion.package_metadata.advisory.Advisory" href="package_metadata/advisory.html#omniversion.package_metadata.advisory.Advisory">Advisory</a>] = &lt;factory&gt;)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>PackageMetadata contains all available information about a particular software package,
+including existing installations, security advisories and all sorts of other metadata.</p>
+<p>If multiple versions of the same package need to be tracked
+for a single combination of package manager and host,
+this should be done using a single PackageMetadata structure.
+By contrast, otherwise identical packages made available by different package managers
+are considered different, as their metadata and/or content <em>may</em> indeed differ.
+We also distinguish between package metadata on different hosts,
+as installations are different and available versions
+will depend on the configured repositories, firewall settings etc.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class PackageMetadata:  # pylint: disable=too-many-instance-attributes
+    &#34;&#34;&#34;PackageMetadata contains all available information about a particular software package,
+including existing installations, security advisories and all sorts of other metadata.
+
+If multiple versions of the same package need to be tracked
+for a single combination of package manager and host,
+this should be done using a single PackageMetadata structure.
+By contrast, otherwise identical packages made available by different package managers
+are considered different, as their metadata and/or content *may* indeed differ.
+We also distinguish between package metadata on different hosts,
+as installations are different and available versions
+will depend on the configured repositories, firewall settings etc.
+&#34;&#34;&#34;
+
+    name: str | None = None
+    aliases: list[str] | None = field(default_factory=lambda: [])
+
+    package_manager: str | None = None
+    host: str | None = None
+    installations: list[InstalledPackage] = field(default_factory=lambda: [])
+
+    current: str | None = None
+    default: str | None = None
+    latest: str | None = None
+    wanted: str | None = None
+    locked: str | None = None
+
+    architecture: str | None = None
+    author: str | None = None
+    description: str | None = None
+    homepage: str | None = None
+    license: str | None = None
+    sources: list[str] = field(default_factory=lambda: [])
+    advisories: list[Advisory] = field(default_factory=lambda: [])</code></pre>
+</details>
+<h3>Class variables</h3>
+<dl>
+<dt id="omniversion.PackageMetadata.advisories"><code class="name">var <span class="ident">advisories</span> : list[<a title="omniversion.package_metadata.advisory.Advisory" href="package_metadata/advisory.html#omniversion.package_metadata.advisory.Advisory">Advisory</a>]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="omniversion.PackageMetadata.aliases"><code class="name">var <span class="ident">aliases</span> : list[str] | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="omniversion.PackageMetadata.architecture"><code class="name">var <span class="ident">architecture</span> : str | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="omniversion.PackageMetadata.author"><code class="name">var <span class="ident">author</span> : str | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="omniversion.PackageMetadata.current"><code class="name">var <span class="ident">current</span> : str | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="omniversion.PackageMetadata.default"><code class="name">var <span class="ident">default</span> : str | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="omniversion.PackageMetadata.description"><code class="name">var <span class="ident">description</span> : str | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="omniversion.PackageMetadata.homepage"><code class="name">var <span class="ident">homepage</span> : str | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="omniversion.PackageMetadata.host"><code class="name">var <span class="ident">host</span> : str | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="omniversion.PackageMetadata.installations"><code class="name">var <span class="ident">installations</span> : list[<a title="omniversion.package_metadata.installed_package.InstalledPackage" href="package_metadata/installed_package.html#omniversion.package_metadata.installed_package.InstalledPackage">InstalledPackage</a>]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="omniversion.PackageMetadata.latest"><code class="name">var <span class="ident">latest</span> : str | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="omniversion.PackageMetadata.license"><code class="name">var <span class="ident">license</span> : str | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="omniversion.PackageMetadata.locked"><code class="name">var <span class="ident">locked</span> : str | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="omniversion.PackageMetadata.name"><code class="name">var <span class="ident">name</span> : str | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="omniversion.PackageMetadata.package_manager"><code class="name">var <span class="ident">package_manager</span> : str | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="omniversion.PackageMetadata.sources"><code class="name">var <span class="ident">sources</span> : list[str]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="omniversion.PackageMetadata.wanted"><code class="name">var <span class="ident">wanted</span> : str | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="omniversion.PackagesMetadataList"><code class="flex name class">
+<span>class <span class="ident">PackagesMetadataList</span></span>
+<span>(</span><span>initlist=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>A list of software package mate data infos</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class PackagesMetadataList(UserList[PackageMetadata]):
+    &#34;&#34;&#34;A list of software package mate data infos&#34;&#34;&#34;
+
+    def __str__(self):
+        &#34;&#34;&#34;Human-readable description of each dependency&#34;&#34;&#34;
+        num_items = len(self)
+        if num_items &gt; 0:
+            table_items = [
+                f&#39;\t{(item.host or &#34;&#34;).ljust(12)}&#39;
+                + f&#39;\t{(item.current or &#34;&#34;).ljust(20)}&#39;
+                + f&#39;\t{(item.package_manager or &#34;&#34;).ljust(12)}&#39;
+                for item in self
+            ]
+            return (
+                    f&#39;{num_items} version{&#34;&#34; if num_items == 1 else &#34;s&#34;} found\n&#39;
+                    + &#34;\n&#34;.join(table_items)
+            )
+        return pretty.traffic_light(&#34;No versions found&#34;, &#34;red&#34;)
+
+    def summary(self):
+        &#34;&#34;&#34;Summary of dependency counts grouped by host&#34;&#34;&#34;
+        result = &#34;&#34;
+        for host, items in group_by_host(self):
+            result += &#34;\n  &#34; + pretty.hostname(host) + &#34;\n&#34;
+            result += &#34;    &#34; + pretty.dependency_count(len(list(items)))
+        return result</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>collections.UserList</li>
+<li>collections.abc.MutableSequence</li>
+<li>collections.abc.Sequence</li>
+<li>collections.abc.Reversible</li>
+<li>collections.abc.Collection</li>
+<li>collections.abc.Sized</li>
+<li>collections.abc.Iterable</li>
+<li>collections.abc.Container</li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="omniversion.package_metadata.list.available_updates.AvailableUpdates" href="package_metadata/list/available_updates.html#omniversion.package_metadata.list.available_updates.AvailableUpdates">AvailableUpdates</a></li>
+<li><a title="omniversion.package_metadata.list.versions_match.VersionsMatch" href="package_metadata/list/versions_match.html#omniversion.package_metadata.list.versions_match.VersionsMatch">VersionsMatch</a></li>
+<li><a title="omniversion.package_metadata.list.vulnerabilities.Vulnerabilities" href="package_metadata/list/vulnerabilities.html#omniversion.package_metadata.list.vulnerabilities.Vulnerabilities">Vulnerabilities</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="omniversion.PackagesMetadataList.summary"><code class="name flex">
+<span>def <span class="ident">summary</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Summary of dependency counts grouped by host</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def summary(self):
+    &#34;&#34;&#34;Summary of dependency counts grouped by host&#34;&#34;&#34;
+    result = &#34;&#34;
+    for host, items in group_by_host(self):
+        result += &#34;\n  &#34; + pretty.hostname(host) + &#34;\n&#34;
+        result += &#34;    &#34; + pretty.dependency_count(len(list(items)))
+    return result</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="omniversion.VersionsMatch"><code class="flex name class">
+<span>class <span class="ident">VersionsMatch</span></span>
+<span>(</span><span>data: <a title="omniversion.package_metadata.list.packages_metadata_list.PackagesMetadataList" href="package_metadata/list/packages_metadata_list.html#omniversion.package_metadata.list.packages_metadata_list.PackagesMetadataList">PackagesMetadataList</a>, package_name: str, display_name: str | None = None, expected_num: int | None = None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>List of installations of one particular package</p>
+<p>Initialize the dependency match</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class VersionsMatch(PackagesMetadataList):
+    &#34;&#34;&#34;List of installations of one particular package&#34;&#34;&#34;
+    package_name: str
+    display_name: str
+    expected_num: int | None
+
+    def __init__(
+            self,
+            data: PackagesMetadataList,
+            package_name: str,
+            display_name: str | None = None,
+            expected_num: int | None = None,
+    ):
+        &#34;&#34;&#34;Initialize the dependency match&#34;&#34;&#34;
+        super().__init__(data)
+        self.package_name = package_name
+        self.display_name = display_name or package_name
+        self.expected_num = expected_num
+
+    @property
+    def is_consistent(self):
+        &#34;&#34;&#34;Do all versions match?&#34;&#34;&#34;
+        if len(self.deduplicated_versions()) == 1:
+            return True
+        return False
+
+    @property
+    def has_all_expected_items(self):
+        &#34;&#34;&#34;Does the number of dependencies match the expected value?&#34;&#34;&#34;
+        return self.expected_num is None or len(self.data) == self.expected_num
+
+    def __str__(self):
+        &#34;&#34;&#34;Human-readable description of the version match&#34;&#34;&#34;
+        table_items = [
+            f&#39;\t{(item.current or &#34;&#34;).ljust(20)}&#39;
+            + f&#39;\t{(item.host or &#34;&#34;).ljust(12)}&#39;
+            + f&#39;\t{(item.package_manager or &#34;&#34;).ljust(12)}&#39;
+            + f&#39;\t{item.name or &#34;&#34;}&#39;
+            for item in self.data
+        ]
+        if len(self.versions()) == 0:
+            return pretty.traffic_light(f&#34;No {self.display_name} versions found&#34;, &#34;red&#34;)
+        if len(self.versions()) == 1:
+            return pretty.traffic_light(
+                f&#34;Only one {self.display_name} version found\n&#34;
+                + &#34;\n&#34;.join(table_items),
+                &#34;red&#34;,
+            )
+        if self.is_consistent:
+            if self.has_all_expected_items:
+                return pretty.traffic_light(
+                    f&#34;{self.display_name.capitalize()} versions match&#34;, &#34;green&#34;
+                )
+            return pretty.traffic_light(
+                f&#34;Only {len(self.data)} installations of {self.display_name} found&#34;
+                + f&#34; (expected {self.expected_num})&#34;,
+                &#34;amber&#34;,
+            )
+        if self.has_all_expected_items:
+            return pretty.traffic_light(
+                f&#34;{self.display_name.capitalize()} versions mismatch\n&#34;
+                + &#34;\n&#34;.join(table_items),
+                &#34;red&#34;,
+            )
+        return pretty.traffic_light(
+            f&#34;{self.display_name.capitalize()} versions mismatch&#34;
+            + f&#34; (only {len(self.data)} of {self.expected_num} installations found)\n&#34;
+            + &#34;\n&#34;.join(table_items),
+            &#34;red&#34;,
+        )
+
+    def versions(self):
+        &#34;&#34;&#34;All dependency versions with duplicates removed&#34;&#34;&#34;
+        return [dependency.current for dependency in self.data if dependency.current is not None]
+
+    def deduplicated_versions(self):
+        &#34;&#34;&#34;All dependency versions with duplicates removed&#34;&#34;&#34;
+        return {dependency.current for dependency in self.data}</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="omniversion.package_metadata.list.packages_metadata_list.PackagesMetadataList" href="package_metadata/list/packages_metadata_list.html#omniversion.package_metadata.list.packages_metadata_list.PackagesMetadataList">PackagesMetadataList</a></li>
+<li>collections.UserList</li>
+<li>collections.abc.MutableSequence</li>
+<li>collections.abc.Sequence</li>
+<li>collections.abc.Reversible</li>
+<li>collections.abc.Collection</li>
+<li>collections.abc.Sized</li>
+<li>collections.abc.Iterable</li>
+<li>collections.abc.Container</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="omniversion.VersionsMatch.display_name"><code class="name">var <span class="ident">display_name</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="omniversion.VersionsMatch.expected_num"><code class="name">var <span class="ident">expected_num</span> : int | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="omniversion.VersionsMatch.package_name"><code class="name">var <span class="ident">package_name</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Instance variables</h3>
+<dl>
+<dt id="omniversion.VersionsMatch.has_all_expected_items"><code class="name">var <span class="ident">has_all_expected_items</span></code></dt>
+<dd>
+<div class="desc"><p>Does the number of dependencies match the expected value?</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def has_all_expected_items(self):
+    &#34;&#34;&#34;Does the number of dependencies match the expected value?&#34;&#34;&#34;
+    return self.expected_num is None or len(self.data) == self.expected_num</code></pre>
+</details>
+</dd>
+<dt id="omniversion.VersionsMatch.is_consistent"><code class="name">var <span class="ident">is_consistent</span></code></dt>
+<dd>
+<div class="desc"><p>Do all versions match?</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def is_consistent(self):
+    &#34;&#34;&#34;Do all versions match?&#34;&#34;&#34;
+    if len(self.deduplicated_versions()) == 1:
+        return True
+    return False</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="omniversion.VersionsMatch.deduplicated_versions"><code class="name flex">
+<span>def <span class="ident">deduplicated_versions</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>All dependency versions with duplicates removed</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def deduplicated_versions(self):
+    &#34;&#34;&#34;All dependency versions with duplicates removed&#34;&#34;&#34;
+    return {dependency.current for dependency in self.data}</code></pre>
+</details>
+</dd>
+<dt id="omniversion.VersionsMatch.versions"><code class="name flex">
+<span>def <span class="ident">versions</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>All dependency versions with duplicates removed</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def versions(self):
+    &#34;&#34;&#34;All dependency versions with duplicates removed&#34;&#34;&#34;
+    return [dependency.current for dependency in self.data if dependency.current is not None]</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="omniversion.package_metadata.list.packages_metadata_list.PackagesMetadataList" href="package_metadata/list/packages_metadata_list.html#omniversion.package_metadata.list.packages_metadata_list.PackagesMetadataList">PackagesMetadataList</a></b></code>:
+<ul class="hlist">
+<li><code><a title="omniversion.package_metadata.list.packages_metadata_list.PackagesMetadataList.summary" href="package_metadata/list/packages_metadata_list.html#omniversion.package_metadata.list.packages_metadata_list.PackagesMetadataList.summary">summary</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="omniversion.Vulnerabilities"><code class="flex name class">
+<span>class <span class="ident">Vulnerabilities</span></span>
+<span>(</span><span>initlist=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>A list of dependencies, optionally containing vulnerability notices</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Vulnerabilities(PackagesMetadataList):
+    &#34;&#34;&#34;A list of dependencies, optionally containing vulnerability notices&#34;&#34;&#34;
+
+    def __str__(self):
+        &#34;&#34;&#34;Human-readable description of the security advisories for each dependency&#34;&#34;&#34;
+        advisories = [[data_item, advisory] for data_item in self for advisory in data_item.advisories]
+        if len(advisories) == 0:
+            return pretty.traffic_light(&#34;No vulnerabilities found&#34;)
+        audit_items = [
+            f&#39;\t{(data_item.name or &#34;&#34;).ljust(20)}&#39;
+            + f&#39;\t{(data_item.host or &#34;&#34;).ljust(12)}&#39;
+            + f&#39;\t{(data_item.package_manager or &#34;&#34;).ljust(12)}&#39;
+            + f&#39;\t{advisory.severity or &#34;&#34;}&#39;
+            for [data_item, advisory] in advisories
+        ]
+        summary = f&#34;{len(advisories)} vulnerabilities found&#34; if len(advisories) &gt; 1 else &#34;One vulnerability found&#34;
+        return pretty.traffic_light(
+            f&#34;{summary}\n&#34;
+            + &#34;\n&#34;.join(audit_items),
+            &#34;red&#34;)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="omniversion.package_metadata.list.packages_metadata_list.PackagesMetadataList" href="package_metadata/list/packages_metadata_list.html#omniversion.package_metadata.list.packages_metadata_list.PackagesMetadataList">PackagesMetadataList</a></li>
+<li>collections.UserList</li>
+<li>collections.abc.MutableSequence</li>
+<li>collections.abc.Sequence</li>
+<li>collections.abc.Reversible</li>
+<li>collections.abc.Collection</li>
+<li>collections.abc.Sized</li>
+<li>collections.abc.Iterable</li>
+<li>collections.abc.Container</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="omniversion.package_metadata.list.packages_metadata_list.PackagesMetadataList" href="package_metadata/list/packages_metadata_list.html#omniversion.package_metadata.list.packages_metadata_list.PackagesMetadataList">PackagesMetadataList</a></b></code>:
+<ul class="hlist">
+<li><code><a title="omniversion.package_metadata.list.packages_metadata_list.PackagesMetadataList.summary" href="package_metadata/list/packages_metadata_list.html#omniversion.package_metadata.list.packages_metadata_list.PackagesMetadataList.summary">summary</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+</dl>
 </section>
 </article>
 <nav id="sidebar">
@@ -89,14 +1009,93 @@ import omniversion.types</code></pre>
 <ul id="index">
 <li><h3><a href="#header-submodules">Sub-modules</a></h3>
 <ul>
-<li><code><a title="omniversion.data" href="data/index.html">omniversion.data</a></code></li>
 <li><code><a title="omniversion.file_info" href="file_info/index.html">omniversion.file_info</a></code></li>
 <li><code><a title="omniversion.helpers" href="helpers/index.html">omniversion.helpers</a></code></li>
 <li><code><a title="omniversion.loader" href="loader/index.html">omniversion.loader</a></code></li>
+<li><code><a title="omniversion.omniversion" href="omniversion.html">omniversion.omniversion</a></code></li>
+<li><code><a title="omniversion.package_manager" href="package_manager/index.html">omniversion.package_manager</a></code></li>
 <li><code><a title="omniversion.package_metadata" href="package_metadata/index.html">omniversion.package_metadata</a></code></li>
 <li><code><a title="omniversion.pretty" href="pretty/index.html">omniversion.pretty</a></code></li>
 <li><code><a title="omniversion.samples" href="samples/index.html">omniversion.samples</a></code></li>
-<li><code><a title="omniversion.types" href="types/index.html">omniversion.types</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="omniversion.Advisory" href="#omniversion.Advisory">Advisory</a></code></h4>
+<ul class="two-column">
+<li><code><a title="omniversion.Advisory.access" href="#omniversion.Advisory.access">access</a></code></li>
+<li><code><a title="omniversion.Advisory.cvss_score" href="#omniversion.Advisory.cvss_score">cvss_score</a></code></li>
+<li><code><a title="omniversion.Advisory.identifier" href="#omniversion.Advisory.identifier">identifier</a></code></li>
+<li><code><a title="omniversion.Advisory.overview" href="#omniversion.Advisory.overview">overview</a></code></li>
+<li><code><a title="omniversion.Advisory.patched_versions" href="#omniversion.Advisory.patched_versions">patched_versions</a></code></li>
+<li><code><a title="omniversion.Advisory.recommendation" href="#omniversion.Advisory.recommendation">recommendation</a></code></li>
+<li><code><a title="omniversion.Advisory.references" href="#omniversion.Advisory.references">references</a></code></li>
+<li><code><a title="omniversion.Advisory.severity" href="#omniversion.Advisory.severity">severity</a></code></li>
+<li><code><a title="omniversion.Advisory.title" href="#omniversion.Advisory.title">title</a></code></li>
+<li><code><a title="omniversion.Advisory.url" href="#omniversion.Advisory.url">url</a></code></li>
+<li><code><a title="omniversion.Advisory.vulnerable_versions" href="#omniversion.Advisory.vulnerable_versions">vulnerable_versions</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="omniversion.AvailableUpdates" href="#omniversion.AvailableUpdates">AvailableUpdates</a></code></h4>
+</li>
+<li>
+<h4><code><a title="omniversion.Omniversion" href="#omniversion.Omniversion">Omniversion</a></code></h4>
+<ul class="">
+<li><code><a title="omniversion.Omniversion.add_local_config_value" href="#omniversion.Omniversion.add_local_config_value">add_local_config_value</a></code></li>
+<li><code><a title="omniversion.Omniversion.audit" href="#omniversion.Omniversion.audit">audit</a></code></li>
+<li><code><a title="omniversion.Omniversion.files" href="#omniversion.Omniversion.files">files</a></code></li>
+<li><code><a title="omniversion.Omniversion.hosts" href="#omniversion.Omniversion.hosts">hosts</a></code></li>
+<li><code><a title="omniversion.Omniversion.items" href="#omniversion.Omniversion.items">items</a></code></li>
+<li><code><a title="omniversion.Omniversion.ls" href="#omniversion.Omniversion.ls">ls</a></code></li>
+<li><code><a title="omniversion.Omniversion.outdated" href="#omniversion.Omniversion.outdated">outdated</a></code></li>
+<li><code><a title="omniversion.Omniversion.show" href="#omniversion.Omniversion.show">show</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="omniversion.PackageMetadata" href="#omniversion.PackageMetadata">PackageMetadata</a></code></h4>
+<ul class="two-column">
+<li><code><a title="omniversion.PackageMetadata.advisories" href="#omniversion.PackageMetadata.advisories">advisories</a></code></li>
+<li><code><a title="omniversion.PackageMetadata.aliases" href="#omniversion.PackageMetadata.aliases">aliases</a></code></li>
+<li><code><a title="omniversion.PackageMetadata.architecture" href="#omniversion.PackageMetadata.architecture">architecture</a></code></li>
+<li><code><a title="omniversion.PackageMetadata.author" href="#omniversion.PackageMetadata.author">author</a></code></li>
+<li><code><a title="omniversion.PackageMetadata.current" href="#omniversion.PackageMetadata.current">current</a></code></li>
+<li><code><a title="omniversion.PackageMetadata.default" href="#omniversion.PackageMetadata.default">default</a></code></li>
+<li><code><a title="omniversion.PackageMetadata.description" href="#omniversion.PackageMetadata.description">description</a></code></li>
+<li><code><a title="omniversion.PackageMetadata.homepage" href="#omniversion.PackageMetadata.homepage">homepage</a></code></li>
+<li><code><a title="omniversion.PackageMetadata.host" href="#omniversion.PackageMetadata.host">host</a></code></li>
+<li><code><a title="omniversion.PackageMetadata.installations" href="#omniversion.PackageMetadata.installations">installations</a></code></li>
+<li><code><a title="omniversion.PackageMetadata.latest" href="#omniversion.PackageMetadata.latest">latest</a></code></li>
+<li><code><a title="omniversion.PackageMetadata.license" href="#omniversion.PackageMetadata.license">license</a></code></li>
+<li><code><a title="omniversion.PackageMetadata.locked" href="#omniversion.PackageMetadata.locked">locked</a></code></li>
+<li><code><a title="omniversion.PackageMetadata.name" href="#omniversion.PackageMetadata.name">name</a></code></li>
+<li><code><a title="omniversion.PackageMetadata.package_manager" href="#omniversion.PackageMetadata.package_manager">package_manager</a></code></li>
+<li><code><a title="omniversion.PackageMetadata.sources" href="#omniversion.PackageMetadata.sources">sources</a></code></li>
+<li><code><a title="omniversion.PackageMetadata.wanted" href="#omniversion.PackageMetadata.wanted">wanted</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="omniversion.PackagesMetadataList" href="#omniversion.PackagesMetadataList">PackagesMetadataList</a></code></h4>
+<ul class="">
+<li><code><a title="omniversion.PackagesMetadataList.summary" href="#omniversion.PackagesMetadataList.summary">summary</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="omniversion.VersionsMatch" href="#omniversion.VersionsMatch">VersionsMatch</a></code></h4>
+<ul class="">
+<li><code><a title="omniversion.VersionsMatch.deduplicated_versions" href="#omniversion.VersionsMatch.deduplicated_versions">deduplicated_versions</a></code></li>
+<li><code><a title="omniversion.VersionsMatch.display_name" href="#omniversion.VersionsMatch.display_name">display_name</a></code></li>
+<li><code><a title="omniversion.VersionsMatch.expected_num" href="#omniversion.VersionsMatch.expected_num">expected_num</a></code></li>
+<li><code><a title="omniversion.VersionsMatch.has_all_expected_items" href="#omniversion.VersionsMatch.has_all_expected_items">has_all_expected_items</a></code></li>
+<li><code><a title="omniversion.VersionsMatch.is_consistent" href="#omniversion.VersionsMatch.is_consistent">is_consistent</a></code></li>
+<li><code><a title="omniversion.VersionsMatch.package_name" href="#omniversion.VersionsMatch.package_name">package_name</a></code></li>
+<li><code><a title="omniversion.VersionsMatch.versions" href="#omniversion.VersionsMatch.versions">versions</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="omniversion.Vulnerabilities" href="#omniversion.Vulnerabilities">Vulnerabilities</a></code></h4>
+</li>
 </ul>
 </li>
 </ul>
