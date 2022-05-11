@@ -1,7 +1,7 @@
 ---
-- name: Refresh all deplendency caches
+- name: Refresh all dependency caches
   hosts: all
   roles:
-    - ../roles/check
-    - ../roles/autodetect
-    - ../roles/refresh
+    - layer9gmbh.omniversion.check
+    - layer9gmbh.omniversion.autodetect
+    - layer9gmbh.omniversion.refresh

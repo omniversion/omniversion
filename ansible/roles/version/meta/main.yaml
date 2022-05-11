@@ -1,0 +1,6 @@
+---
+galaxy_info:
+  role_name: omniversion version role
+  description: Fetch versions of package managers themselves, as well as independently installed software.
+  author: Roman Priebe
+  company: Layer9 GmbH

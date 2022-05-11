@@ -1,0 +1,15 @@
+---
+- name: 'gem : List available `gem` updates'
+  ansible.builtin.command: 'gem outdated --update-sources --quiet'
+  args:
+    chdir: '{{ var_omniversion.gem.dir | default("/") }}'
+  register: var_omniversion_gem_result
+  changed_when: true
+
+- include_tasks: ../../shared/parse.yaml
+  vars:
+    var_omniversion_parse_input: '{{ var_omniversion_gem_result.stdout | string }}'
+
+- include_tasks: ../../shared/save.yaml
+  vars:
+    var_omniversion_save_input: '{{ var_omniversion_parse_result.stdout | string }}'

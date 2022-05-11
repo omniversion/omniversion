@@ -1,11 +1,11 @@
 ---
-- name: Fetch all info from servers
-  hosts: webservers
+- name: Fetch all version info from servers
+  hosts: all
   roles:
-    - ../roles/check
-    - ../roles/autodetect
-    - ../roles/audit
-    - ../roles/list
-    - ../roles/outdated
-    - ../roles/refresh
-    - ../roles/version
+    - layer9gmbh.omniversion.check
+    - layer9gmbh.omniversion.autodetect
+    - layer9gmbh.omniversion.audit
+    - layer9gmbh.omniversion.list
+    - layer9gmbh.omniversion.outdated
+    - layer9gmbh.omniversion.refresh
+    - layer9gmbh.omniversion.version

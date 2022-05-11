@@ -5,25 +5,26 @@
   tags:
     - always
 
-- name: Get versions of npm, Node etc.
-  when: var_omniversion.npm is defined
+- name: Run `npm` tasks
+  when: var_omniversion.npm is defined and var_omniversion.npm
   tags:
     - npm
-  block:
-    - name: Get versions as json
-      ansible.builtin.command: 'npm version --json'
-      args:
-        chdir: '{{ var_omniversion.npm.dir | default("/") }}'
-      register: omniversion_result
-      changed_when: true
+  args:
+    apply:
+      tags:
+        - npm
+  vars:
+    var_omniversion_pm: npm
+  include_tasks: npm.yaml
 
-    - include_tasks: ../../shared/save.yaml
-      vars:
-        var_omniversion_pm: npm
-
-- name: Get versions of specific packages through custom shell commands
-  when: var_omniversion.custom is defined
+- name: Run `custom` tasks
+  when: var_omniversion.custom is defined and var_omniversion.custom
   tags:
     - custom
-  with_items: '{{ var_omniversion.custom }}'
+  args:
+    apply:
+      tags:
+        - custom
+  vars:
+    var_omniversion_pm: custom
   include_tasks: custom.yaml

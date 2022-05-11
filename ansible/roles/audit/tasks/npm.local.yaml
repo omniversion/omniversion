@@ -1,15 +1,16 @@
-- name: List local `npm` advisories
-  ansible.builtin.shell: 'npm audit --prod --json 2>&1 || true'
+---
+- name: 'npm : local : List local `npm` security advisories'
+  ansible.builtin.shell: 'npm audit --prod --json --all 2> /dev/null || true'
   args:
-    chdir: '{{ var_omniversion_dir }}'
-  register: omniversion_result
+    chdir: '{{ var_omniversion_npm_local_dir }}'
+  register: var_omniversion_npm_local_result
   changed_when: true
-  tags:
-    - npm
 
-- name: Save result
-  include_tasks: ../../shared/save.yaml
-  tags:
-    - npm
+- name: 'npm : local : Parse result'
+  include_tasks: ../../shared/parse.yaml
   vars:
-    var_omniversion_pm: npm
+    var_omniversion_parse_input: '{{ var_omniversion_npm_local_result.stdout | string }}'
+
+- name: 'npm : local : Remember result'
+  set_fact:
+    var_omniversion_npm_local_parsed_results: '{{ var_omniversion_npm_local_parsed_results + [var_omniversion_parse_result.stdout] }}'

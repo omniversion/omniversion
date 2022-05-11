@@ -1,3 +1,3 @@
-# List role
+# The `list` role
 
-Documentation for the role.
+Applies the `list` verb for each package manager in turn, storing the results in the `omniversion` results directory.

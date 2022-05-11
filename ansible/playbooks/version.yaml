@@ -2,6 +2,6 @@
 - name: Show version of package manager itself
   hosts: all
   roles:
-    - ../roles/check
-    - ../roles/autodetect
-    - ../roles/version
+    - layer9gmbh.omniversion.check
+    - layer9gmbh.omniversion.autodetect
+    - layer9gmbh.omniversion.version

@@ -1,59 +1,29 @@
 ---
-- name: Determine output directory
+- name: '{{ var_omniversion_pm }} : Determine output directory'
   ansible.builtin.set_fact:
-    var_omniversion_full_output_dir: "{{ var_omniversion_output_dir | default('/tmp/omniversion') }}/{{ inventory_hostname }}/{{ var_omniversion_pm }}"
+    var_omniversion_save_dir: "{{ var_omniversion_output_dir | default('/tmp/omniversion') }}/{{ inventory_hostname }}/{{ var_omniversion_pm }}"
 
-- name: Determine output file
+- name: '{{ var_omniversion_pm }} : Determine output file'
   set_fact:
-    var_omniversion_output_file: "{{ var_omniversion_full_output_dir }}/{{ var_omniversion_verb }}{{ var_omniversion_result_index | default('') }}.omniversion.yaml"
+    var_omniversion_save_file: "{{ var_omniversion_save_dir }}/{{ var_omniversion_verb }}.omniversion.yaml"
 
-- name: Ensure output directory exists
+- name: '{{ var_omniversion_pm }} : Ensure directory exists'
   ansible.builtin.file:
-    path: "{{ var_omniversion_full_output_dir }}"
+    path: "{{ var_omniversion_save_dir }}"
     state: directory
     mode: '777'
   delegate_to: localhost
 
-- name: Remove previous results
+- name: '{{ var_omniversion_pm }} : Remove previous results'
   ansible.builtin.copy:
-    dest: '{{ var_omniversion_output_file }}'
+    dest: '{{ var_omniversion_save_file }}'
     content: ""
     mode: '777'
   delegate_to: localhost
 
-- name: Parse output
-  ansible.builtin.command: "omniversion parse {{ var_omniversion_pm }}"
-  args:
-    stdin: "{{ omniversion_result.stdout }}"
-  delegate_to: localhost
-  register: omniversion_result
-  changed_when: true
-  ignore_errors: true
-  when: omniversion_result.stdout is defined
-
-- name: Log error
-  ansible.builtin.debug:
-    msg: "{{ omniversion_result.stderr }}"
-  when: omniversion_result.stderr is defined and omniversion_result.stderr
-
-- name: Store parsed result
+- name: '{{ var_omniversion_pm }} : Store result'
   ansible.builtin.copy:
-    dest: "{{ var_omniversion_output_file }}"
-    content: '{{ omniversion_result.stdout | string }}'
+    dest: "{{ var_omniversion_save_file }}"
+    content: '{{ var_omniversion_save_input }}'
     mode: '777'
   delegate_to: localhost
-  when: omniversion_result.stdout is defined
-
-- name: Store custom items
-  ansible.builtin.copy:
-    dest: "{{ var_omniversion_output_file }}"
-    content: "{{ omniversion_items }}"
-    mode: '777'
-  delegate_to: localhost
-  when: omniversion_items is defined and omniversion_items
-
-- name: Clear results
-  set_fact:
-    omniversion_result: null
-    omniversion_items: null
-    var_omniversion_result_index: null

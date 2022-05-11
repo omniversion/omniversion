@@ -2,6 +2,6 @@
 - name: List available updates
   hosts: all
   roles:
-    - ../roles/check
-    - ../roles/autodetect
-    - ../roles/outdated
+    - layer9gmbh.omniversion.check
+    - layer9gmbh.omniversion.autodetect
+    - layer9gmbh.omniversion.outdated

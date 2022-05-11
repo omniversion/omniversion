@@ -5,49 +5,40 @@
   tags:
     - always
 
-- name: List and store apt versions
-  when: var_omniversion.apt is defined
+- name: 'apt : Run `apt` tasks'
+  when: var_omniversion.apt is defined and var_omniversion.apt
   tags:
     - apt
-  block:
-    - name: List apt package versions
-      ansible.builtin.shell: 'apt list --upgradeable 2> /dev/null || true'
-      register: omniversion_result
-      changed_when: true
-
-    - include_tasks: ../../shared/save.yaml
-      vars:
-        var_omniversion_pm: apt
-
-- name: List and store global `npm` updates
-  when: (var_omniversion.npm.global is defined and var_omniversion.npm.global) or var_omniversion.npm.global is not defined
-  tags:
-    - npm
-  include_tasks: npm.global.yaml
-
-- name: List and store local `npm` updates
-  when: var_omniversion.npm.local is defined
-  with_indexed_items: '{{ var_omniversion.npm.local }}'
-  tags:
-    - npm
-  include_tasks: npm.local.yaml
+  args:
+    apply:
+      tags:
+        - apt
   vars:
-    var_omniversion_result_index: '{{ item.0 }}'
-    var_omniversion_dir: '{{ item.1 }}'
+    var_omniversion_pm: apt
+  include_tasks: apt.yaml
 
-- name: Fetch and store rubygems versions
-  when: var_omniversion.rubygems is defined
+- name: 'gem : Run `gem` tasks'
+  when: var_omniversion.gem is defined and var_omniversion.gem
   tags:
     - rubygems
     - gem
-  block:
-    - name: Fetch rubygems versions
-      ansible.builtin.command: 'gem outdated --update-sources --quiet'
-      args:
-        chdir: '{{ var_omniversion.rubygems.dir }}'
-      register: omniversion_result
-      changed_when: true
+  args:
+    apply:
+      tags:
+        - rubygems
+        - gem
+  vars:
+    var_omniversion_pm: gem
+  include_tasks: gem.yaml
 
-    - include_tasks: ../../shared/save.yaml
-      vars:
-        var_omniversion_pm: rubygems
+- name: 'npm : Run `npm` tasks'
+  when: var_omniversion.npm is defined and var_omniversion.npm
+  tags:
+    - npm
+  args:
+    apply:
+      tags:
+        - npm
+  vars:
+    var_omniversion_pm: npm
+  include_tasks: npm.yaml

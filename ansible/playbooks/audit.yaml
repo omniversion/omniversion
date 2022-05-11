@@ -2,6 +2,6 @@
 - name: List known security vulnerabilities
   hosts: all
   roles:
-    - ../roles/check
-    - ../roles/autodetect
-    - ../roles/audit
+    - layer9gmbh.omniversion.check
+    - layer9gmbh.omniversion.autodetect
+    - layer9gmbh.omniversion.audit

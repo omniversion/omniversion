@@ -5,35 +5,28 @@
   tags:
     - always
 
-- name: List and store available global `npm` updates
-  when: (var_omniversion.npm.global is defined and var_omniversion.npm.global) or var_omniversion.npm.global is not defined
-  tags:
-    - npm
-  include_tasks: npm.global.yaml
-
-- name: List and store available local `npm` updates
-  when: var_omniversion.npm.local is defined
-  with_indexed_items: '{{ var_omniversion.npm.local }}'
-  tags:
-    - npm
-  include_tasks: npm.local.yaml
-  vars:
-    var_omniversion_result_index: '{{ item.0 }}'
-    var_omniversion_dir: '{{ item.1 }}'
-
-- name: Fetch and store available bundler updates
-  when: var_omniversion.rubygems is defined
+- name: 'gem : Run `gem` tasks'
+  when: var_omniversion.gem is defined and var_omniversion.gem
   tags:
     - rubygems
     - gem
-  block:
-    - name: Fetch available bundler updates
-      ansible.builtin.shell: 'bundle-audit 2>&1 || true'
-      args:
-        chdir: '{{ var_omniversion.rubygems.dir }}'
-      register: omniversion_result
-      changed_when: true
+  args:
+    apply:
+      tags:
+        - rubygems
+        - gem
+  vars:
+    var_omniversion_pm: gem
+  include_tasks: gem.yaml
 
-    - include_tasks: ../../shared/save.yaml
-      vars:
-        var_omniversion_pm: rubygems
+- name: 'npm : Run `npm` tasks'
+  when: var_omniversion.npm is defined and var_omniversion.npm
+  tags:
+    - npm
+  args:
+    apply:
+      tags:
+        - npm
+  vars:
+    var_omniversion_pm: npm
+  include_tasks: npm.yaml

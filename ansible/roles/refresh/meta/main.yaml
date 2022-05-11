@@ -1,0 +1,6 @@
+---
+galaxy_info:
+  role_name: omniversion refresh role
+  description: Refresh/update the cache of each package manager on each host. Available for `apt` only.
+  author: Roman Priebe
+  company: Layer9 GmbH

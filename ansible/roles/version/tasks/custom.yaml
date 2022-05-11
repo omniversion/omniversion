@@ -1,26 +1,21 @@
-- name: Get custom command output
-  ansible.builtin.shell: '{{ item.command }}' # noqa command-instead-of-shell
-  args:
-    chdir: '{{ item.dir | default("/") }}'
-  register: custom_result
-  changed_when: true
-  tags:
-    - custom
-
-- name: Set `omniversion` version
-  run_once: true
-  delegate_to: localhost
-  ansible.builtin.shell: "omniversion version | grep version | sed 's/version: //"
-
-
-- name: Append result to output items
+---
+- name: Prepare results
   ansible.builtin.set_fact:
-    omniversion_items: "{{ omniversion_items | default('version: {{  }}\nitems:\n') }}  - name: {{ item.name }}\n    version: {{ custom_result.stdout }}\n"
-  tags:
-    - custom
+    var_omniversion_custom_parsed_results: []
 
-- include_tasks: ../../shared/save.yaml
+- name: List `custom` package versions
+  with_items: '{{ var_omniversion.custom }}'
+  args:
+    apply:
+      tags:
+        - custom
   vars:
-    var_omniversion_pm: custom
-  tags:
-    - custom
+    var_omniversion_custom_command: '{{ item.command }}'
+    var_omniversion_custom_dir: '{{ item.dir | default("/") }}'
+    var_omniversion_custom_name: '{{ item.name }}'
+  include_tasks: custom.item.yaml
+
+- name: Save results
+  include_tasks: ../../shared/save.yaml
+  vars:
+    var_omniversion_save_input: "{{ { 'version': var_omniversion_version, 'items': var_omniversion_custom_parsed_results } | to_nice_yaml(indent=2) }}"

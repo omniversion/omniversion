@@ -2,6 +2,6 @@
 - name: List all versions
   hosts: all
   roles:
-    - ../roles/check
-    - ../roles/autodetect
-    - ../roles/list
+    - layer9gmbh.omniversion.check
+    - layer9gmbh.omniversion.autodetect
+    - layer9gmbh.omniversion.list

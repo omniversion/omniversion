@@ -1,6 +1,6 @@
 ---
 - name: 'Check for presence of package manager `{{ var_omniversion_pm }}`'
-  ansible.builtin.command: '{{ var_omniversion_detect_command }}'
+  ansible.builtin.command: "which {{ var_omniversion_pm }}"
   register: omniversion_check_result
   ignore_errors: true
   failed_when: false
