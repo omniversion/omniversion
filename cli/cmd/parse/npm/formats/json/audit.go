@@ -3,6 +3,7 @@ package json
 import (
 	"encoding/json"
 	"fmt"
+	mapstructure "github.com/mitchellh/mapstructure"
 	. "github.com/omniversion/omniversion/cli/cmd/parse/npm/item"
 	"github.com/omniversion/omniversion/cli/cmd/parse/npm/stderr"
 	. "github.com/omniversion/omniversion/cli/types"
@@ -41,6 +42,16 @@ type V8AuditJsonOutput struct {
 			Total        int
 		}
 	}
+}
+
+type V8AuditVia struct {
+	Dependency string
+	Name       string
+	Range      string
+	Severity   string
+	Source     int
+	Title      string
+	Url        string
 }
 
 type V6AuditJsonOutput struct {
@@ -107,17 +118,30 @@ func ParseAuditOutput(input string, stderrOutput stderr.Output) ([]PackageMetada
 	if v8JsonUnmarshallErr == nil && v8AuditJson.AuditReportVersion != 0 {
 		result = make(map[string]PackageMetadata, len(v8AuditJson.Vulnerabilities))
 		for _, vulnerability := range v8AuditJson.Vulnerabilities {
-			advisory := Advisory{
-				Severity:           vulnerability.Severity,
-				VulnerableVersions: vulnerability.Range,
+			newItem := New(vulnerability.Name)
+			for _, viaData := range vulnerability.Via {
+				var via V8AuditVia
+				decodeErr := mapstructure.Decode(viaData, &via)
+				if decodeErr == nil {
+					// TODO: be more specific about the "name" and "dependency" fields
+					// but we need more test data for this...
+					advisory := Advisory{
+						Identifier:         fmt.Sprintf("%v", via.Source),
+						Severity:           via.Severity,
+						VulnerableVersions: via.Range,
+						Title:              via.Title,
+						Url:                via.Url,
+					}
+					newItem.Advisories = append(newItem.Advisories, advisory)
+				} else {
+					advisory := Advisory{
+						Severity:           vulnerability.Severity,
+						VulnerableVersions: vulnerability.Range,
+					}
+					newItem.Advisories = append(newItem.Advisories, advisory)
+				}
 			}
-			if existingResult, ok := result[vulnerability.Name]; ok {
-				existingResult.Advisories = append(existingResult.Advisories, advisory)
-			} else {
-				newItem := New(vulnerability.Name)
-				newItem.Advisories = []Advisory{advisory}
-				result[vulnerability.Name] = *newItem
-			}
+			result[vulnerability.Name] = *newItem
 		}
 	} else {
 		v6AuditJson := V6AuditJsonOutput{}
@@ -148,7 +172,7 @@ func ParseAuditOutput(input string, stderrOutput stderr.Output) ([]PackageMetada
 			}
 		} else {
 			// report the unmarshal error for v8, not the outdated format
-			return []PackageMetadata{}, v8JsonUnmarshallErr
+			return []PackageMetadata{}, fmt.Errorf("unable to parse JSON: %v", v8JsonUnmarshallErr)
 		}
 	}
 	// we were dealing with a map, so need to turn it into an array

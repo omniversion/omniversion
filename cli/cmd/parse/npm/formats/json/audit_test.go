@@ -27,7 +27,7 @@ func TestParseAuditOutput_NoLockfile(t *testing.T) {
 }
 
 func TestParseAuditOutput(t *testing.T) {
-	vector := "{\n  \"auditReportVersion\": 2,\n  \"vulnerabilities\": {\n    \"async\": {\n      \"name\": \"async\",\n      \"severity\": \"high\",\n      \"isDirect\": true,\n      \"via\": [\n        {\n          \"source\": 1070206,\n          \"name\": \"async\",\n          \"dependency\": \"async\",\n          \"title\": \"Prototype Pollution in async\",\n          \"url\": \"https://github.com/advisories/GHSA-fwr7-v2mv-hh25\",\n          \"severity\": \"high\",\n          \"range\": \"<2.6.4\"\n        }\n      ],\n      \"effects\": [],\n      \"range\": \"<2.6.4\",\n      \"nodes\": [\n        \"node_modules/async\"\n      ],\n      \"fixAvailable\": {\n        \"name\": \"async\",\n        \"version\": \"2.6.4\",\n        \"isSemVerMajor\": false\n      }\n    },\n    \"moment\": {\n      \"name\": \"moment\",\n      \"severity\": \"high\",\n      \"isDirect\": true,\n      \"via\": [\n        {\n          \"source\": 1070245,\n          \"name\": \"moment\",\n          \"dependency\": \"moment\",\n          \"title\": \"Path Traversal: 'dir/../../filename' in moment.locale\",\n          \"url\": \"https://github.com/advisories/GHSA-8hfj-j24r-96c4\",\n          \"severity\": \"high\",\n          \"range\": \"<2.29.2\"\n        }\n      ],\n      \"effects\": [],\n      \"range\": \"<2.29.2\",\n      \"nodes\": [\n        \"node_modules/moment\"\n      ],\n      \"fixAvailable\": {\n        \"name\": \"moment\",\n        \"version\": \"2.29.3\",\n        \"isSemVerMajor\": false\n      }\n    }\n  },\n  \"metadata\": {\n    \"vulnerabilities\": {\n      \"info\": 0,\n      \"low\": 0,\n      \"moderate\": 0,\n      \"high\": 2,\n      \"critical\": 0,\n      \"total\": 2\n    },\n    \"dependencies\": {\n      \"prod\": 2,\n      \"dev\": 2,\n      \"optional\": 0,\n      \"peer\": 1,\n      \"peerOptional\": 0,\n      \"total\": 4\n    }\n  }\n}\n"
+	vector := "{\n  \"auditReportVersion\": 2,\n  \"vulnerabilities\": {\n    \"@angular-devkit/build-angular\": {\n      \"name\": \"@angular-devkit/build-angular\",\n      \"severity\": \"high\",\n      \"isDirect\": true,\n      \"via\": [\n        \"webpack-dev-server\"\n      ],\n      \"effects\": [],\n      \"range\": \"<=13.2.0-rc.1\",\n      \"nodes\": [\n        \"node_modules/@angular-devkit/build-angular\"\n      ],\n      \"fixAvailable\": true\n    },\n    \"async\": {\n      \"name\": \"async\",\n      \"severity\": \"high\",\n      \"isDirect\": false,\n      \"via\": [\n        {\n          \"source\": 1070206,\n          \"name\": \"async\",\n          \"dependency\": \"async\",\n          \"title\": \"Prototype Pollution in async\",\n          \"url\": \"https://github.com/advisories/GHSA-fwr7-v2mv-hh25\",\n          \"severity\": \"high\",\n          \"range\": \"<2.6.4\"\n        },\n        {\n          \"source\": 1070207,\n          \"name\": \"async\",\n          \"dependency\": \"async\",\n          \"title\": \"Prototype Pollution in async\",\n          \"url\": \"https://github.com/advisories/GHSA-fwr7-v2mv-hh25\",\n          \"severity\": \"high\",\n          \"range\": \">=3.0.0 <3.2.2\"\n        }\n      ],\n      \"effects\": [\n        \"jake\",\n        \"mail-listener2\",\n        \"pdf2json\"\n      ],\n      \"range\": \">=3.0.0 <3.2.2 || <2.6.4\",\n      \"nodes\": [\n        \"node_modules/async\",\n        \"node_modules/jake/node_modules/async\",\n        \"node_modules/mail-listener2/node_modules/async\",\n        \"node_modules/pdf2json/node_modules/async\",\n        \"node_modules/portfinder/node_modules/async\",\n        \"node_modules/protractor-jasmine2-html-reporter/node_modules/async\"\n      ],\n      \"fixAvailable\": {\n        \"name\": \"pdf2json\",\n        \"version\": \"2.0.1\",\n        \"isSemVerMajor\": true\n      }\n    },\n    \"ejs\": {\n      \"name\": \"ejs\",\n      \"severity\": \"high\",\n      \"isDirect\": false,\n      \"via\": [\n        {\n          \"source\": 1070256,\n          \"name\": \"ejs\",\n          \"dependency\": \"ejs\",\n          \"title\": \"Template injection in ejs\",\n          \"url\": \"https://github.com/advisories/GHSA-phwq-j96m-2c2q\",\n          \"severity\": \"high\",\n          \"range\": \"<3.1.7\"\n        }\n      ],\n      \"effects\": [],\n      \"range\": \"<3.1.7\",\n      \"nodes\": [\n        \"node_modules/ejs\"\n      ],\n      \"fixAvailable\": true\n    },\n    \"jake\": {\n      \"name\": \"jake\",\n      \"severity\": \"high\",\n      \"isDirect\": false,\n      \"via\": [\n        \"async\"\n      ],\n      \"effects\": [],\n      \"range\": \"8.0.1 - 10.8.4\",\n      \"nodes\": [\n        \"node_modules/jake\"\n      ],\n      \"fixAvailable\": true\n    },\n    \"mail-listener2\": {\n      \"name\": \"mail-listener2\",\n      \"severity\": \"high\",\n      \"isDirect\": true,\n      \"via\": [\n        \"async\"\n      ],\n      \"effects\": [],\n      \"range\": \">=0.1.5\",\n      \"nodes\": [\n        \"node_modules/mail-listener2\"\n      ],\n      \"fixAvailable\": {\n        \"name\": \"mail-listener2\",\n        \"version\": \"0.1.4\",\n        \"isSemVerMajor\": true\n      }\n    },\n    \"minimist\": {\n      \"name\": \"minimist\",\n      \"severity\": \"critical\",\n      \"isDirect\": false,\n      \"via\": [\n        {\n          \"source\": 1067342,\n          \"name\": \"minimist\",\n          \"dependency\": \"minimist\",\n          \"title\": \"Prototype Pollution in minimist\",\n          \"url\": \"https://github.com/advisories/GHSA-xvch-5gv4-984h\",\n          \"severity\": \"critical\",\n          \"range\": \"<1.2.6\"\n        }\n      ],\n      \"effects\": [],\n      \"range\": \"<1.2.6\",\n      \"nodes\": [\n        \"node_modules/minimist\"\n      ],\n      \"fixAvailable\": true\n    },\n    \"moment\": {\n      \"name\": \"moment\",\n      \"severity\": \"high\",\n      \"isDirect\": true,\n      \"via\": [\n        {\n          \"source\": 1070245,\n          \"name\": \"moment\",\n          \"dependency\": \"moment\",\n          \"title\": \"Path Traversal: 'dir/../../filename' in moment.locale\",\n          \"url\": \"https://github.com/advisories/GHSA-8hfj-j24r-96c4\",\n          \"severity\": \"high\",\n          \"range\": \"<2.29.2\"\n        }\n      ],\n      \"effects\": [],\n      \"range\": \"<2.29.2\",\n      \"nodes\": [\n        \"node_modules/moment\"\n      ],\n      \"fixAvailable\": true\n    },\n    \"node-forge\": {\n      \"name\": \"node-forge\",\n      \"severity\": \"high\",\n      \"isDirect\": false,\n      \"via\": [\n        {\n          \"source\": 1067364,\n          \"name\": \"node-forge\",\n          \"dependency\": \"node-forge\",\n          \"title\": \"Improper Verification of Cryptographic Signature in node-forge\",\n          \"url\": \"https://github.com/advisories/GHSA-cfm4-qjh2-4765\",\n          \"severity\": \"high\",\n          \"range\": \"<1.3.0\"\n        }\n      ],\n      \"effects\": [\n        \"selfsigned\"\n      ],\n      \"range\": \"<1.3.0\",\n      \"nodes\": [\n        \"node_modules/node-forge\"\n      ],\n      \"fixAvailable\": true\n    },\n    \"pdf2json\": {\n      \"name\": \"pdf2json\",\n      \"severity\": \"high\",\n      \"isDirect\": true,\n      \"via\": [\n        \"async\"\n      ],\n      \"effects\": [],\n      \"range\": \"0.2.6 - 0.7.1 || 1.2.0 - 1.3.1\",\n      \"nodes\": [\n        \"node_modules/pdf2json\"\n      ],\n      \"fixAvailable\": {\n        \"name\": \"pdf2json\",\n        \"version\": \"2.0.1\",\n        \"isSemVerMajor\": true\n      }\n    },\n    \"selfsigned\": {\n      \"name\": \"selfsigned\",\n      \"severity\": \"high\",\n      \"isDirect\": false,\n      \"via\": [\n        \"node-forge\"\n      ],\n      \"effects\": [\n        \"webpack-dev-server\"\n      ],\n      \"range\": \"1.1.1 - 1.10.14\",\n      \"nodes\": [\n        \"node_modules/selfsigned\"\n      ],\n      \"fixAvailable\": true\n    },\n    \"webpack-dev-server\": {\n      \"name\": \"webpack-dev-server\",\n      \"severity\": \"high\",\n      \"isDirect\": false,\n      \"via\": [\n        \"selfsigned\"\n      ],\n      \"effects\": [\n        \"@angular-devkit/build-angular\"\n      ],\n      \"range\": \"2.5.0 - 4.7.2\",\n      \"nodes\": [\n        \"node_modules/webpack-dev-server\"\n      ],\n      \"fixAvailable\": true\n    }\n  },\n  \"metadata\": {\n    \"vulnerabilities\": {\n      \"info\": 0,\n      \"low\": 0,\n      \"moderate\": 0,\n      \"high\": 10,\n      \"critical\": 1,\n      \"total\": 11\n    },\n    \"dependencies\": {\n      \"prod\": 524,\n      \"dev\": 1297,\n      \"optional\": 48,\n      \"peer\": 5,\n      \"peerOptional\": 0,\n      \"total\": 1830\n    }\n  }\n}"
 
 	verb, format := formats.DetectVerbAndFormat(vector, stderr.Output{})
 	assert.Equal(t, formats.AuditCommand, verb)
@@ -39,24 +39,35 @@ func TestParseAuditOutput(t *testing.T) {
 	result, err := ParseAuditOutput(vector, stderr.Output{})
 
 	assert.Nil(t, err)
-	assert.Equal(t, 2, len(result))
+	assert.Equal(t, 11, len(result))
 
-	item := result[0]
+	item := result[1]
 	assert.Equal(t, "npm", item.PackageManager)
 	assert.Equal(t, "async", item.Name)
 	assert.Equal(t, "", item.Current)
-	assert.Equal(t, 1, len(item.Advisories))
+	assert.Equal(t, 2, len(item.Advisories))
 
 	advisory := item.Advisories[0]
 	assert.Equal(t, 0.0, advisory.CVSSScore)
-	assert.Equal(t, "", advisory.Identifier)
+	assert.Equal(t, "1070206", advisory.Identifier)
 	assert.Equal(t, "", advisory.Overview)
 	assert.Equal(t, "", advisory.PatchedVersions)
 	assert.Equal(t, "", advisory.Recommendation)
 	assert.Equal(t, "high", advisory.Severity)
-	assert.Equal(t, "", advisory.Title)
-	assert.Equal(t, "", advisory.Url)
+	assert.Equal(t, "Prototype Pollution in async", advisory.Title)
+	assert.Equal(t, "https://github.com/advisories/GHSA-fwr7-v2mv-hh25", advisory.Url)
 	assert.Equal(t, "<2.6.4", advisory.VulnerableVersions)
+
+	advisory = item.Advisories[1]
+	assert.Equal(t, 0.0, advisory.CVSSScore)
+	assert.Equal(t, "1070207", advisory.Identifier)
+	assert.Equal(t, "", advisory.Overview)
+	assert.Equal(t, "", advisory.PatchedVersions)
+	assert.Equal(t, "", advisory.Recommendation)
+	assert.Equal(t, "high", advisory.Severity)
+	assert.Equal(t, "Prototype Pollution in async", advisory.Title)
+	assert.Equal(t, "https://github.com/advisories/GHSA-fwr7-v2mv-hh25", advisory.Url)
+	assert.Equal(t, ">=3.0.0 <3.2.2", advisory.VulnerableVersions)
 }
 
 func TestParseAuditOutput_V6(t *testing.T) {
@@ -101,4 +112,14 @@ func TestParseAuditOutput_V6(t *testing.T) {
 	assert.Equal(t, "Prototype Pollution in async", advisory.Title)
 	assert.Equal(t, "https://github.com/advisories/GHSA-fwr7-v2mv-hh25", advisory.Url)
 	assert.Equal(t, ">=3.0.0 <3.2.2", advisory.VulnerableVersions)
+}
+
+func TestParseAuditOutput_InvalidJson(t *testing.T) {
+	vector := "{ test"
+
+	result, err := ParseAuditOutput(vector, stderr.Output{})
+
+	assert.NotNil(t, err)
+	assert.Contains(t, err.Error(), "unable to parse JSON")
+	assert.Zero(t, len(result))
 }

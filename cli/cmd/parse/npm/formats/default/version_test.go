@@ -19,3 +19,13 @@ func TestParseVersionOutput(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, 19, len(result))
 }
+
+func TestParseVersionOutput_InvalidJson(t *testing.T) {
+	vector := "{\n\t\"version\":"
+
+	result, err := ParseVersionOutput(vector, stderr.Output{})
+
+	assert.NotNil(t, err)
+	assert.Contains(t, err.Error(), "invalid version data")
+	assert.Zero(t, len(result))
+}

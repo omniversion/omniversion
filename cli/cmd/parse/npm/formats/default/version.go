@@ -1,8 +1,9 @@
 package _default
 
 import (
+	"fmt"
+	"github.com/omniversion/omniversion/cli/cmd/parse/npm/item"
 	"github.com/omniversion/omniversion/cli/cmd/parse/npm/stderr"
-	"github.com/omniversion/omniversion/cli/cmd/parse/shared"
 	. "github.com/omniversion/omniversion/cli/types"
 	"gopkg.in/yaml.v3"
 	"sort"
@@ -17,17 +18,13 @@ func ParseVersionOutput(input string, _ stderr.Output) ([]PackageMetadata, error
 	npmVersionData := VersionJson{}
 	yamlUnmarshallErr := yaml.Unmarshal([]byte(input), &npmVersionData)
 	if yamlUnmarshallErr != nil {
-		return result, yamlUnmarshallErr
+		return result, fmt.Errorf("invalid version data: %v", yamlUnmarshallErr)
 	}
 	for packageName, version := range npmVersionData {
-		newResult := PackageMetadata{
-			Name:    packageName,
-			Current: version,
-		}
-		if shared.InjectPackageManager {
-			newResult.PackageManager = "npm"
-		}
-		result = append(result, newResult)
+		newResult := item.New(packageName)
+		newResult.Current = version
+
+		result = append(result, *newResult)
 	}
 	sort.Slice(result, func(i, j int) bool {
 		return result[i].Name < result[j].Name

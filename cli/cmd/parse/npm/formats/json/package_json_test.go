@@ -45,3 +45,13 @@ func TestParsePackageJson(t *testing.T) {
 	assert.Equal(t, "", item.Current)
 	assert.Equal(t, "^1.0.3", item.Wanted)
 }
+
+func TestParsePackageJson_InvalidJson(t *testing.T) {
+	vector := "{\n\t\"version\":"
+
+	result, err := ParsePackageJsonFile(vector, stderr.Output{})
+
+	assert.NotNil(t, err)
+	assert.Contains(t, err.Error(), "unexpected end of JSON input")
+	assert.Zero(t, len(result))
+}

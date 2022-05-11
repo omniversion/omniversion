@@ -45,18 +45,3 @@ func TestParseHomebrewListVersionsOutput(t *testing.T) {
 	assert.Equal(t, 1, len(item.Installations))
 	assert.Equal(t, "5.7.0", item.Installations[0].Version)
 }
-
-func TestParseHomebrewVersionOutput(t *testing.T) {
-	vector := "Homebrew 3.4.10-49-g14ff6be\nHomebrew/homebrew-core (git revision 31e2ed54e34; last commit 2022-05-06)\nHomebrew/homebrew-cask (git revision b817992654; last commit 2022-05-06)\n\n"
-
-	result, err := parseHomebrewOutput(vector)
-
-	assert.Nil(t, err)
-	assert.Equal(t, 1, len(result))
-
-	item := result[0]
-	assert.Equal(t, "homebrew", item.Name)
-	assert.Equal(t, "3.4.10-49-g14ff6be", item.Current)
-	assert.Equal(t, 1, len(item.Installations))
-	assert.Equal(t, "3.4.10-49-g14ff6be", item.Installations[0].Version)
-}

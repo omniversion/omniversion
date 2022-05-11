@@ -9,7 +9,7 @@ import (
 )
 
 func TestParseListOutput_NotInstalled(t *testing.T) {
-	vector := "{\n  \"version\": \"1.0.0\",\n  \"name\": \"test\",\n  \"problems\": [\n    \"missing: async@2.1.1, required by test@1.0.0\",\n    \"missing: moment@2.21.0, required by test@1.0.0\",\n    \"missing: underscore@^1.0.3, required by test@1.0.0\"\n  ],\n  \"dependencies\": {\n    \"async\": {\n      \"required\": \"2.1.1\",\n      \"missing\": true,\n      \"problems\": [\n        \"missing: async@2.1.1, required by test@1.0.0\"\n      ]\n    },\n    \"moment\": {\n      \"missing\": true,\n      \"problems\": [\n        \"missing: moment@2.21.0, required by test@1.0.0\"\n      ]\n    },\n    \"underscore\": {\n      \"missing\": true,\n      \"problems\": [\n        \"missing: underscore@^1.0.3, required by test@1.0.0\"\n      ]\n    }\n  }\n}\nnpm ERR! code ELSPROBLEMS\nnpm ERR! missing: async@2.1.1, required by test@1.0.0\nnpm ERR! missing: moment@2.21.0, required by test@1.0.0\nnpm ERR! missing: underscore@^1.0.3, required by test@1.0.0\n{\n  \"error\": {\n    \"code\": \"ELSPROBLEMS\",\n    \"summary\": \"missing: async@2.1.1, required by test@1.0.0\\nmissing: moment@2.21.0, required by test@1.0.0\\nmissing: underscore@^1.0.3, required by test@1.0.0\",\n    \"detail\": \"\"\n  }\n}\n\nnpm ERR! A complete log of this run can be found in:\nnpm ERR!     /Users/wilhelmschuttelspeer/.npm/_logs/2022-05-09T10_30_40_760Z-debug.log\n"
+	vector := "{\n  \"version\": \"1.0.0\",\n  \"name\": \"test\",\n  \"problems\": [\n    \"missing: async@2.1.1, required by test@1.0.0\",\n    \"missing: moment@2.21.0, required by test@1.0.0\",\n    \"missing: underscore@^1.0.3, required by test@1.0.0\"\n  ],\n  \"dependencies\": {\n    \"async\": {\n      \"required\": \"2.1.1\",\n      \"missing\": true,\n      \"problems\": [\n        \"missing: async@2.1.1, required by test@1.0.0\"\n      ]\n    },\n    \"moment\": {\n      \"missing\": true,\n      \"problems\": [\n        \"missing: moment@2.21.0, required by test@1.0.0\"\n      ]\n    },\n    \"underscore\": {\n      \"missing\": true,\n      \"problems\": [\n        \"missing: underscore@^1.0.3, required by test@1.0.0\"\n      ]\n    }\n  }\n}\nnpm ERR! code ELSPROBLEMS\nnpm ERR! missing: async@2.1.1, required by test@1.0.0\nnpm ERR! missing: moment@2.21.0, required by test@1.0.0\nnpm ERR! missing: underscore@^1.0.3, required by test@1.0.0\n{\n  \"error\": {\n    \"code\": \"ELSPROBLEMS\",\n    \"summary\": \"missing: async@2.1.1, required by test@1.0.0\\nmissing: moment@2.21.0, required by test@1.0.0\\nmissing: underscore@^1.0.3, required by test@1.0.0\",\n    \"detail\": \"\"\n  }\n}\n\nnpm ERR! A complete log of this run can be found in:\nnpm ERR!     /Users/testor/.npm/_logs/2022-05-09T10_30_40_760Z-debug.log\n"
 
 	strippedInput, stderrOutput, _ := stderr.Strip(vector)
 	verb, format := formats.DetectVerbAndFormat(strippedInput, stderrOutput)
@@ -117,4 +117,14 @@ func TestParseListOutput_WithProblems(t *testing.T) {
 	assert.Equal(t, "test", item.Name)
 	assert.Equal(t, "0.1301.2", item.Wanted)
 	assert.Equal(t, "0.1301.2", item.Current)
+}
+
+func TestParseListOutput_InvalidJson(t *testing.T) {
+	vector := "{\n\t\"version\":"
+
+	result, err := ParseListOutput(vector, stderr.Output{})
+
+	assert.NotNil(t, err)
+	assert.Contains(t, err.Error(), "unexpected end of JSON input")
+	assert.Zero(t, len(result))
 }

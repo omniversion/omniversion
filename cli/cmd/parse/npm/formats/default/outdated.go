@@ -1,8 +1,8 @@
 package _default
 
 import (
+	"github.com/omniversion/omniversion/cli/cmd/parse/npm/item"
 	"github.com/omniversion/omniversion/cli/cmd/parse/npm/stderr"
-	"github.com/omniversion/omniversion/cli/cmd/parse/shared"
 	. "github.com/omniversion/omniversion/cli/types"
 	"regexp"
 )
@@ -24,21 +24,16 @@ func ParseOutdatedOutput(input string, _ stderr.Output) ([]PackageMetadata, erro
 		wanted := foundItem[listRegex.SubexpIndex("wanted")]
 		latest := foundItem[listRegex.SubexpIndex("latest")]
 		location := foundItem[listRegex.SubexpIndex("location")]
-		newItem := PackageMetadata{
-			Name:    name,
-			Current: current,
-			Wanted:  wanted,
-			Latest:  latest,
-		}
+		newItem := item.New(name)
+		newItem.Current = current
+		newItem.Wanted = wanted
+		newItem.Latest = latest
 		if current != "" {
 			newItem.Installations = []InstalledPackage{{
 				Location: location,
 				Version:  current}}
 		}
-		if shared.InjectPackageManager {
-			newItem.PackageManager = "npm"
-		}
-		result = append(result, newItem)
+		result = append(result, *newItem)
 	}
 	return result, nil
 }

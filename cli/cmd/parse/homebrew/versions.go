@@ -2,7 +2,7 @@ package homebrew
 
 import (
 	"github.com/hashicorp/go-multierror"
-	"github.com/omniversion/omniversion/cli/cmd/parse/shared"
+	"github.com/omniversion/omniversion/cli/cmd/parse/homebrew/item"
 	. "github.com/omniversion/omniversion/cli/types"
 	"regexp"
 )
@@ -13,18 +13,14 @@ func parseAsListWithVersionsCommandOutput(input string) ([]PackageMetadata, erro
 
 	result := make([]PackageMetadata, 0, len(items))
 	var allErrors *multierror.Error
-	for _, item := range items {
-		name := item[extractionRegex.SubexpIndex("name")]
-		version := item[extractionRegex.SubexpIndex("version")]
-		newItem := PackageMetadata{
-			Name:          name,
-			Current:       version,
-			Installations: []InstalledPackage{{Version: version}},
-		}
-		if shared.InjectPackageManager {
-			newItem.PackageManager = "rubygems"
-		}
-		result = append(result, newItem)
+	for _, itemData := range items {
+		name := itemData[extractionRegex.SubexpIndex("name")]
+		version := itemData[extractionRegex.SubexpIndex("version")]
+		newItem := item.New(name)
+		newItem.Current = version
+		newItem.Installations = []InstalledPackage{{Version: version}}
+
+		result = append(result, *newItem)
 	}
 	return result, allErrors.ErrorOrNil()
 }
