@@ -20,13 +20,17 @@
 - name: 'gem : Run `gem` tasks'
   when: var_omniversion.gem is defined and var_omniversion.gem
   tags:
-    - rubygems
+    - bundle
+    - bundler
     - gem
+    - rubygems
   args:
     apply:
       tags:
-        - rubygems
+        - bundle
+        - bundler
         - gem
+        - rubygems
   vars:
     var_omniversion_pm: gem
   include_tasks: gem.yaml
