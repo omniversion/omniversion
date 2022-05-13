@@ -85,17 +85,17 @@ Like Ansible, we not support Windows control nodes, but this might change in the
 
 ### Package managers
 
-| Name             | Supported   |
-|------------------|-------------|
-| `ansible-galaxy` | 🕙 planned  |
-| `apt`            | ✅ yes       |
-| `brew`           | ✅ yes       |
-| `Composer`       | 🕙 planned  |
-| `go mod`         | 🕙 planned  |
-| `maven`          | 🕙 planned  |
-| `npm`            | ✅ yes       |
-| `nvm`            | 🕙 planned  |
-| `pip`            | 🕙 planned  |
-| `rubygems`       | ✅ yes       |
-| `rvm`            | ✅ yes       |
-| `yarn`           | 🕙 planned  |
+| Name             | Supported  |
+|------------------|------------|
+| `ansible-galaxy` | 🕙 planned |
+| `apt`            | ✅ yes      |
+| `brew`           | ✅ yes      |
+| `Composer`       | 🕙 planned |
+| `go mod`         | 🕙 planned |
+| `maven`          | 🕙 planned |
+| `npm`            | ✅ yes      |
+| `nvm`            | ✅ yes      |
+| `pip`            | 🕙 planned |
+| `rubygems`       | ✅ yes      |
+| `rvm`            | ✅ yes      |
+| `yarn`           | 🕙 planned |

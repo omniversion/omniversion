@@ -47,6 +47,20 @@
     var_omniversion_pm: npm
   include_tasks: npm.yaml
 
+- name: 'nvm : Run `nvm` tasks'
+  when: var_omniversion.nvm is defined and var_omniversion.nvm
+  tags:
+    - nvm
+    - node
+  args:
+    apply:
+      tags:
+        - nvm
+        - node
+  vars:
+    var_omniversion_pm: nvm
+  include_tasks: nvm.yaml
+
 - name: 'rvm : Run `rvm` tasks'
   when: var_omniversion.rvm is defined and var_omniversion.rvm
   tags:

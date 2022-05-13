@@ -1,0 +1,13 @@
+---
+- name: Get `rvm` version info
+  ansible.builtin.command: 'rvm --version'
+  register: var_omniversion_rvm_result
+  changed_when: true
+
+- include_tasks: ../../shared/parse.yaml
+  vars:
+    var_omniversion_parse_input: '{{ var_omniversion_rvm_result.stdout | string }}'
+
+- include_tasks: ../../shared/save.yaml
+  vars:
+    var_omniversion_save_input: '{{ var_omniversion_parse_result.stdout | string }}'

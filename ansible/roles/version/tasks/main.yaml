@@ -5,6 +5,18 @@
   tags:
     - always
 
+- name: Run `custom` tasks
+  when: var_omniversion.custom is defined and var_omniversion.custom
+  tags:
+    - custom
+  args:
+    apply:
+      tags:
+        - custom
+  vars:
+    var_omniversion_pm: custom
+  include_tasks: custom.yaml
+
 - name: Run `npm` tasks
   when: var_omniversion.npm is defined and var_omniversion.npm
   tags:
@@ -17,14 +29,26 @@
     var_omniversion_pm: npm
   include_tasks: npm.yaml
 
-- name: Run `custom` tasks
-  when: var_omniversion.custom is defined and var_omniversion.custom
+- name: Run `nvm` tasks
+  when: var_omniversion.nvm is defined and var_omniversion.nvm
   tags:
-    - custom
+    - nvm
   args:
     apply:
       tags:
-        - custom
+        - nvm
   vars:
-    var_omniversion_pm: custom
-  include_tasks: custom.yaml
+    var_omniversion_pm: nvm
+  include_tasks: nvm.yaml
+
+- name: Run `rvm` tasks
+  when: var_omniversion.rvm is defined and var_omniversion.rvm
+  tags:
+    - rvm
+  args:
+    apply:
+      tags:
+        - rvm
+  vars:
+    var_omniversion_pm: rvm
+  include_tasks: rvm.yaml
