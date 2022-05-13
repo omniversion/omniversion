@@ -18,12 +18,16 @@
       command: which apt
     - name: brew
       command: which brew
-    - name: npm
-      command: which npm
     - name: gem
       command: which gem
+    - name: npm
+      command: which npm
+    - name: npm
+      command: which nvm
     - name: rvm
       command: /bin/bash -l -c 'rvm --version'
+    - name: pip
+      command: which pip
   when: var_omniversion.auto and var_omniversion[item.name] is not defined
   vars:
     var_omniversion_pm: '{{ item.name }}'

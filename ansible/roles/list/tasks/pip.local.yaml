@@ -1,0 +1,14 @@
+---
+- name: 'pip : local : List local `pip` updates'
+  ansible.builtin.shell: 'pip list --format=json --local --path={{ var_omniversion_pip_local_dir | quote }}'
+  register: var_omniversion_pip_local_result
+  changed_when: true
+
+- name: 'pip : local : Parse result'
+  include_tasks: ../../shared/parse.yaml
+  vars:
+    var_omniversion_parse_input: '{{ var_omniversion_pip_local_result.stdout | string }}'
+
+- name: 'pip : local : Remember result'
+  set_fact:
+    var_omniversion_pip_local_parsed_results: '{{ var_omniversion_pip_local_parsed_results + [var_omniversion_parse_result.stdout] }}'

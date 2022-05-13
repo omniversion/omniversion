@@ -1,0 +1,39 @@
+---
+- name: 'pip : Prepare results'
+  ansible.builtin.set_fact:
+    var_omniversion_pip_global_parsed_result: ''
+    var_omniversion_pip_local_parsed_results: []
+
+- name: 'pip : global : List global `pip` package versions'
+  when: (var_omniversion.pip.global is defined and var_omniversion.pip.global) or var_omniversion.pip.global is not defined
+  block:
+    - name: 'pip : global : List packages'
+      ansible.builtin.shell: 'pip list --format=json'
+      register: var_omniversion_pip_global_result
+      changed_when: true
+
+    - name: 'pip : global : Parse result'
+      include_tasks: ../../shared/parse.yaml
+      vars:
+        var_omniversion_parse_input: '{{ var_omniversion_pip_global_result.stdout | string }}'
+
+    - name: 'pip : global : Remember result'
+      ansible.builtin.set_fact:
+        var_omniversion_pip_global_parsed_result: '{{ var_omniversion_parse_result.stdout | string }}'
+
+- name: 'pip : local : List local `pip` package versions'
+  when: var_omniversion.pip.local is defined
+  with_items: '{{ var_omniversion.pip.local }}'
+  args:
+    apply:
+      tags:
+        - pip
+  vars:
+    var_omniversion_pip_local_dir: '{{ item }}'
+  include_tasks: pip.local.yaml
+
+# we save the results as multiple yaml documents in the same file
+- name: 'pip : Save results'
+  include_tasks: ../../shared/save.yaml
+  vars:
+    var_omniversion_save_input: "{{ var_omniversion_pip_global_parsed_result + \"\n---\n\" + (var_omniversion_npm_local_parsed_results | join(\"\n---\n\")) }}"

@@ -95,7 +95,7 @@ Like Ansible, we not support Windows control nodes, but this might change in the
 | `maven`          | 🕙 planned |
 | `npm`            | ✅ yes      |
 | `nvm`            | ✅ yes      |
-| `pip`            | 🕙 planned |
+| `pip`            | ✅ yes      |
 | `rubygems`       | ✅ yes      |
 | `rvm`            | ✅ yes      |
 | `yarn`           | 🕙 planned |

@@ -24,7 +24,7 @@ var Date = "-"
 // Via is the installation method ("npm"/"brew"/"compiled from source"/...)
 var Via = "compiled from source"
 
-// implements the version command that outputs information on the current installation as a yaml string map
+// Cmd implements the version command that outputs information on the current installation as a yaml string map
 var Cmd = &cobra.Command{
 	Use:   "version",
 	Short: "Print the version of the omniversion binary",

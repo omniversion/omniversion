@@ -52,3 +52,15 @@
   vars:
     var_omniversion_pm: rvm
   include_tasks: rvm.yaml
+
+- name: 'pip : Run `pip` tasks'
+  when: var_omniversion.pip is defined and var_omniversion.pip
+  tags:
+    - pip
+  args:
+    apply:
+      tags:
+        - pip
+  vars:
+    var_omniversion_pm: pip
+  include_tasks: pip.yaml

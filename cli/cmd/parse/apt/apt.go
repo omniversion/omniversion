@@ -63,8 +63,8 @@ func parseAptOutput(input string) ([]PackageMetadata, error) {
 
 var ParseCommand = &cobra.Command{
 	Use:     "apt",
-	Short:   "Parse the output of apt",
-	Long:    `Translate the output of apt into the omniversion format.`,
+	Short:   "Parse the output of `apt`",
+	Long:    "Translate the output of `apt` into the omniversion format.",
 	Run:     shared.WrapCommand(parseAptOutput),
 	Aliases: []string{"apt-get", "aptitude"},
 }

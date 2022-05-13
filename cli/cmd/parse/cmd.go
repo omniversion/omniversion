@@ -5,6 +5,7 @@ import (
 	"github.com/omniversion/omniversion/cli/cmd/parse/homebrew"
 	"github.com/omniversion/omniversion/cli/cmd/parse/npm"
 	"github.com/omniversion/omniversion/cli/cmd/parse/nvm"
+	"github.com/omniversion/omniversion/cli/cmd/parse/pip"
 	"github.com/omniversion/omniversion/cli/cmd/parse/rubygems"
 	"github.com/omniversion/omniversion/cli/cmd/parse/rvm"
 	"github.com/omniversion/omniversion/cli/cmd/parse/shared"
@@ -20,6 +21,7 @@ func InitSubcommand(rootCommand *cobra.Command) {
 	Cmd.AddCommand(homebrew.ParseCommand)
 	Cmd.AddCommand(npm.ParseCommand)
 	Cmd.AddCommand(nvm.ParseCommand)
+	Cmd.AddCommand(pip.ParseCommand)
 	Cmd.AddCommand(rubygems.ParseCommand)
 	Cmd.AddCommand(rvm.ParseCommand)
 }

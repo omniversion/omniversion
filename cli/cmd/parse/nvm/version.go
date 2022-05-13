@@ -5,7 +5,7 @@ import (
 	"regexp"
 )
 
-var versionOutputRegex = `(?m)^(?P<version>\S+)$`
+const versionOutputRegex = `(?m)^(?P<version>\S+)$`
 
 func isVersionOutput(input string) bool {
 	return regexp.MustCompile(versionOutputRegex).MatchString(input)
