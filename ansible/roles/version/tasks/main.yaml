@@ -5,62 +5,22 @@
   tags:
     - always
 
-- name: Run `custom` tasks
-  when: var_omniversion.custom is defined and var_omniversion.custom
-  tags:
+- name: 'Run tasks'
+  loop:
     - custom
-  args:
-    apply:
-      tags:
-        - custom
-  vars:
-    var_omniversion_pm: custom
-  include_tasks: custom.yaml
-
-- name: Run `npm` tasks
-  when: var_omniversion.npm is defined and var_omniversion.npm
-  tags:
     - npm
-  args:
-    apply:
-      tags:
-        - npm
-  vars:
-    var_omniversion_pm: npm
-  include_tasks: npm.yaml
-
-- name: Run `nvm` tasks
-  when: var_omniversion.nvm is defined and var_omniversion.nvm
-  tags:
     - nvm
-  args:
-    apply:
-      tags:
-        - nvm
-  vars:
-    var_omniversion_pm: nvm
-  include_tasks: nvm.yaml
-
-- name: Run `rvm` tasks
-  when: var_omniversion.rvm is defined and var_omniversion.rvm
-  tags:
-    - rvm
-  args:
-    apply:
-      tags:
-        - rvm
-  vars:
-    var_omniversion_pm: rvm
-  include_tasks: rvm.yaml
-
-- name: 'pip : Run `pip` tasks'
-  when: var_omniversion.pip is defined and var_omniversion.pip
-  tags:
     - pip
+    - rvm
+  loop_control:
+    loop_var: pm
+  tags:
+    - always
+  when: pm in var_omniversion and var_omniversion[pm]
+  include_tasks: '{{ pm }}.yaml'
+  vars:
+    var_omniversion_pm: '{{ pm }}'
   args:
     apply:
       tags:
-        - pip
-  vars:
-    var_omniversion_pm: pip
-  include_tasks: pip.yaml
+        - '{{ pm }}'

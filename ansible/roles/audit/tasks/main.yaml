@@ -5,32 +5,19 @@
   tags:
     - always
 
-- name: 'gem : Run `gem` tasks'
-  when: var_omniversion.gem is defined and var_omniversion.gem
-  tags:
-    - bundle
-    - bundler
+- name: 'Run tasks'
+  loop:
     - gem
-    - rubygems
-  args:
-    apply:
-      tags:
-        - bundle
-        - gem
-        - bundler
-        - rubygems
-  vars:
-    var_omniversion_pm: gem
-  include_tasks: gem.yaml
-
-- name: 'npm : Run `npm` tasks'
-  when: var_omniversion.npm is defined and var_omniversion.npm
-  tags:
     - npm
+  loop_control:
+    loop_var: pm
+  tags:
+    - always
+  when: pm in var_omniversion and var_omniversion[pm]
+  include_tasks: '{{ pm }}.yaml'
+  vars:
+    var_omniversion_pm: '{{ pm }}'
   args:
     apply:
       tags:
-        - npm
-  vars:
-    var_omniversion_pm: npm
-  include_tasks: npm.yaml
+        - '{{ pm }}'

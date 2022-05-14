@@ -1,15 +1,21 @@
 ---
+- name: 'go : Prepare results'
+  ansible.builtin.set_fact:
+    var_omniversion_go_parsed_results: []
+
 - name: 'go : List `go` module versions'
-  ansible.builtin.command: 'go list -m -json all'
+  when: var_omniversion.go.local is defined
+  with_items: '{{ var_omniversion.go.local }}'
   args:
-    chdir: '{{ var_omniversion.go.dir | default("/") }}'
-  register: var_omniversion_go_result
-  changed_when: true
-
-- include_tasks: ../../shared/parse.yaml
+    apply:
+      tags:
+        - go
   vars:
-    var_omniversion_parse_input: '{{ var_omniversion_go_result.stdout | string }}'
+    var_omniversion_go_local_dir: '{{ item }}'
+  include_tasks: go.local.yaml
 
-- include_tasks: ../../shared/save.yaml
+# we save the results as multiple yaml documents in the same file
+- name: 'go : Save results'
+  include_tasks: ../../shared/save.yaml
   vars:
-    var_omniversion_save_input: '{{ var_omniversion_parse_result.stdout | string }}'
+    var_omniversion_save_input: "{{ (var_omniversion_go_parsed_results | join(\"\n---\n\")) }}"

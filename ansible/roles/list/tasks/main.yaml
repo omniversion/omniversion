@@ -5,98 +5,24 @@
   tags:
     - always
 
-- name: 'apt : Run `apt` tasks'
-  when: var_omniversion.apt is defined and var_omniversion.apt
-  tags:
+- name: 'Run tasks'
+  loop:
     - apt
-  args:
-    apply:
-      tags:
-        - apt
-  vars:
-    var_omniversion_pm: apt
-  include_tasks: apt.yaml
-
-- name: 'gem : Run `gem` tasks'
-  when: var_omniversion.gem is defined and var_omniversion.gem
-  tags:
-    - bundle
-    - bundler
     - gem
-    - rubygems
-  args:
-    apply:
-      tags:
-        - bundle
-        - bundler
-        - gem
-        - rubygems
-  vars:
-    var_omniversion_pm: gem
-  include_tasks: gem.yaml
-
-- name: 'go : Run `go` tasks'
-  when: var_omniversion.go is defined and var_omniversion.go
-  tags:
     - go
-    - gomod
-    - mod
-  args:
-    apply:
-      tags:
-        - go
-        - gomod
-        - mod
-  vars:
-    var_omniversion_pm: go
-  include_tasks: go.yaml
-
-- name: 'npm : Run `npm` tasks'
-  when: var_omniversion.npm is defined and var_omniversion.npm
-  tags:
     - npm
-  args:
-    apply:
-      tags:
-        - npm
-  vars:
-    var_omniversion_pm: npm
-  include_tasks: npm.yaml
-
-- name: 'nvm : Run `nvm` tasks'
-  when: var_omniversion.nvm is defined and var_omniversion.nvm
-  tags:
     - nvm
-    - node
-  args:
-    apply:
-      tags:
-        - nvm
-        - node
-  vars:
-    var_omniversion_pm: nvm
-  include_tasks: nvm.yaml
-
-- name: 'rvm : Run `rvm` tasks'
-  when: var_omniversion.rvm is defined and var_omniversion.rvm
-  tags:
-    - rvm
-  args:
-    apply:
-      tags:
-        - rvm
-  vars:
-    var_omniversion_pm: rvm
-  include_tasks: rvm.yaml
-
-- name: 'pip : Run `pip` tasks'
-  when: var_omniversion.pip is defined and var_omniversion.pip
-  tags:
     - pip
+    - rvm
+  loop_control:
+    loop_var: pm
+  tags:
+    - always
+  when: pm in var_omniversion and var_omniversion[pm]
+  include_tasks: '{{ pm }}.yaml'
+  vars:
+    var_omniversion_pm: '{{ pm }}'
   args:
     apply:
       tags:
-        - pip
-  vars:
-    var_omniversion_pm: pip
-  include_tasks: pip.yaml
+        - '{{ pm }}'

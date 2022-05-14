@@ -1,5 +1,5 @@
 ---
-- name: 'npm : local : List local `npm` updates'
+- name: 'npm : local : List local `npm` package versions'
   ansible.builtin.shell: 'npm ls --json --all 2> /dev/null || true'
   args:
     chdir: '{{ var_omniversion_npm_local_dir }}'

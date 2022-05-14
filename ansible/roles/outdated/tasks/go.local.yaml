@@ -1,0 +1,16 @@
+---
+- name: 'go : local : List local `go` modules'
+  ansible.builtin.shell: 'go list -u -m -json all'
+  args:
+    chdir: '{{ var_omniversion_go_local_dir }}'
+  register: var_omniversion_go_local_result
+  changed_when: true
+
+- name: 'go : local : Parse result'
+  include_tasks: ../../shared/parse.yaml
+  vars:
+    var_omniversion_parse_input: '{{ var_omniversion_go_local_result.stdout | string }}'
+
+- name: 'go : local : Remember result'
+  set_fact:
+    var_omniversion_go_parsed_results: '{{ var_omniversion_go_parsed_results + [var_omniversion_parse_result.stdout] }}'
