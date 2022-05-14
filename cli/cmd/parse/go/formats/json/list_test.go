@@ -14,24 +14,29 @@ func TestParseListOutput(t *testing.T) {
 	assert.Equal(t, 23, len(result))
 
 	item := result[0]
-	assert.Equal(t, "omniversion/cli", item.Name)
+	assert.Equal(t, "github.com/omniversion/omniversion/cli", item.Name)
+	assert.Equal(t, []string{"omniversion/cli"}, item.Aliases)
 	assert.Equal(t, "", item.Current)
 	assert.Equal(t, 1, len(item.Installations))
 	assert.Equal(t, "/Users/testor/Documents/Repositories/omniversion/cli", item.Installations[0].Location)
 
 	item = result[1]
-	assert.Equal(t, "toml", item.Name)
+	assert.Equal(t, "github.com/BurntSushi/toml", item.Name)
+	assert.Equal(t, []string{"toml"}, item.Aliases)
 	assert.Equal(t, "1.1.0", item.Current)
 	assert.Equal(t, 1, len(item.Installations))
 	assert.Equal(t, "/Users/testor/go/pkg/mod/github.com/!burnt!sushi/toml@v1.1.0", item.Installations[0].Location)
 	assert.Equal(t, "1.1.0", item.Installations[0].Version)
 
 	item = result[2]
-	assert.Equal(t, "go-md2man/v2", item.Name)
+	assert.Equal(t, "github.com/cpuguy83/go-md2man/v2", item.Name)
+	assert.Equal(t, []string{"go-md2man/v2"}, item.Aliases)
 
 	item = result[15]
-	assert.Equal(t, "crypto", item.Name)
+	assert.Equal(t, "golang.org/x/crypto", item.Name)
+	assert.Equal(t, []string{"crypto"}, item.Aliases)
 
 	item = result[22]
-	assert.Equal(t, "yaml.v3", item.Name)
+	assert.Equal(t, "gopkg.in/yaml.v3", item.Name)
+	assert.Equal(t, []string{"yaml.v3"}, item.Aliases)
 }

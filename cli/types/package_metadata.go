@@ -11,12 +11,7 @@ package types
 // as installations are different and available versions
 // will depend on the configured repositories, firewall settings etc.
 type PackageMetadata struct {
-	// Name is the human-readable name of the package.
-	// For package managers that can install from a URL (e.g. `go mod`),
-	// the Name is typically not unique.
-	// For package managers that use package names (e.g. `npm`, `pip`, etc.),
-	// the combination of package manager and Name should usually be unique,
-	// although there are exceptions, such as non-default configurations with multiple repositories.
+	// Name is the identifier used to install the package.
 	Name string `json:",omitempty" toml:",omitempty" yaml:",omitempty"`
 	// InstallPath is the path or identifier used to install the package, if different from Name.
 	// The combination of package manager and InstallIdentifier should uniquely identify a package.

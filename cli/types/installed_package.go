@@ -9,4 +9,5 @@ type InstalledPackage struct {
 	Version string `json:",omitempty" toml:",omitempty" yaml:",omitempty"`
 	// VersionAliases are alternative names for Version (e.g. `latest`, `16` etc.)
 	VersionAliases []string `json:",omitempty" toml:",omitempty" yaml:",omitempty"`
+	Hash           string
 }

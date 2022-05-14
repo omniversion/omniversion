@@ -1,4 +1,4 @@
-package _go
+package _default
 
 import (
 	"github.com/stretchr/testify/assert"
@@ -14,25 +14,28 @@ func TestParseListOutput(t *testing.T) {
 	assert.Equal(t, 23, len(result))
 
 	item := result[0]
-	assert.Equal(t, "omniversion/cli", item.Name)
+	assert.Equal(t, "github.com/omniversion/omniversion/cli", item.Name)
+	assert.Equal(t, []string{"omniversion/cli"}, item.Aliases)
 	assert.Equal(t, "", item.Current)
 	assert.Equal(t, 1, len(item.Installations))
-	assert.Equal(t, "github.com/omniversion/omniversion/cli", item.InstallPath)
 
 	item = result[1]
-	assert.Equal(t, "toml", item.Name)
+	assert.Equal(t, "github.com/BurntSushi/toml", item.Name)
+	assert.Equal(t, []string{"toml"}, item.Aliases)
 	assert.Equal(t, "1.1.0", item.Current)
 	assert.Equal(t, 1, len(item.Installations))
-	assert.Equal(t, "github.com/BurntSushi/toml", item.InstallPath)
 
 	item = result[2]
-	assert.Equal(t, "go-md2man/v2", item.Name)
+	assert.Equal(t, "github.com/cpuguy83/go-md2man/v2", item.Name)
+	assert.Equal(t, []string{"go-md2man/v2"}, item.Aliases)
 
 	item = result[15]
-	assert.Equal(t, "crypto", item.Name)
+	assert.Equal(t, "golang.org/x/crypto", item.Name)
+	assert.Equal(t, []string{"crypto"}, item.Aliases)
 
 	item = result[22]
-	assert.Equal(t, "yaml.v3", item.Name)
+	assert.Equal(t, "gopkg.in/yaml.v3", item.Name)
+	assert.Equal(t, []string{"yaml.v3"}, item.Aliases)
 }
 
 func TestParseListOutput_VersionsFlag(t *testing.T) {
@@ -43,27 +46,30 @@ func TestParseListOutput_VersionsFlag(t *testing.T) {
 	assert.Equal(t, 23, len(result))
 
 	item := result[0]
-	assert.Equal(t, "omniversion/cli", item.Name)
+	assert.Equal(t, "github.com/omniversion/omniversion/cli", item.Name)
+	assert.Equal(t, []string{"omniversion/cli"}, item.Aliases)
 	assert.Equal(t, "", item.Current)
 	assert.Equal(t, 1, len(item.Installations))
-	assert.Equal(t, "github.com/omniversion/omniversion/cli", item.InstallPath)
 
 	item = result[1]
-	assert.Equal(t, "toml", item.Name)
+	assert.Equal(t, "github.com/BurntSushi/toml", item.Name)
+	assert.Equal(t, []string{"toml"}, item.Aliases)
 	assert.Equal(t, "1.1.0", item.Current)
 	assert.Equal(t, 1, len(item.Installations))
-	assert.Equal(t, "github.com/BurntSushi/toml", item.InstallPath)
 	assert.Equal(t, 1, len(item.Sources))
 	assert.Equal(t, []string{"0.1.0", "0.2.0", "0.3.0", "0.3.1", "0.4.0", "0.4.1", "1.0.0", "1.1.0"}, item.Sources[0].Versions)
 
 	item = result[2]
-	assert.Equal(t, "go-md2man/v2", item.Name)
+	assert.Equal(t, "github.com/cpuguy83/go-md2man/v2", item.Name)
+	assert.Equal(t, []string{"go-md2man/v2"}, item.Aliases)
 	assert.Equal(t, 1, len(item.Sources))
 	assert.Equal(t, []string{"2.0.0", "2.0.1", "2.0.2"}, item.Sources[0].Versions)
 
 	item = result[15]
-	assert.Equal(t, "crypto", item.Name)
+	assert.Equal(t, "golang.org/x/crypto", item.Name)
+	assert.Equal(t, []string{"crypto"}, item.Aliases)
 
 	item = result[22]
-	assert.Equal(t, "yaml.v3", item.Name)
+	assert.Equal(t, "gopkg.in/yaml.v3", item.Name)
+	assert.Equal(t, []string{"yaml.v3"}, item.Aliases)
 }

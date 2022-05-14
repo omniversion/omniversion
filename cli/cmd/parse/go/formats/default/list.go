@@ -1,4 +1,4 @@
-package _go
+package _default
 
 import (
 	"github.com/hashicorp/go-multierror"
@@ -10,18 +10,18 @@ import (
 )
 
 func ParseListOutput(input string) ([]PackageMetadata, error) {
-	extractionRegex := regexp.MustCompile(`(?m)^(?P<path>\S+)( (?P<versions>.+))?$`)
+	extractionRegex := regexp.MustCompile(`(?m)^(?P<name>\S+)( (?P<versions>.+))?$`)
 	items := extractionRegex.FindAllStringSubmatch(input, -1)
 
 	result := make([]PackageMetadata, 0, len(items))
 	var allErrors *multierror.Error
 	for _, itemData := range items {
-		path := itemData[extractionRegex.SubexpIndex("path")]
+		name := itemData[extractionRegex.SubexpIndex("name")]
 		versions := itemData[extractionRegex.SubexpIndex("versions")]
-		newItem := item.New(helpers.NameForPath(path))
+		newItem := item.New(name)
+		newItem.Aliases = []string{helpers.ShortModuleName(name)}
 		currentVersion := helpers.LastVersion(strings.Split(versions, " "))
 		newItem.Current = currentVersion
-		newItem.InstallPath = path
 		newItem.Installations = []InstalledPackage{{
 			Version: currentVersion,
 		}}

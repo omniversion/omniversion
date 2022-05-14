@@ -1,4 +1,4 @@
-package _go
+package _default
 
 import (
 	"github.com/stretchr/testify/assert"
@@ -14,7 +14,8 @@ func TestParseGoModFile(t *testing.T) {
 	assert.Equal(t, 17, len(result))
 
 	item := result[0]
-	assert.Equal(t, "omniversion/cli", item.Name)
+	assert.Equal(t, "github.com/omniversion/omniversion/cli", item.Name)
+	assert.Equal(t, []string{"omniversion/cli"}, item.Aliases)
 	assert.Equal(t, "", item.Current)
 	assert.Zero(t, len(item.Installations))
 
@@ -24,13 +25,16 @@ func TestParseGoModFile(t *testing.T) {
 	assert.Zero(t, len(item.Installations))
 
 	item = result[2]
-	assert.Equal(t, "toml", item.Name)
+	assert.Equal(t, "github.com/BurntSushi/toml", item.Name)
+	assert.Equal(t, []string{"toml"}, item.Aliases)
 	assert.Equal(t, "1.1.0", item.Current)
 	assert.Zero(t, len(item.Installations))
 
 	item = result[8]
-	assert.Equal(t, "mod", item.Name)
+	assert.Equal(t, "golang.org/x/mod", item.Name)
+	assert.Equal(t, []string{"mod"}, item.Aliases)
 
 	item = result[9]
-	assert.Equal(t, "yaml.v3", item.Name)
+	assert.Equal(t, "gopkg.in/yaml.v3", item.Name)
+	assert.Equal(t, []string{"yaml.v3"}, item.Aliases)
 }

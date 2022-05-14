@@ -2,8 +2,8 @@ package helpers
 
 import "strings"
 
-func NameForPath(path string) string {
-	components := strings.Split(path, "/")
+func ShortModuleName(fullName string) string {
+	components := strings.Split(fullName, "/")
 	switch len(components) {
 	case 2:
 		return components[1]

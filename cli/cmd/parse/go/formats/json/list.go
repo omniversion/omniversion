@@ -54,7 +54,8 @@ func ParseListOutput(input string) ([]PackageMetadata, error) {
 			continue
 		}
 
-		newItem := item.New(helpers.NameForPath(listItem.Path))
+		newItem := item.New(listItem.Path)
+		newItem.Aliases = []string{helpers.ShortModuleName(listItem.Path)}
 		newItem.Current = helpers.CleanVersion(listItem.Version)
 		direct := !listItem.Indirect
 		newItem.Direct = &direct
