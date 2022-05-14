@@ -3,8 +3,8 @@ package _default
 import (
 	"fmt"
 	"github.com/hashicorp/go-multierror"
-	"github.com/omniversion/omniversion/cli/cmd/parse/go/helpers"
 	"github.com/omniversion/omniversion/cli/cmd/parse/go/item"
+	"github.com/omniversion/omniversion/cli/cmd/parse/shared"
 	. "github.com/omniversion/omniversion/cli/types"
 	"regexp"
 	"strings"
@@ -34,8 +34,8 @@ func ParseGoSumFile(input string) ([]PackageMetadata, error) {
 		hash := match[lineRegex.SubexpIndex("hash")]
 		if name != "" && version != "" && hash != "" {
 			newItem := item.New(name)
-			newItem.Aliases = []string{helpers.ShortModuleName(name)}
-			newItem.Current = helpers.CleanVersion(version)
+			newItem.Aliases = []string{shared.ShortModuleName(name)}
+			newItem.Current = shared.CleanVersion(version)
 			newItem.Installations = []InstalledPackage{{
 				Version: version,
 				Hash:    hash,

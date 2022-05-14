@@ -87,11 +87,11 @@ Like Ansible, we not support Windows control nodes, but this might change in the
 
 | Name             | Supported  |
 |------------------|------------|
-| `ansible-galaxy` | 🕙 planned |
+| `ansible-galaxy` | ✅ yes      |
 | `apt`            | ✅ yes      |
 | `brew`           | ✅ yes      |
 | `Composer`       | 🕙 planned |
-| `go mod`         | 🕙 planned |
+| `go mod`         | ✅ yes      |
 | `maven`          | 🕙 planned |
 | `npm`            | ✅ yes      |
 | `nvm`            | ✅ yes      |

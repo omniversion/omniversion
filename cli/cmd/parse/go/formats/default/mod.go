@@ -2,8 +2,8 @@ package _default
 
 import (
 	"fmt"
-	"github.com/omniversion/omniversion/cli/cmd/parse/go/helpers"
 	"github.com/omniversion/omniversion/cli/cmd/parse/go/item"
+	"github.com/omniversion/omniversion/cli/cmd/parse/shared"
 	. "github.com/omniversion/omniversion/cli/types"
 	"golang.org/x/mod/modfile"
 )
@@ -16,7 +16,7 @@ func ParseGoModFile(input string) ([]PackageMetadata, error) {
 	var result []PackageMetadata
 	if file.Module != nil {
 		newItem := item.New(file.Module.Mod.Path)
-		newItem.Aliases = []string{helpers.ShortModuleName(file.Module.Mod.Path)}
+		newItem.Aliases = []string{shared.ShortModuleName(file.Module.Mod.Path)}
 		newItem.Current = file.Module.Mod.Version
 		newItem.PackageManager = "gomod"
 		result = append(result, *newItem)
@@ -31,8 +31,8 @@ func ParseGoModFile(input string) ([]PackageMetadata, error) {
 	for _, requireLine := range file.Require {
 		if requireLine != nil {
 			newItem := item.New(requireLine.Mod.Path)
-			newItem.Aliases = []string{helpers.ShortModuleName(requireLine.Mod.Path)}
-			newItem.Current = helpers.CleanVersion(requireLine.Mod.Version)
+			newItem.Aliases = []string{shared.ShortModuleName(requireLine.Mod.Path)}
+			newItem.Current = shared.CleanVersion(requireLine.Mod.Version)
 			newItem.PackageManager = "go"
 			newItem.InstallPath = requireLine.Mod.Path
 			newItem.Homepage = requireLine.Mod.Path

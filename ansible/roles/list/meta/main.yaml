@@ -4,3 +4,19 @@ galaxy_info:
   description: Run the `list` command for each package manager on each host.
   author: Roman Priebe
   company: Layer9 GmbH
+  platforms:
+    - name: EL
+      versions:
+        - all
+    - name: Debian
+      versions:
+        - all
+    - name: macOS
+      versions:
+        - all
+    - name: MacOSX
+      versions:
+        - all
+    - name: Ubuntu
+      versions:
+        - all

@@ -5,8 +5,8 @@ import (
 	_errors "errors"
 	"fmt"
 	"github.com/hashicorp/go-multierror"
-	"github.com/omniversion/omniversion/cli/cmd/parse/go/helpers"
 	"github.com/omniversion/omniversion/cli/cmd/parse/go/item"
+	"github.com/omniversion/omniversion/cli/cmd/parse/shared"
 	. "github.com/omniversion/omniversion/cli/types"
 	"regexp"
 	"strings"
@@ -55,18 +55,18 @@ func ParseListOutput(input string) ([]PackageMetadata, error) {
 		}
 
 		newItem := item.New(listItem.Path)
-		newItem.Aliases = []string{helpers.ShortModuleName(listItem.Path)}
-		newItem.Current = helpers.CleanVersion(listItem.Version)
+		newItem.Aliases = []string{shared.ShortModuleName(listItem.Path)}
+		newItem.Current = shared.CleanVersion(listItem.Version)
 		direct := !listItem.Indirect
 		newItem.Direct = &direct
 		newItem.Installations = []InstalledPackage{{
 			Location: listItem.Dir,
-			Version:  helpers.LastVersion(strings.Split(listItem.Dir, "@")),
+			Version:  shared.LastVersion(strings.Split(listItem.Dir, "@")),
 		}}
 		if listItem.Update != nil {
-			newItem.Latest = helpers.CleanVersion(listItem.Update.Version)
+			newItem.Latest = shared.CleanVersion(listItem.Update.Version)
 			newItem.Sources = []PackagesSource{{
-				Versions: []string{helpers.CleanVersion(listItem.Update.Version)},
+				Versions: []string{shared.CleanVersion(listItem.Update.Version)},
 			}}
 		}
 		result = append(result, *newItem)

@@ -1,6 +1,7 @@
 package parse
 
 import (
+	"github.com/omniversion/omniversion/cli/cmd/parse/ansible"
 	"github.com/omniversion/omniversion/cli/cmd/parse/apt"
 	_go "github.com/omniversion/omniversion/cli/cmd/parse/go"
 	"github.com/omniversion/omniversion/cli/cmd/parse/homebrew"
@@ -18,6 +19,7 @@ func InitSubcommand(rootCommand *cobra.Command) {
 	Cmd.PersistentFlags().StringVarP(&shared.OutputFormat, "output-format", "o", "yaml", "the desired output format (\"toml\"/\"json\"/\"yaml\")")
 
 	rootCommand.AddCommand(Cmd)
+	Cmd.AddCommand(ansible.ParseCommand)
 	Cmd.AddCommand(apt.ParseCommand)
 	Cmd.AddCommand(_go.ParseCommand)
 	Cmd.AddCommand(homebrew.ParseCommand)

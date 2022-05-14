@@ -4,3 +4,19 @@ galaxy_info:
   description: Fetch versions of package managers themselves, as well as independently installed software.
   author: Roman Priebe
   company: Layer9 GmbH
+  platforms:
+    - name: EL
+      versions:
+        - all
+    - name: Debian
+      versions:
+        - all
+    - name: macOS
+      versions:
+        - all
+    - name: MacOSX
+      versions:
+        - all
+    - name: Ubuntu
+      versions:
+        - all

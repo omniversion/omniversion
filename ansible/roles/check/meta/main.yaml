@@ -1,7 +1,7 @@
 ---
 galaxy_info:
-  role_name: omniversion refresh role
-  description: Refresh/update the cache of each package manager on each host. Available for `apt` only.
+  role_name: omniversion check role
+  description: Check that `omniversion/cli` is installed on the control node.
   author: Roman Priebe
   company: Layer9 GmbH
   platforms:
