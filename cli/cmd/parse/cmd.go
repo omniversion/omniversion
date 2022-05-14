@@ -2,6 +2,7 @@ package parse
 
 import (
 	"github.com/omniversion/omniversion/cli/cmd/parse/apt"
+	_go "github.com/omniversion/omniversion/cli/cmd/parse/go"
 	"github.com/omniversion/omniversion/cli/cmd/parse/homebrew"
 	"github.com/omniversion/omniversion/cli/cmd/parse/npm"
 	"github.com/omniversion/omniversion/cli/cmd/parse/nvm"
@@ -18,6 +19,7 @@ func InitSubcommand(rootCommand *cobra.Command) {
 
 	rootCommand.AddCommand(Cmd)
 	Cmd.AddCommand(apt.ParseCommand)
+	Cmd.AddCommand(_go.ParseCommand)
 	Cmd.AddCommand(homebrew.ParseCommand)
 	Cmd.AddCommand(npm.ParseCommand)
 	Cmd.AddCommand(nvm.ParseCommand)

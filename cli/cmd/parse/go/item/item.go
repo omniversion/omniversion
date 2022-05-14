@@ -5,12 +5,12 @@ import (
 	. "github.com/omniversion/omniversion/cli/types"
 )
 
-func New() *PackageMetadata {
+func New(name string) *PackageMetadata {
 	newItem := &PackageMetadata{
-		Name: "node",
+		Name: name,
 	}
 	if shared.InjectPackageManager {
-		newItem.PackageManager = "nvm"
+		newItem.PackageManager = "go"
 	}
 	return newItem
 }

@@ -72,7 +72,7 @@ func DetectVerbAndFormat(input string, stderrOutput stderr.Output) (Verb, InputF
 	}
 	if strings.HasPrefix(input, "{") {
 		// starting with `{`, but invalid JSON
-		// we are probably dealing with the default `npm version` command
+		// we are probably dealing with the default `npm --versions` command
 		// which outputs an object with unquoted keys
 		// that can't be parsed as JSON (but can be parsed as YAML)
 		return VersionCommand, DefaultFormat

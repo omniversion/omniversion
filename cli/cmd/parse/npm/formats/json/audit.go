@@ -3,7 +3,7 @@ package json
 import (
 	"encoding/json"
 	"fmt"
-	mapstructure "github.com/mitchellh/mapstructure"
+	"github.com/mitchellh/mapstructure"
 	. "github.com/omniversion/omniversion/cli/cmd/parse/npm/item"
 	"github.com/omniversion/omniversion/cli/cmd/parse/npm/stderr"
 	. "github.com/omniversion/omniversion/cli/types"

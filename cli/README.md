@@ -45,8 +45,8 @@ npm outdated --json | omniversion parse npm
 npm outdated --parseable | omniversion parse npm
 cat package.json | omniversion parse npm
 cat package-lock.json | omniversion parse npm
-npm version | omniversion parse npm
-npm version --json | omniversion parse npm
+npm --versions | omniversion parse npm
+npm --versions --json | omniversion parse npm
 
 rvm list | omniversion parse rvm
 rvm version | omniversion parse rvm

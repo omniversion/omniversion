@@ -1,6 +1,6 @@
 ---
 - name: Get `npm` version info
-  ansible.builtin.command: 'npm version --json'
+  ansible.builtin.command: 'npm --versions --json'
   register: var_omniversion_npm_result
   changed_when: true
 

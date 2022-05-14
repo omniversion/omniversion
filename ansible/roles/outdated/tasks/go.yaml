@@ -1,0 +1,15 @@
+---
+- name: 'go : List available `go` module updates'
+  ansible.builtin.command: 'go list -u -m -json all'
+  args:
+    chdir: '{{ var_omniversion.go.dir | default("/") }}'
+  register: var_omniversion_go_result
+  changed_when: true
+
+- include_tasks: ../../shared/parse.yaml
+  vars:
+    var_omniversion_parse_input: '{{ var_omniversion_go_result.stdout | string }}'
+
+- include_tasks: ../../shared/save.yaml
+  vars:
+    var_omniversion_save_input: '{{ var_omniversion_parse_result.stdout | string }}'

@@ -51,7 +51,13 @@ func parseAptOutput(input string) ([]PackageMetadata, error) {
 					case "architecture":
 						newDependency.Architecture = value
 					case "sources":
-						newDependency.Sources = strings.Split(value, ",")
+						var sources []PackagesSource
+						for _, sourceIdentifier := range strings.Split(value, ",") {
+							sources = append(sources, PackagesSource{
+								Identifier: sourceIdentifier,
+							})
+						}
+						newDependency.Sources = sources
 					}
 				}
 			}

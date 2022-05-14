@@ -11,6 +11,10 @@ func parseNvmOutput(input string) ([]PackageMetadata, error) {
 		return parseAsVersionOutput(input)
 	}
 
+	if isNvmrcFile(input) {
+		return parseNvmrcFile(input)
+	}
+
 	return parseAsListOutput(input)
 }
 

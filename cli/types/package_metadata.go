@@ -11,9 +11,16 @@ package types
 // as installations are different and available versions
 // will depend on the configured repositories, firewall settings etc.
 type PackageMetadata struct {
-	// Name is the human-readable name used to install the package.
-	// The combination of package manager and name should uniquely identify a package.
+	// Name is the human-readable name of the package.
+	// For package managers that can install from a URL (e.g. `go mod`),
+	// the Name is typically not unique.
+	// For package managers that use package names (e.g. `npm`, `pip`, etc.),
+	// the combination of package manager and Name should usually be unique,
+	// although there are exceptions, such as non-default configurations with multiple repositories.
 	Name string `json:",omitempty" toml:",omitempty" yaml:",omitempty"`
+	// InstallPath is the path or identifier used to install the package, if different from Name.
+	// The combination of package manager and InstallIdentifier should uniquely identify a package.
+	InstallPath string `json:",omitempty" toml:",omitempty" yaml:",omitempty"`
 	// Aliases contain alternative names by which the package may be known or have been known
 	Aliases []string `json:",omitempty" toml:",omitempty" yaml:",omitempty"`
 
@@ -34,6 +41,8 @@ type PackageMetadata struct {
 	Type DependencyType `json:",omitempty" toml:",omitempty" yaml:",omitempty"`
 	// Optional is true if the dependency need not be installed
 	Optional *bool `json:",omitempty" toml:",omitempty" yaml:",omitempty"`
+	// Direct specifies whether the dependency has been required directly or transitively
+	Direct *bool `json:",omitempty" toml:",omitempty" yaml:",omitempty"`
 
 	// Current is the currently installed version of the package as reported by the package manager.
 	// E.g. what is reported by `npm ls <package>`, `rvm info` `pip show <package>`.
@@ -78,7 +87,7 @@ type PackageMetadata struct {
 	License string `json:",omitempty" toml:",omitempty" yaml:",omitempty"`
 	// Sources through which the package is available, as reported by the package manager.
 	// E.g. the `sources` field in `apt list`.
-	Sources []string `json:",omitempty" toml:",omitempty" yaml:",omitempty"`
+	Sources []PackagesSource `json:",omitempty" toml:",omitempty" yaml:",omitempty"`
 	// Advisories contains security notices on known vulnerabilities.
 	// E.g. the information contained in the output of `npm audit`.
 	Advisories []Advisory `json:",omitempty" toml:",omitempty" yaml:",omitempty"`

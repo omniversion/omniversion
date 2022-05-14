@@ -22,25 +22,25 @@ mde-netfilter/insiders-fast,bionic,now 100.69.32 amd64 [installed,upgradable to:
 	assert.Equal(t, "2.69-11", item.Current)
 	assert.Equal(t, "all", item.Architecture)
 	assert.Equal(t, 2, len(item.Sources))
-	assert.Equal(t, "bionic", item.Sources[0])
-	assert.Equal(t, "now", item.Sources[1])
+	assert.Equal(t, "bionic", item.Sources[0].Identifier)
+	assert.Equal(t, "now", item.Sources[1].Identifier)
 
 	item = result[1]
 	assert.Equal(t, "autotools-dev", item.Name)
 	assert.Equal(t, "20180224.1", item.Current)
 	assert.Equal(t, "all", item.Architecture)
 	assert.Equal(t, 2, len(item.Sources))
-	assert.Equal(t, "bionic-updates", item.Sources[0])
-	assert.Equal(t, "now", item.Sources[1])
+	assert.Equal(t, "bionic-updates", item.Sources[0].Identifier)
+	assert.Equal(t, "now", item.Sources[1].Identifier)
 
 	item = result[2]
 	assert.Equal(t, "mde-netfilter", item.Name)
 	assert.Equal(t, "100.69.32", item.Current)
 	assert.Equal(t, "amd64", item.Architecture)
 	assert.Equal(t, 3, len(item.Sources))
-	assert.Equal(t, "insiders-fast", item.Sources[0])
-	assert.Equal(t, "bionic", item.Sources[1])
-	assert.Equal(t, "now", item.Sources[2])
+	assert.Equal(t, "insiders-fast", item.Sources[0].Identifier)
+	assert.Equal(t, "bionic", item.Sources[1].Identifier)
+	assert.Equal(t, "now", item.Sources[2].Identifier)
 	assert.Equal(t, "100.69.45", item.Latest)
 }
 
@@ -60,7 +60,7 @@ zssh/bionic 1.5c.debian.1-4 amd64`
 	assert.Equal(t, "1.5c.debian.1-4", item.Wanted)
 	assert.Equal(t, "amd64", item.Architecture)
 	assert.Equal(t, 1, len(item.Sources))
-	assert.Equal(t, "bionic", item.Sources[0])
+	assert.Equal(t, "bionic", item.Sources[0].Identifier)
 }
 
 func TestParseAptOutdatedOutput(t *testing.T) {
@@ -84,5 +84,5 @@ N: There are 4 additional versions. Please use the '-a' switch to see them.`
 	assert.Equal(t, "100.69.32", item.Installations[0].Version)
 	assert.Equal(t, "amd64", item.Architecture)
 	assert.Equal(t, 1, len(item.Sources))
-	assert.Equal(t, "insiders-fast", item.Sources[0])
+	assert.Equal(t, "insiders-fast", item.Sources[0].Identifier)
 }

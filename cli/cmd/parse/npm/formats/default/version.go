@@ -13,7 +13,7 @@ type VersionJson map[string]string
 
 func ParseVersionOutput(input string, _ stderr.Output) ([]PackageMetadata, error) {
 	var result []PackageMetadata
-	// the keys in the default `npm version` output are unquoted,
+	// the keys in the default `npm --versions` output are unquoted,
 	// but the yaml parser can deal with this
 	npmVersionData := VersionJson{}
 	yamlUnmarshallErr := yaml.Unmarshal([]byte(input), &npmVersionData)

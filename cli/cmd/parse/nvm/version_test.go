@@ -6,7 +6,7 @@ import (
 )
 
 func TestParseVersionOutput(t *testing.T) {
-	vector := "0.35.3"
+	vector := "0.35.3\n"
 
 	assert.True(t, isVersionOutput(vector))
 

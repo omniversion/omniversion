@@ -35,6 +35,22 @@
     var_omniversion_pm: gem
   include_tasks: gem.yaml
 
+- name: 'go : Run `go` tasks'
+  when: var_omniversion.go is defined and var_omniversion.go
+  tags:
+    - go
+    - gomod
+    - mod
+  args:
+    apply:
+      tags:
+        - go
+        - gomod
+        - mod
+  vars:
+    var_omniversion_pm: go
+  include_tasks: go.yaml
+
 - name: 'npm : Run `npm` tasks'
   when: var_omniversion.npm is defined and var_omniversion.npm
   tags:
