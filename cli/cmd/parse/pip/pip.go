@@ -24,6 +24,8 @@ func parserForVerbAndFormat(verb Verb, format InputFormat) func(string) ([]Packa
 		switch verb {
 		case ListCommand:
 			return _json.ParseListOutput
+		case OutdatedCommand:
+			return _json.ParseOutdatedOutput
 		}
 	case FreezeFormat:
 		switch verb {

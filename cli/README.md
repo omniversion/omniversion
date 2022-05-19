@@ -32,8 +32,8 @@ brew tap omniversion/tap && brew install omniversion
 The `parse` subcommand understands many different types of package manager output, translating the available information into the universal [omniversion format](../docs/MODELS.md).
 ```shell
 apt list --installed | omniversion parse apt
-apt list --upgradeable | omniversion parse apt
-apt list --upgradeable --all-versions | omniversion parse apt
+apt list --upgradable | omniversion parse apt
+apt list --upgradable --all-versions | omniversion parse apt
 
 npm audit | omniversion parse npm
 npm audit --json | omniversion parse npm

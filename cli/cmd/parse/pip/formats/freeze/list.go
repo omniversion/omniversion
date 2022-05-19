@@ -21,7 +21,9 @@ func ParseListOutput(input string) ([]PackageMetadata, error) {
 		}
 		match := lineRegex.FindStringSubmatch(line)
 		if match == nil {
-			errors = multierror.Append(errors, fmt.Errorf("failed to parse line: %q", line))
+			if !strings.HasPrefix(line, "## FIXME:") {
+				errors = multierror.Append(errors, fmt.Errorf("failed to parse line: %q", line))
+			}
 			continue
 		}
 		name := match[lineRegex.SubexpIndex("name")]

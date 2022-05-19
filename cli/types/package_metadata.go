@@ -13,9 +13,6 @@ package types
 type PackageMetadata struct {
 	// Name is the identifier used to install the package.
 	Name string `json:",omitempty" toml:",omitempty" yaml:",omitempty"`
-	// InstallPath is the path or identifier used to install the package, if different from Name.
-	// The combination of package manager and InstallIdentifier should uniquely identify a package.
-	InstallPath string `json:",omitempty" toml:",omitempty" yaml:",omitempty"`
 	// Aliases contain alternative names by which the package may be known or have been known
 	Aliases []string `json:",omitempty" toml:",omitempty" yaml:",omitempty"`
 
@@ -23,7 +20,8 @@ type PackageMetadata struct {
 	// If a package is available through multiple package managers, we should use separate
 	// PackageMetadata objects to track them.
 	PackageManager string `json:"packageManager,omitempty" toml:"package_manager,omitempty" yaml:"package_manager,omitempty"`
-	// Host is the name of the machine to which this metadata refers.
+	// Host is the name of the machine on which this package has been installed, requested
+	// or otherwise tracked by a package manager.
 	// This may be `localhost`, a hostname (with or without schema) or the name of a docker container.
 	// While the naming is flexible, care should be taken to keep these identifiers unique.
 	// If a package is installed on multiple hosts, we should use separate
@@ -57,6 +55,7 @@ type PackageMetadata struct {
 	// Extraneous is true if the package is not required, but installed.
 	Extraneous *bool `json:",omitempty" toml:",omitempty" yaml:",omitempty"`
 	// Missing is true if the package is required, but not installed.
+	// Installed optional packages do not count as extraneous.
 	Missing *bool `json:",omitempty" toml:",omitempty" yaml:",omitempty"`
 
 	// Dependencies are packages directly required by this package at runtime.
@@ -75,7 +74,7 @@ type PackageMetadata struct {
 	Author string `json:",omitempty" toml:",omitempty" yaml:",omitempty"`
 	// Description is the package description reported by the package manager.
 	Description string `json:",omitempty" toml:",omitempty" yaml:",omitempty"`
-	// Description is the package's homepage reported by the package manager.
+	// Homepage is the package's homepage reported by the package manager.
 	Homepage string `json:",omitempty" toml:",omitempty" yaml:",omitempty"`
 	// License is a license identifier as reported by the package manager.
 	// This is not currently standardized across package managers.

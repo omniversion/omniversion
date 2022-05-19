@@ -208,3 +208,12 @@ func TestVersionWithoutDefault(t *testing.T) {
 	assert.Equal(t, 1, len(item.Installations))
 	assert.Equal(t, "0.2.0", item.Installations[0].Version)
 }
+
+func TestParseList_EmptyAuthors(t *testing.T) {
+	vector := "json (1.8.3)\n    Author: \n    Installed at (default): /usr/local/lib/ruby/gems/2.3.0\n\n    This json is bundled with Ruby\n"
+
+	result, err := parseRubygemsOutput(vector)
+
+	assert.Nil(t, err)
+	assert.Equal(t, 1, len(result))
+}

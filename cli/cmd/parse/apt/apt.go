@@ -10,7 +10,7 @@ import (
 )
 
 func parseAptOutput(input string) ([]PackageMetadata, error) {
-	compiledRegex := regexp.MustCompile(`(?m)^(?P<name>.*?)/(?P<sources>\S*) (?P<version>\S*) (?P<architecture>\S*)( \[(?P<installed>installed)?(,(?P<automatic>automatic))?(,upgradable to: (?P<latest>.*))?(upgradable from: (?P<outdatedVersion>.*))?])?$`)
+	compiledRegex := regexp.MustCompile(`(?m)^(?P<name>.*?)/(?P<sources>\S*) (?P<version>\S*) (?P<architecture>\S*)( \[(?P<installed>installed)?(,(?P<local>local))?(,(?P<automatic>automatic))?(,upgradable to: (?P<latest>.*))?(upgradable from: (?P<outdatedVersion>.*))?])?$`)
 	matches := compiledRegex.FindAllStringSubmatch(input, -1)
 	result := make([]PackageMetadata, 0, len(matches))
 	var allErrors *multierror.Error
