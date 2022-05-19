@@ -36,20 +36,20 @@ from ..package_metadata import PackageMetadata
 
 class VersionsMatch(UserList):
     &#34;&#34;&#34;List of installations of one particular package&#34;&#34;&#34;
-    package_name: str
     display_name: str
+    &#34;&#34;&#34;The name to display to the user.&#34;&#34;&#34;
     expected_num: Optional[int]
+    &#34;&#34;&#34;The number of packages expected to be found. This prevents false positives where versions appear to match \
+    due to some versions not being fetched.&#34;&#34;&#34;
 
     def __init__(
             self,
             data: List[PackageMetadata],
-            package_name: str,
             display_name: Optional[str] = None,
             expected_num: Optional[int] = None,
     ):
         &#34;&#34;&#34;Initialize the dependency match&#34;&#34;&#34;
         super().__init__(data)
-        self.package_name = package_name
         self.display_name = display_name
         self.expected_num = expected_num
 
@@ -76,18 +76,16 @@ class VersionsMatch(UserList):
         return {dependency.current for dependency in self.data}
 
     def __repr__(self) -&gt; str:
-        &#34;&#34;&#34;Human-readable description of the version match&#34;&#34;&#34;
-        name = self.display_name if self.display_name is not None else self.package_name
         if len(self.versions) == 0:
-            return f&#34;No `{name}` versions found&#34;
+            return f&#34;No `{self.display_name}` versions found&#34;
         if len(self.versions) == 1:
-            return f&#34;Only one `{name}` version found&#34;
+            return f&#34;Only one `{self.display_name}` version found&#34;
         suffix = &#34;&#34;
         if not self.has_all_expected_items:
             suffix = f&#34; (only {len(self.versions)} of {self.expected_num} found)&#34;
         if self.is_consistent:
-            return f&#34;Versions match for package `{name}`: {&#39;, &#39;.join(self.versions)}{suffix}&#34;
-        return f&#34;Versions mismatch for package `{name}`: {&#39;, &#39;.join(self.versions)}{suffix}&#34;</code></pre>
+            return f&#34;Versions match for package `{self.display_name}`: {&#39;, &#39;.join(self.versions)}{suffix}&#34;
+        return f&#34;Versions mismatch for package `{self.display_name}`: {&#39;, &#39;.join(self.versions)}{suffix}&#34;</code></pre>
 </details>
 </section>
 <section>
@@ -101,7 +99,7 @@ class VersionsMatch(UserList):
 <dl>
 <dt id="omniversion.models.package_metadata.list.versions_match.VersionsMatch"><code class="flex name class">
 <span>class <span class="ident">VersionsMatch</span></span>
-<span>(</span><span>data: List[<a title="omniversion.models.package_metadata.package_metadata.PackageMetadata" href="../package_metadata.html#omniversion.models.package_metadata.package_metadata.PackageMetadata">PackageMetadata</a>], package_name: str, display_name: Optional[str] = None, expected_num: Optional[int] = None)</span>
+<span>(</span><span>data: List[<a title="omniversion.models.package_metadata.package_metadata.PackageMetadata" href="../package_metadata.html#omniversion.models.package_metadata.package_metadata.PackageMetadata">PackageMetadata</a>], display_name: Optional[str] = None, expected_num: Optional[int] = None)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>List of installations of one particular package</p>
@@ -112,20 +110,20 @@ class VersionsMatch(UserList):
 </summary>
 <pre><code class="python">class VersionsMatch(UserList):
     &#34;&#34;&#34;List of installations of one particular package&#34;&#34;&#34;
-    package_name: str
     display_name: str
+    &#34;&#34;&#34;The name to display to the user.&#34;&#34;&#34;
     expected_num: Optional[int]
+    &#34;&#34;&#34;The number of packages expected to be found. This prevents false positives where versions appear to match \
+    due to some versions not being fetched.&#34;&#34;&#34;
 
     def __init__(
             self,
             data: List[PackageMetadata],
-            package_name: str,
             display_name: Optional[str] = None,
             expected_num: Optional[int] = None,
     ):
         &#34;&#34;&#34;Initialize the dependency match&#34;&#34;&#34;
         super().__init__(data)
-        self.package_name = package_name
         self.display_name = display_name
         self.expected_num = expected_num
 
@@ -152,18 +150,16 @@ class VersionsMatch(UserList):
         return {dependency.current for dependency in self.data}
 
     def __repr__(self) -&gt; str:
-        &#34;&#34;&#34;Human-readable description of the version match&#34;&#34;&#34;
-        name = self.display_name if self.display_name is not None else self.package_name
         if len(self.versions) == 0:
-            return f&#34;No `{name}` versions found&#34;
+            return f&#34;No `{self.display_name}` versions found&#34;
         if len(self.versions) == 1:
-            return f&#34;Only one `{name}` version found&#34;
+            return f&#34;Only one `{self.display_name}` version found&#34;
         suffix = &#34;&#34;
         if not self.has_all_expected_items:
             suffix = f&#34; (only {len(self.versions)} of {self.expected_num} found)&#34;
         if self.is_consistent:
-            return f&#34;Versions match for package `{name}`: {&#39;, &#39;.join(self.versions)}{suffix}&#34;
-        return f&#34;Versions mismatch for package `{name}`: {&#39;, &#39;.join(self.versions)}{suffix}&#34;</code></pre>
+            return f&#34;Versions match for package `{self.display_name}`: {&#39;, &#39;.join(self.versions)}{suffix}&#34;
+        return f&#34;Versions mismatch for package `{self.display_name}`: {&#39;, &#39;.join(self.versions)}{suffix}&#34;</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -180,15 +176,12 @@ class VersionsMatch(UserList):
 <dl>
 <dt id="omniversion.models.package_metadata.list.versions_match.VersionsMatch.display_name"><code class="name">var <span class="ident">display_name</span> : str</code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The name to display to the user.</p></div>
 </dd>
 <dt id="omniversion.models.package_metadata.list.versions_match.VersionsMatch.expected_num"><code class="name">var <span class="ident">expected_num</span> : Optional[int]</code></dt>
 <dd>
-<div class="desc"></div>
-</dd>
-<dt id="omniversion.models.package_metadata.list.versions_match.VersionsMatch.package_name"><code class="name">var <span class="ident">package_name</span> : str</code></dt>
-<dd>
-<div class="desc"></div>
+<div class="desc"><p>The number of packages expected to be found. This prevents false positives where versions appear to match
+due to some versions not being fetched.</p></div>
 </dd>
 </dl>
 <h3>Instance variables</h3>
@@ -273,7 +266,6 @@ def versions(self) -&gt; List[str]:
 <li><code><a title="omniversion.models.package_metadata.list.versions_match.VersionsMatch.expected_num" href="#omniversion.models.package_metadata.list.versions_match.VersionsMatch.expected_num">expected_num</a></code></li>
 <li><code><a title="omniversion.models.package_metadata.list.versions_match.VersionsMatch.has_all_expected_items" href="#omniversion.models.package_metadata.list.versions_match.VersionsMatch.has_all_expected_items">has_all_expected_items</a></code></li>
 <li><code><a title="omniversion.models.package_metadata.list.versions_match.VersionsMatch.is_consistent" href="#omniversion.models.package_metadata.list.versions_match.VersionsMatch.is_consistent">is_consistent</a></code></li>
-<li><code><a title="omniversion.models.package_metadata.list.versions_match.VersionsMatch.package_name" href="#omniversion.models.package_metadata.list.versions_match.VersionsMatch.package_name">package_name</a></code></li>
 <li><code><a title="omniversion.models.package_metadata.list.versions_match.VersionsMatch.versions" href="#omniversion.models.package_metadata.list.versions_match.VersionsMatch.versions">versions</a></code></li>
 </ul>
 </li>

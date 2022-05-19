@@ -52,18 +52,18 @@ class DataSources:
         files = []
         packages = []
         real_path = os.path.realpath(base_path)
-        host_dirs = [
+        host_dirs = sorted([
             directory
             for directory in os.listdir(real_path)
             if os.path.isdir(os.path.join(real_path, directory))
-        ]
+        ])
         for host in host_dirs:
             host_path = os.path.join(real_path, host)
-            package_manager_dirs = [
+            package_manager_dirs = sorted([
                 directory
                 for directory in os.listdir(host_path)
                 if os.path.isdir(os.path.join(host_path, directory))
-            ]
+            ])
             for package_manager in package_manager_dirs:
                 for verb in VALID_VERBS:
                     file_path = os.path.join(host_path, package_manager, verb + ".omniversion.yaml")

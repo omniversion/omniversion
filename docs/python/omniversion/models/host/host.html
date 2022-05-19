@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
 <title>omniversion.models.host.host API documentation</title>
-<meta name="description" content="" />
+<meta name="description" content="A remote server, container or local host from which package data can be fetched." />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -22,11 +22,13 @@
 <h1 class="title">Module <code>omniversion.models.host.host</code></h1>
 </header>
 <section id="section-intro">
+<p>A remote server, container or local host from which package data can be fetched.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">from dataclasses import dataclass
+<pre><code class="python">&#34;&#34;&#34;A remote server, container or local host from which package data can be fetched.&#34;&#34;&#34;
+from dataclasses import dataclass
 from typing import List, Union
 
 from omniversion.models.package_metadata.package_metadata import PackageMetadata
@@ -35,20 +37,32 @@ from omniversion.models.package_metadata.list.packages_metadata_list import Pack
 
 @dataclass
 class Host:
-    &#34;&#34;&#34;&#34;&#34;&#34;
+    &#34;&#34;&#34;A remote server, container or local host from which package data can be fetched.&#34;&#34;&#34;
     name: str
+    &#34;&#34;&#34;The name of the host, e.g. an ssh host or `localhost`. This should be unique.&#34;&#34;&#34;
     packages: PackagesMetadataList
+    &#34;&#34;&#34;The package data fetched from this host.&#34;&#34;&#34;
 
     @classmethod
     def list_from_packages(cls, packages: Union[PackagesMetadataList, List[PackageMetadata]]) -&gt; List[&#39;Host&#39;]:
+        &#34;&#34;&#34;Create a list of hosts from a list of packages.
+
+        Parameters
+        ----------
+        packages
+            A `PackagesMetadataList` or a list of `PackageMetadata` items that should be grouped by their `host` \
+            property.
+
+        Returns
+        -------
+        List[Host]
+            A list of `Host` objects, each containing only the packages belonging to this host.
+        &#34;&#34;&#34;
         hostnames = sorted(list({package.host for package in packages}))
         return [Host(hostname, PackagesMetadataList([package for package in packages if package.host == hostname]))
                 for hostname in hostnames]
 
     def __str__(self):
-        &#34;&#34;&#34;Debug string representation.
-
-        Use the `omniversion.pretty_print` module for prettier output more suitable for human consumption.&#34;&#34;&#34;
         return f&#34;host: {self.name}&#34;</code></pre>
 </details>
 </section>
@@ -66,27 +80,39 @@ class Host:
 <span>(</span><span>name: str, packages: <a title="omniversion.models.package_metadata.list.packages_metadata_list.PackagesMetadataList" href="../package_metadata/list/packages_metadata_list.html#omniversion.models.package_metadata.list.packages_metadata_list.PackagesMetadataList">PackagesMetadataList</a>)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Host(name: str, packages: omniversion.models.package_metadata.list.packages_metadata_list.PackagesMetadataList)</p></div>
+<div class="desc"><p>A remote server, container or local host from which package data can be fetched.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@dataclass
 class Host:
-    &#34;&#34;&#34;&#34;&#34;&#34;
+    &#34;&#34;&#34;A remote server, container or local host from which package data can be fetched.&#34;&#34;&#34;
     name: str
+    &#34;&#34;&#34;The name of the host, e.g. an ssh host or `localhost`. This should be unique.&#34;&#34;&#34;
     packages: PackagesMetadataList
+    &#34;&#34;&#34;The package data fetched from this host.&#34;&#34;&#34;
 
     @classmethod
     def list_from_packages(cls, packages: Union[PackagesMetadataList, List[PackageMetadata]]) -&gt; List[&#39;Host&#39;]:
+        &#34;&#34;&#34;Create a list of hosts from a list of packages.
+
+        Parameters
+        ----------
+        packages
+            A `PackagesMetadataList` or a list of `PackageMetadata` items that should be grouped by their `host` \
+            property.
+
+        Returns
+        -------
+        List[Host]
+            A list of `Host` objects, each containing only the packages belonging to this host.
+        &#34;&#34;&#34;
         hostnames = sorted(list({package.host for package in packages}))
         return [Host(hostname, PackagesMetadataList([package for package in packages if package.host == hostname]))
                 for hostname in hostnames]
 
     def __str__(self):
-        &#34;&#34;&#34;Debug string representation.
-
-        Use the `omniversion.pretty_print` module for prettier output more suitable for human consumption.&#34;&#34;&#34;
         return f&#34;host: {self.name}&#34;</code></pre>
 </details>
 <h3>Subclasses</h3>
@@ -97,11 +123,11 @@ class Host:
 <dl>
 <dt id="omniversion.models.host.host.Host.name"><code class="name">var <span class="ident">name</span> : str</code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The name of the host, e.g. an ssh host or <code>localhost</code>. This should be unique.</p></div>
 </dd>
 <dt id="omniversion.models.host.host.Host.packages"><code class="name">var <span class="ident">packages</span> : <a title="omniversion.models.package_metadata.list.packages_metadata_list.PackagesMetadataList" href="../package_metadata/list/packages_metadata_list.html#omniversion.models.package_metadata.list.packages_metadata_list.PackagesMetadataList">PackagesMetadataList</a></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The package data fetched from this host.</p></div>
 </dd>
 </dl>
 <h3>Static methods</h3>
@@ -110,13 +136,37 @@ class Host:
 <span>def <span class="ident">list_from_packages</span></span>(<span>packages: Union[<a title="omniversion.models.package_metadata.list.packages_metadata_list.PackagesMetadataList" href="../package_metadata/list/packages_metadata_list.html#omniversion.models.package_metadata.list.packages_metadata_list.PackagesMetadataList">PackagesMetadataList</a>, List[<a title="omniversion.models.package_metadata.package_metadata.PackageMetadata" href="../package_metadata/package_metadata.html#omniversion.models.package_metadata.package_metadata.PackageMetadata">PackageMetadata</a>]]) ‑> List[<a title="omniversion.models.host.host.Host" href="#omniversion.models.host.host.Host">Host</a>]</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Create a list of hosts from a list of packages.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>packages</code></strong></dt>
+<dd>A <code>PackagesMetadataList</code> or a list of <code>PackageMetadata</code> items that should be grouped by their <code>host</code>
+property.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>List[<a title="omniversion.models.host.host.Host" href="#omniversion.models.host.host.Host">Host</a>]</code></dt>
+<dd>A list of <code><a title="omniversion.models.host.host.Host" href="#omniversion.models.host.host.Host">Host</a></code> objects, each containing only the packages belonging to this host.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@classmethod
 def list_from_packages(cls, packages: Union[PackagesMetadataList, List[PackageMetadata]]) -&gt; List[&#39;Host&#39;]:
+    &#34;&#34;&#34;Create a list of hosts from a list of packages.
+
+    Parameters
+    ----------
+    packages
+        A `PackagesMetadataList` or a list of `PackageMetadata` items that should be grouped by their `host` \
+        property.
+
+    Returns
+    -------
+    List[Host]
+        A list of `Host` objects, each containing only the packages belonging to this host.
+    &#34;&#34;&#34;
     hostnames = sorted(list({package.host for package in packages}))
     return [Host(hostname, PackagesMetadataList([package for package in packages if package.host == hostname]))
             for hostname in hostnames]</code></pre>

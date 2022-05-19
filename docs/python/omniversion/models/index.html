@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
 <title>omniversion.models API documentation</title>
-<meta name="description" content="" />
+<meta name="description" content="Omniversion model classes" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -22,11 +22,13 @@
 <h1 class="title">Module <code>omniversion.models</code></h1>
 </header>
 <section id="section-intro">
+<p>Omniversion model classes</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">from .host import Host, Localhost
+<pre><code class="python">&#34;&#34;&#34;Omniversion model classes&#34;&#34;&#34;
+from .host import Host, Localhost
 from .data_source import ConfigDataSource, FileDataSource
 from .data_source.data_sources import DataSources
 from .package_metadata import Advisory, InstalledPackage, PackageMetadata
@@ -38,19 +40,19 @@ from .package_metadata.list import AvailableUpdates, PackagesMetadataList, Versi
 <dl>
 <dt><code class="name"><a title="omniversion.models.data_source" href="data_source/index.html">omniversion.models.data_source</a></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Model classes for the sources of imported omniversion data.</p></div>
 </dd>
 <dt><code class="name"><a title="omniversion.models.host" href="host/index.html">omniversion.models.host</a></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Model classes for hosts, i.e. localhost and remote systems.</p></div>
 </dd>
 <dt><code class="name"><a title="omniversion.models.package_manager" href="package_manager/index.html">omniversion.models.package_manager</a></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Model class for package managers.</p></div>
 </dd>
 <dt><code class="name"><a title="omniversion.models.package_metadata" href="package_metadata/index.html">omniversion.models.package_metadata</a></code></dt>
 <dd>
-<div class="desc"><p>Model classes for various types of package infos</p></div>
+<div class="desc"><p>Model classes for various types of package metadata items.</p></div>
 </dd>
 </dl>
 </section>

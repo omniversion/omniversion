@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
 <title>omniversion.models.package_metadata.list.packages_metadata_list API documentation</title>
-<meta name="description" content="A list of dependencies, i.e. software packages" />
+<meta name="description" content="A list of package metadata items, each describing all that is known about a particular software package." />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -22,12 +22,12 @@
 <h1 class="title">Module <code>omniversion.models.package_metadata.list.packages_metadata_list</code></h1>
 </header>
 <section id="section-intro">
-<p>A list of dependencies, i.e. software packages</p>
+<p>A list of package metadata items, each describing all that is known about a particular software package.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">&#34;&#34;&#34;A list of dependencies, i.e. software packages&#34;&#34;&#34;
+<pre><code class="python">&#34;&#34;&#34;A list of package metadata items, each describing all that is known about a particular software package.&#34;&#34;&#34;
 from collections import UserList
 from typing import Optional, Union, List
 
@@ -39,6 +39,9 @@ from .vulnerabilities import Vulnerabilities
 
 
 class PackagesMetadataList(UserList):
+    &#34;&#34;&#34;A list of package metadata items, each describing all that is known about a particular software package.
+
+    This object is offers convenient methods for filtering packages.&#34;&#34;&#34;
     def filter(
             self,
             verb: Optional[Union[str, List[str]]] = None,
@@ -46,7 +49,28 @@ class PackagesMetadataList(UserList):
             package_manager: Optional[str] = None,
             package_name: Optional[Union[str, List[str]]] = None,
     ) -&gt; &#39;PackagesMetadataList&#39;:
-        &#34;&#34;&#34;List all dependencies matching the given criteria&#34;&#34;&#34;
+        &#34;&#34;&#34;List all dependencies matching the given criteria.
+
+        Parameters
+        ----------
+        verb
+            If provided, will ensure only packages obtained via this verb/these verbs will be returned. A verb is a \
+            package manager command type like `list`, `audit`, `outdated` etc.
+
+        host
+            If provided, will ensure only packages extracted from to the specified host(s) will be returned.
+
+        package_manager
+            If provided, the identifier of a package manager whose packages should be returned.
+
+        package_name
+            If provided, only packages matching this name or list of names will be returned.
+
+        Returns
+        -------
+        PackagesMetadataList
+            A list of matching packages.
+        &#34;&#34;&#34;
         def filter_condition(package: PackageMetadata) -&gt; bool:
             if host is not None and package.host != host:
                 return False
@@ -69,7 +93,24 @@ class PackagesMetadataList(UserList):
             package_manager: Optional[str] = None,
             package_name: Optional[Union[str, List[str]]] = None,
     ) -&gt; Vulnerabilities:
-        &#34;&#34;&#34;List security vulnerabilities&#34;&#34;&#34;
+        &#34;&#34;&#34;Extract security vulnerabilities from the data.
+
+        Parameters
+        ----------
+        host
+            If provided, will ensure only packages extracted from to the specified host(s) will be returned.
+
+        package_manager
+            If provided, the identifier of a package manager whose packages should be returned.
+
+        package_name
+            If provided, only packages matching this name or list of names will be returned.
+
+        Returns
+        -------
+        omniversion.models.package_metadata.list.vulnerabilities.Vulnerabilities
+            All security issues contained in the input.
+        &#34;&#34;&#34;
         return Vulnerabilities(self.filter(&#34;audit&#34;, host, package_manager, package_name))
 
     def ls(
@@ -78,7 +119,24 @@ class PackagesMetadataList(UserList):
             package_manager: Optional[str] = None,
             package_name: Optional[Union[str, List[str]]] = None,
     ):
-        &#34;&#34;&#34;List software packages&#34;&#34;&#34;
+        &#34;&#34;&#34;Extract installed package metadata items.
+
+        Parameters
+        ----------
+        host
+            If provided, will ensure only packages extracted from to the specified host(s) will be returned.
+
+        package_manager
+            If provided, the identifier of a package manager whose packages should be returned.
+
+        package_name
+            If provided, only packages matching this name or list of names will be returned.
+
+        Returns
+        -------
+        PackagesMetadataList
+            All package metadata items relating to installed packages contained in the input.
+        &#34;&#34;&#34;
         return PackagesMetadataList(self.filter([&#34;list&#34;, &#34;version&#34;], host, package_manager, package_name))
 
     def outdated(
@@ -87,13 +145,47 @@ class PackagesMetadataList(UserList):
             package_manager: Optional[str] = None,
             package_name: Optional[Union[str, List[str]]] = None,
     ):
-        &#34;&#34;&#34;List available updates&#34;&#34;&#34;
+        &#34;&#34;&#34;Extract available updates from the data.
+
+        Parameters
+        ----------
+        host
+            If provided, will ensure only packages extracted from to the specified host(s) will be returned.
+
+        package_manager
+            If provided, the identifier of a package manager whose packages should be returned.
+
+        package_name
+            If provided, only packages matching this name or list of names will be returned.
+
+        Returns
+        -------
+        omniversion.models.package_metadata.list.available_updates.AvailableUpdates
+            All available updates for the packages contained in the input.
+        &#34;&#34;&#34;
         return AvailableUpdates(self.filter(&#34;outdated&#34;, host, package_manager, package_name))
 
     def show(
             self, package_name: Union[str, List[str]], display_name: Optional[str] = None
     ):
-        &#34;&#34;&#34;Match versions of all installations of a particular package&#34;&#34;&#34;
+        &#34;&#34;&#34;Extract metadata for a particular package or list of related packages.
+
+        This is especially useful for ensuring consistency of versions installed on different hosts, \
+        as well as versions of related packages delivered through different package managers.
+
+        Parameters
+        ----------
+        package_name
+            The name(s) of the package(s) that should be extracted.
+
+        display_name
+            An optional value used in human-readable output.
+
+        Returns
+        -------
+        omniversion.models.package_metadata.list.versions_match.VersionsMatch
+            All available metadata for the specified package(s).
+        &#34;&#34;&#34;
         return VersionsMatch(
             self.filter([&#34;list&#34;, &#34;version&#34;], package_name=package_name).data,
             package_name,
@@ -101,7 +193,6 @@ class PackagesMetadataList(UserList):
         )
 
     def __repr__(self) -&gt; str:
-        &#34;&#34;&#34;Summary showing dependency count&#34;&#34;&#34;
         num_dependencies = len(self)
         return f&#34;{num_dependencies} package{ &#39;&#39; if num_dependencies == 1 else &#39;s&#39;}&#34;</code></pre>
 </details>
@@ -120,12 +211,16 @@ class PackagesMetadataList(UserList):
 <span>(</span><span>initlist=None)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>A more or less complete user-defined wrapper around list objects.</p></div>
+<div class="desc"><p>A list of package metadata items, each describing all that is known about a particular software package.</p>
+<p>This object is offers convenient methods for filtering packages.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class PackagesMetadataList(UserList):
+    &#34;&#34;&#34;A list of package metadata items, each describing all that is known about a particular software package.
+
+    This object is offers convenient methods for filtering packages.&#34;&#34;&#34;
     def filter(
             self,
             verb: Optional[Union[str, List[str]]] = None,
@@ -133,7 +228,28 @@ class PackagesMetadataList(UserList):
             package_manager: Optional[str] = None,
             package_name: Optional[Union[str, List[str]]] = None,
     ) -&gt; &#39;PackagesMetadataList&#39;:
-        &#34;&#34;&#34;List all dependencies matching the given criteria&#34;&#34;&#34;
+        &#34;&#34;&#34;List all dependencies matching the given criteria.
+
+        Parameters
+        ----------
+        verb
+            If provided, will ensure only packages obtained via this verb/these verbs will be returned. A verb is a \
+            package manager command type like `list`, `audit`, `outdated` etc.
+
+        host
+            If provided, will ensure only packages extracted from to the specified host(s) will be returned.
+
+        package_manager
+            If provided, the identifier of a package manager whose packages should be returned.
+
+        package_name
+            If provided, only packages matching this name or list of names will be returned.
+
+        Returns
+        -------
+        PackagesMetadataList
+            A list of matching packages.
+        &#34;&#34;&#34;
         def filter_condition(package: PackageMetadata) -&gt; bool:
             if host is not None and package.host != host:
                 return False
@@ -156,7 +272,24 @@ class PackagesMetadataList(UserList):
             package_manager: Optional[str] = None,
             package_name: Optional[Union[str, List[str]]] = None,
     ) -&gt; Vulnerabilities:
-        &#34;&#34;&#34;List security vulnerabilities&#34;&#34;&#34;
+        &#34;&#34;&#34;Extract security vulnerabilities from the data.
+
+        Parameters
+        ----------
+        host
+            If provided, will ensure only packages extracted from to the specified host(s) will be returned.
+
+        package_manager
+            If provided, the identifier of a package manager whose packages should be returned.
+
+        package_name
+            If provided, only packages matching this name or list of names will be returned.
+
+        Returns
+        -------
+        omniversion.models.package_metadata.list.vulnerabilities.Vulnerabilities
+            All security issues contained in the input.
+        &#34;&#34;&#34;
         return Vulnerabilities(self.filter(&#34;audit&#34;, host, package_manager, package_name))
 
     def ls(
@@ -165,7 +298,24 @@ class PackagesMetadataList(UserList):
             package_manager: Optional[str] = None,
             package_name: Optional[Union[str, List[str]]] = None,
     ):
-        &#34;&#34;&#34;List software packages&#34;&#34;&#34;
+        &#34;&#34;&#34;Extract installed package metadata items.
+
+        Parameters
+        ----------
+        host
+            If provided, will ensure only packages extracted from to the specified host(s) will be returned.
+
+        package_manager
+            If provided, the identifier of a package manager whose packages should be returned.
+
+        package_name
+            If provided, only packages matching this name or list of names will be returned.
+
+        Returns
+        -------
+        PackagesMetadataList
+            All package metadata items relating to installed packages contained in the input.
+        &#34;&#34;&#34;
         return PackagesMetadataList(self.filter([&#34;list&#34;, &#34;version&#34;], host, package_manager, package_name))
 
     def outdated(
@@ -174,13 +324,47 @@ class PackagesMetadataList(UserList):
             package_manager: Optional[str] = None,
             package_name: Optional[Union[str, List[str]]] = None,
     ):
-        &#34;&#34;&#34;List available updates&#34;&#34;&#34;
+        &#34;&#34;&#34;Extract available updates from the data.
+
+        Parameters
+        ----------
+        host
+            If provided, will ensure only packages extracted from to the specified host(s) will be returned.
+
+        package_manager
+            If provided, the identifier of a package manager whose packages should be returned.
+
+        package_name
+            If provided, only packages matching this name or list of names will be returned.
+
+        Returns
+        -------
+        omniversion.models.package_metadata.list.available_updates.AvailableUpdates
+            All available updates for the packages contained in the input.
+        &#34;&#34;&#34;
         return AvailableUpdates(self.filter(&#34;outdated&#34;, host, package_manager, package_name))
 
     def show(
             self, package_name: Union[str, List[str]], display_name: Optional[str] = None
     ):
-        &#34;&#34;&#34;Match versions of all installations of a particular package&#34;&#34;&#34;
+        &#34;&#34;&#34;Extract metadata for a particular package or list of related packages.
+
+        This is especially useful for ensuring consistency of versions installed on different hosts, \
+        as well as versions of related packages delivered through different package managers.
+
+        Parameters
+        ----------
+        package_name
+            The name(s) of the package(s) that should be extracted.
+
+        display_name
+            An optional value used in human-readable output.
+
+        Returns
+        -------
+        omniversion.models.package_metadata.list.versions_match.VersionsMatch
+            All available metadata for the specified package(s).
+        &#34;&#34;&#34;
         return VersionsMatch(
             self.filter([&#34;list&#34;, &#34;version&#34;], package_name=package_name).data,
             package_name,
@@ -188,7 +372,6 @@ class PackagesMetadataList(UserList):
         )
 
     def __repr__(self) -&gt; str:
-        &#34;&#34;&#34;Summary showing dependency count&#34;&#34;&#34;
         num_dependencies = len(self)
         return f&#34;{num_dependencies} package{ &#39;&#39; if num_dependencies == 1 else &#39;s&#39;}&#34;</code></pre>
 </details>
@@ -209,7 +392,21 @@ class PackagesMetadataList(UserList):
 <span>def <span class="ident">audit</span></span>(<span>self, host: Optional[str] = None, package_manager: Optional[str] = None, package_name: Union[str, List[str], ForwardRef(None)] = None) ‑> <a title="omniversion.models.package_metadata.list.vulnerabilities.Vulnerabilities" href="vulnerabilities.html#omniversion.models.package_metadata.list.vulnerabilities.Vulnerabilities">Vulnerabilities</a></span>
 </code></dt>
 <dd>
-<div class="desc"><p>List security vulnerabilities</p></div>
+<div class="desc"><p>Extract security vulnerabilities from the data.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>host</code></strong></dt>
+<dd>If provided, will ensure only packages extracted from to the specified host(s) will be returned.</dd>
+<dt><strong><code>package_manager</code></strong></dt>
+<dd>If provided, the identifier of a package manager whose packages should be returned.</dd>
+<dt><strong><code>package_name</code></strong></dt>
+<dd>If provided, only packages matching this name or list of names will be returned.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code><a title="omniversion.models.package_metadata.list.vulnerabilities.Vulnerabilities" href="vulnerabilities.html#omniversion.models.package_metadata.list.vulnerabilities.Vulnerabilities">Vulnerabilities</a></code></dt>
+<dd>All security issues contained in the input.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -220,7 +417,24 @@ class PackagesMetadataList(UserList):
         package_manager: Optional[str] = None,
         package_name: Optional[Union[str, List[str]]] = None,
 ) -&gt; Vulnerabilities:
-    &#34;&#34;&#34;List security vulnerabilities&#34;&#34;&#34;
+    &#34;&#34;&#34;Extract security vulnerabilities from the data.
+
+    Parameters
+    ----------
+    host
+        If provided, will ensure only packages extracted from to the specified host(s) will be returned.
+
+    package_manager
+        If provided, the identifier of a package manager whose packages should be returned.
+
+    package_name
+        If provided, only packages matching this name or list of names will be returned.
+
+    Returns
+    -------
+    omniversion.models.package_metadata.list.vulnerabilities.Vulnerabilities
+        All security issues contained in the input.
+    &#34;&#34;&#34;
     return Vulnerabilities(self.filter(&#34;audit&#34;, host, package_manager, package_name))</code></pre>
 </details>
 </dd>
@@ -228,7 +442,24 @@ class PackagesMetadataList(UserList):
 <span>def <span class="ident">filter</span></span>(<span>self, verb: Union[str, List[str], ForwardRef(None)] = None, host: Optional[str] = None, package_manager: Optional[str] = None, package_name: Union[str, List[str], ForwardRef(None)] = None) ‑> <a title="omniversion.models.package_metadata.list.packages_metadata_list.PackagesMetadataList" href="#omniversion.models.package_metadata.list.packages_metadata_list.PackagesMetadataList">PackagesMetadataList</a></span>
 </code></dt>
 <dd>
-<div class="desc"><p>List all dependencies matching the given criteria</p></div>
+<div class="desc"><p>List all dependencies matching the given criteria.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>verb</code></strong></dt>
+<dd>If provided, will ensure only packages obtained via this verb/these verbs will be returned. A verb is a
+package manager command type like <code>list</code>, <code>audit</code>, <code>outdated</code> etc.</dd>
+<dt><strong><code>host</code></strong></dt>
+<dd>If provided, will ensure only packages extracted from to the specified host(s) will be returned.</dd>
+<dt><strong><code>package_manager</code></strong></dt>
+<dd>If provided, the identifier of a package manager whose packages should be returned.</dd>
+<dt><strong><code>package_name</code></strong></dt>
+<dd>If provided, only packages matching this name or list of names will be returned.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code><a title="omniversion.models.package_metadata.list.packages_metadata_list.PackagesMetadataList" href="#omniversion.models.package_metadata.list.packages_metadata_list.PackagesMetadataList">PackagesMetadataList</a></code></dt>
+<dd>A list of matching packages.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -240,7 +471,28 @@ class PackagesMetadataList(UserList):
         package_manager: Optional[str] = None,
         package_name: Optional[Union[str, List[str]]] = None,
 ) -&gt; &#39;PackagesMetadataList&#39;:
-    &#34;&#34;&#34;List all dependencies matching the given criteria&#34;&#34;&#34;
+    &#34;&#34;&#34;List all dependencies matching the given criteria.
+
+    Parameters
+    ----------
+    verb
+        If provided, will ensure only packages obtained via this verb/these verbs will be returned. A verb is a \
+        package manager command type like `list`, `audit`, `outdated` etc.
+
+    host
+        If provided, will ensure only packages extracted from to the specified host(s) will be returned.
+
+    package_manager
+        If provided, the identifier of a package manager whose packages should be returned.
+
+    package_name
+        If provided, only packages matching this name or list of names will be returned.
+
+    Returns
+    -------
+    PackagesMetadataList
+        A list of matching packages.
+    &#34;&#34;&#34;
     def filter_condition(package: PackageMetadata) -&gt; bool:
         if host is not None and package.host != host:
             return False
@@ -262,7 +514,21 @@ class PackagesMetadataList(UserList):
 <span>def <span class="ident">ls</span></span>(<span>self, host: Optional[str] = None, package_manager: Optional[str] = None, package_name: Union[str, List[str], ForwardRef(None)] = None)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>List software packages</p></div>
+<div class="desc"><p>Extract installed package metadata items.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>host</code></strong></dt>
+<dd>If provided, will ensure only packages extracted from to the specified host(s) will be returned.</dd>
+<dt><strong><code>package_manager</code></strong></dt>
+<dd>If provided, the identifier of a package manager whose packages should be returned.</dd>
+<dt><strong><code>package_name</code></strong></dt>
+<dd>If provided, only packages matching this name or list of names will be returned.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code><a title="omniversion.models.package_metadata.list.packages_metadata_list.PackagesMetadataList" href="#omniversion.models.package_metadata.list.packages_metadata_list.PackagesMetadataList">PackagesMetadataList</a></code></dt>
+<dd>All package metadata items relating to installed packages contained in the input.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -273,7 +539,24 @@ class PackagesMetadataList(UserList):
         package_manager: Optional[str] = None,
         package_name: Optional[Union[str, List[str]]] = None,
 ):
-    &#34;&#34;&#34;List software packages&#34;&#34;&#34;
+    &#34;&#34;&#34;Extract installed package metadata items.
+
+    Parameters
+    ----------
+    host
+        If provided, will ensure only packages extracted from to the specified host(s) will be returned.
+
+    package_manager
+        If provided, the identifier of a package manager whose packages should be returned.
+
+    package_name
+        If provided, only packages matching this name or list of names will be returned.
+
+    Returns
+    -------
+    PackagesMetadataList
+        All package metadata items relating to installed packages contained in the input.
+    &#34;&#34;&#34;
     return PackagesMetadataList(self.filter([&#34;list&#34;, &#34;version&#34;], host, package_manager, package_name))</code></pre>
 </details>
 </dd>
@@ -281,7 +564,21 @@ class PackagesMetadataList(UserList):
 <span>def <span class="ident">outdated</span></span>(<span>self, host: Optional[str] = None, package_manager: Optional[str] = None, package_name: Union[str, List[str], ForwardRef(None)] = None)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>List available updates</p></div>
+<div class="desc"><p>Extract available updates from the data.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>host</code></strong></dt>
+<dd>If provided, will ensure only packages extracted from to the specified host(s) will be returned.</dd>
+<dt><strong><code>package_manager</code></strong></dt>
+<dd>If provided, the identifier of a package manager whose packages should be returned.</dd>
+<dt><strong><code>package_name</code></strong></dt>
+<dd>If provided, only packages matching this name or list of names will be returned.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code><a title="omniversion.models.package_metadata.list.available_updates.AvailableUpdates" href="available_updates.html#omniversion.models.package_metadata.list.available_updates.AvailableUpdates">AvailableUpdates</a></code></dt>
+<dd>All available updates for the packages contained in the input.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -292,7 +589,24 @@ class PackagesMetadataList(UserList):
         package_manager: Optional[str] = None,
         package_name: Optional[Union[str, List[str]]] = None,
 ):
-    &#34;&#34;&#34;List available updates&#34;&#34;&#34;
+    &#34;&#34;&#34;Extract available updates from the data.
+
+    Parameters
+    ----------
+    host
+        If provided, will ensure only packages extracted from to the specified host(s) will be returned.
+
+    package_manager
+        If provided, the identifier of a package manager whose packages should be returned.
+
+    package_name
+        If provided, only packages matching this name or list of names will be returned.
+
+    Returns
+    -------
+    omniversion.models.package_metadata.list.available_updates.AvailableUpdates
+        All available updates for the packages contained in the input.
+    &#34;&#34;&#34;
     return AvailableUpdates(self.filter(&#34;outdated&#34;, host, package_manager, package_name))</code></pre>
 </details>
 </dd>
@@ -300,7 +614,21 @@ class PackagesMetadataList(UserList):
 <span>def <span class="ident">show</span></span>(<span>self, package_name: Union[str, List[str]], display_name: Optional[str] = None)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Match versions of all installations of a particular package</p></div>
+<div class="desc"><p>Extract metadata for a particular package or list of related packages.</p>
+<p>This is especially useful for ensuring consistency of versions installed on different hosts,
+as well as versions of related packages delivered through different package managers.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>package_name</code></strong></dt>
+<dd>The name(s) of the package(s) that should be extracted.</dd>
+<dt><strong><code>display_name</code></strong></dt>
+<dd>An optional value used in human-readable output.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code><a title="omniversion.models.package_metadata.list.versions_match.VersionsMatch" href="versions_match.html#omniversion.models.package_metadata.list.versions_match.VersionsMatch">VersionsMatch</a></code></dt>
+<dd>All available metadata for the specified package(s).</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -308,7 +636,24 @@ class PackagesMetadataList(UserList):
 <pre><code class="python">def show(
         self, package_name: Union[str, List[str]], display_name: Optional[str] = None
 ):
-    &#34;&#34;&#34;Match versions of all installations of a particular package&#34;&#34;&#34;
+    &#34;&#34;&#34;Extract metadata for a particular package or list of related packages.
+
+    This is especially useful for ensuring consistency of versions installed on different hosts, \
+    as well as versions of related packages delivered through different package managers.
+
+    Parameters
+    ----------
+    package_name
+        The name(s) of the package(s) that should be extracted.
+
+    display_name
+        An optional value used in human-readable output.
+
+    Returns
+    -------
+    omniversion.models.package_metadata.list.versions_match.VersionsMatch
+        All available metadata for the specified package(s).
+    &#34;&#34;&#34;
     return VersionsMatch(
         self.filter([&#34;list&#34;, &#34;version&#34;], package_name=package_name).data,
         package_name,

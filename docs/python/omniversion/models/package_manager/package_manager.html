@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
 <title>omniversion.models.package_manager.package_manager API documentation</title>
-<meta name="description" content="Common types used by other modules" />
+<meta name="description" content="Representation of a package manager. Use this class to obtain all packages managed by a particular package manager across all servers and directories." />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -22,12 +22,13 @@
 <h1 class="title">Module <code>omniversion.models.package_manager.package_manager</code></h1>
 </header>
 <section id="section-intro">
-<p>Common types used by other modules</p>
+<p>Representation of a package manager. Use this class to obtain all packages managed by a particular package manager across all servers and directories.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">&#34;&#34;&#34;Common types used by other modules&#34;&#34;&#34;
+<pre><code class="python">&#34;&#34;&#34;Representation of a package manager. Use this class to obtain all packages managed by a particular package \
+manager across all servers and directories.&#34;&#34;&#34;
 from dataclasses import dataclass
 from enum import Enum
 from typing import List, Union
@@ -35,18 +36,57 @@ from typing import List, Union
 from omniversion.models.package_metadata.list.packages_metadata_list import PackagesMetadataList
 from omniversion.models.package_metadata.package_metadata import PackageMetadata
 
-PackageManagerIdentifier = Enum(&#34;PackageManagerIdentifier&#34;, &#34;apt npm rubygems rvm&#34;)
+
+class PackageManagerIdentifier(Enum):
+    &#34;&#34;&#34;All package managers currently known to omniversion.&#34;&#34;&#34;
+
+    apt = &#34;apt&#34;
+    &#34;&#34;&#34;[Aptitude](https://salsa.debian.org/apt-team/apt)&#34;&#34;&#34;
+    file = &#34;file&#34;
+    &#34;&#34;&#34;Not an actual package manager. We use this value for package infos extracted from local configuration files.&#34;&#34;&#34;
+    galaxy = &#34;galaxy&#34;
+    &#34;&#34;&#34;[Ansible Galaxy](https://galaxy.ansible.com)&#34;&#34;&#34;
+    go = &#34;go&#34;
+    &#34;&#34;&#34;[go modules](https://go.dev/ref/mod)&#34;&#34;&#34;
+    homebrew = &#34;homebrew&#34;
+    &#34;&#34;&#34;[homebrew](https://brew.sh)&#34;&#34;&#34;
+    npm = &#34;npm&#34;
+    &#34;&#34;&#34;[npm](https://www.npmjs.com)&#34;&#34;&#34;
+    nvm = &#34;nvm&#34;
+    &#34;&#34;&#34;[nvm](https://github.com/nvm-sh/nvm)&#34;&#34;&#34;
+    pip = &#34;pip&#34;
+    &#34;&#34;&#34;[pip](https://pypi.org/project/pip/)&#34;&#34;&#34;
+    rubygems = &#34;rubygems&#34;
+    &#34;&#34;&#34;[rubygems](https://rubygems.org)&#34;&#34;&#34;
+    rvm = &#34;rvm&#34;
+    &#34;&#34;&#34;[rvm](https://rvm.io)&#34;&#34;&#34;
 
 
 @dataclass
 class PackageManager:
-    &#34;&#34;&#34;Package manager&#34;&#34;&#34;
+    &#34;&#34;&#34;Representation of a package manager. Use this class to obtain all packages managed by a particular package \
+    manager across all servers and directories.&#34;&#34;&#34;
 
     identifier: str
+    &#34;&#34;&#34;The package manager&#39;s unique identifier. Refer to `PackageManagerIdentifier` for valid values.&#34;&#34;&#34;
     packages: PackagesMetadataList
 
     @classmethod
     def list_from_packages(cls, packages: Union[PackagesMetadataList, List[PackageMetadata]]) -&gt; List[&#39;PackageManager&#39;]:
+        &#34;&#34;&#34;Create a list of `PackageManager` objects from a list of package metadata items.
+        
+        Parameters
+        ----------
+        packages
+            A `PackagesMetadataList` or a list of `PackageMetadata` items that should be be grouped by their \
+            `package_manager` property.
+            
+        Returns
+        -------
+        List[PackageManager]
+            A list of `PackageManager` objects, each containing only the package infos obtained via this package \
+            manager.        
+        &#34;&#34;&#34;
         package_manager_identifiers = sorted(list({package.package_manager for package in packages
                                                    if package.package_manager is not None}))
         return [PackageManager(identifier, PackagesMetadataList([
@@ -54,9 +94,6 @@ class PackageManager:
                 for identifier in package_manager_identifiers]
 
     def __str__(self):
-        &#34;&#34;&#34;Debug string representation.
-
-        Use the `omniversion.pretty_print` module for prettier output more suitable for human consumption.&#34;&#34;&#34;
         return f&#34;package manager: {self.identifier}&#34;</code></pre>
 </details>
 </section>
@@ -74,20 +111,37 @@ class PackageManager:
 <span>(</span><span>identifier: str, packages: <a title="omniversion.models.package_metadata.list.packages_metadata_list.PackagesMetadataList" href="../package_metadata/list/packages_metadata_list.html#omniversion.models.package_metadata.list.packages_metadata_list.PackagesMetadataList">PackagesMetadataList</a>)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Package manager</p></div>
+<div class="desc"><p>Representation of a package manager. Use this class to obtain all packages managed by a particular package
+manager across all servers and directories.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@dataclass
 class PackageManager:
-    &#34;&#34;&#34;Package manager&#34;&#34;&#34;
+    &#34;&#34;&#34;Representation of a package manager. Use this class to obtain all packages managed by a particular package \
+    manager across all servers and directories.&#34;&#34;&#34;
 
     identifier: str
+    &#34;&#34;&#34;The package manager&#39;s unique identifier. Refer to `PackageManagerIdentifier` for valid values.&#34;&#34;&#34;
     packages: PackagesMetadataList
 
     @classmethod
     def list_from_packages(cls, packages: Union[PackagesMetadataList, List[PackageMetadata]]) -&gt; List[&#39;PackageManager&#39;]:
+        &#34;&#34;&#34;Create a list of `PackageManager` objects from a list of package metadata items.
+        
+        Parameters
+        ----------
+        packages
+            A `PackagesMetadataList` or a list of `PackageMetadata` items that should be be grouped by their \
+            `package_manager` property.
+            
+        Returns
+        -------
+        List[PackageManager]
+            A list of `PackageManager` objects, each containing only the package infos obtained via this package \
+            manager.        
+        &#34;&#34;&#34;
         package_manager_identifiers = sorted(list({package.package_manager for package in packages
                                                    if package.package_manager is not None}))
         return [PackageManager(identifier, PackagesMetadataList([
@@ -95,16 +149,13 @@ class PackageManager:
                 for identifier in package_manager_identifiers]
 
     def __str__(self):
-        &#34;&#34;&#34;Debug string representation.
-
-        Use the `omniversion.pretty_print` module for prettier output more suitable for human consumption.&#34;&#34;&#34;
         return f&#34;package manager: {self.identifier}&#34;</code></pre>
 </details>
 <h3>Class variables</h3>
 <dl>
 <dt id="omniversion.models.package_manager.package_manager.PackageManager.identifier"><code class="name">var <span class="ident">identifier</span> : str</code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The package manager's unique identifier. Refer to <code><a title="omniversion.models.package_manager.package_manager.PackageManagerIdentifier" href="#omniversion.models.package_manager.package_manager.PackageManagerIdentifier">PackageManagerIdentifier</a></code> for valid values.</p></div>
 </dd>
 <dt id="omniversion.models.package_manager.package_manager.PackageManager.packages"><code class="name">var <span class="ident">packages</span> : <a title="omniversion.models.package_metadata.list.packages_metadata_list.PackagesMetadataList" href="../package_metadata/list/packages_metadata_list.html#omniversion.models.package_metadata.list.packages_metadata_list.PackagesMetadataList">PackagesMetadataList</a></code></dt>
 <dd>
@@ -117,13 +168,39 @@ class PackageManager:
 <span>def <span class="ident">list_from_packages</span></span>(<span>packages: Union[<a title="omniversion.models.package_metadata.list.packages_metadata_list.PackagesMetadataList" href="../package_metadata/list/packages_metadata_list.html#omniversion.models.package_metadata.list.packages_metadata_list.PackagesMetadataList">PackagesMetadataList</a>, List[<a title="omniversion.models.package_metadata.package_metadata.PackageMetadata" href="../package_metadata/package_metadata.html#omniversion.models.package_metadata.package_metadata.PackageMetadata">PackageMetadata</a>]]) ‑> List[<a title="omniversion.models.package_manager.package_manager.PackageManager" href="#omniversion.models.package_manager.package_manager.PackageManager">PackageManager</a>]</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Create a list of <code><a title="omniversion.models.package_manager.package_manager.PackageManager" href="#omniversion.models.package_manager.package_manager.PackageManager">PackageManager</a></code> objects from a list of package metadata items.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>packages</code></strong></dt>
+<dd>A <code>PackagesMetadataList</code> or a list of <code>PackageMetadata</code> items that should be be grouped by their
+<code>package_manager</code> property.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>List[<a title="omniversion.models.package_manager.package_manager.PackageManager" href="#omniversion.models.package_manager.package_manager.PackageManager">PackageManager</a>]</code></dt>
+<dd>A list of <code><a title="omniversion.models.package_manager.package_manager.PackageManager" href="#omniversion.models.package_manager.package_manager.PackageManager">PackageManager</a></code> objects, each containing only the package infos obtained via this package
+manager.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@classmethod
 def list_from_packages(cls, packages: Union[PackagesMetadataList, List[PackageMetadata]]) -&gt; List[&#39;PackageManager&#39;]:
+    &#34;&#34;&#34;Create a list of `PackageManager` objects from a list of package metadata items.
+    
+    Parameters
+    ----------
+    packages
+        A `PackagesMetadataList` or a list of `PackageMetadata` items that should be be grouped by their \
+        `package_manager` property.
+        
+    Returns
+    -------
+    List[PackageManager]
+        A list of `PackageManager` objects, each containing only the package infos obtained via this package \
+        manager.        
+    &#34;&#34;&#34;
     package_manager_identifiers = sorted(list({package.package_manager for package in packages
                                                if package.package_manager is not None}))
     return [PackageManager(identifier, PackagesMetadataList([
@@ -138,7 +215,35 @@ def list_from_packages(cls, packages: Union[PackagesMetadataList, List[PackageMe
 <span>(</span><span>value, names=None, *, module=None, qualname=None, type=None, start=1)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>An enumeration.</p></div>
+<div class="desc"><p>All package managers currently known to omniversion.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class PackageManagerIdentifier(Enum):
+    &#34;&#34;&#34;All package managers currently known to omniversion.&#34;&#34;&#34;
+
+    apt = &#34;apt&#34;
+    &#34;&#34;&#34;[Aptitude](https://salsa.debian.org/apt-team/apt)&#34;&#34;&#34;
+    file = &#34;file&#34;
+    &#34;&#34;&#34;Not an actual package manager. We use this value for package infos extracted from local configuration files.&#34;&#34;&#34;
+    galaxy = &#34;galaxy&#34;
+    &#34;&#34;&#34;[Ansible Galaxy](https://galaxy.ansible.com)&#34;&#34;&#34;
+    go = &#34;go&#34;
+    &#34;&#34;&#34;[go modules](https://go.dev/ref/mod)&#34;&#34;&#34;
+    homebrew = &#34;homebrew&#34;
+    &#34;&#34;&#34;[homebrew](https://brew.sh)&#34;&#34;&#34;
+    npm = &#34;npm&#34;
+    &#34;&#34;&#34;[npm](https://www.npmjs.com)&#34;&#34;&#34;
+    nvm = &#34;nvm&#34;
+    &#34;&#34;&#34;[nvm](https://github.com/nvm-sh/nvm)&#34;&#34;&#34;
+    pip = &#34;pip&#34;
+    &#34;&#34;&#34;[pip](https://pypi.org/project/pip/)&#34;&#34;&#34;
+    rubygems = &#34;rubygems&#34;
+    &#34;&#34;&#34;[rubygems](https://rubygems.org)&#34;&#34;&#34;
+    rvm = &#34;rvm&#34;
+    &#34;&#34;&#34;[rvm](https://rvm.io)&#34;&#34;&#34;</code></pre>
+</details>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li>enum.Enum</li>
@@ -147,19 +252,43 @@ def list_from_packages(cls, packages: Union[PackagesMetadataList, List[PackageMe
 <dl>
 <dt id="omniversion.models.package_manager.package_manager.PackageManagerIdentifier.apt"><code class="name">var <span class="ident">apt</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p><a href="https://salsa.debian.org/apt-team/apt">Aptitude</a></p></div>
+</dd>
+<dt id="omniversion.models.package_manager.package_manager.PackageManagerIdentifier.file"><code class="name">var <span class="ident">file</span></code></dt>
+<dd>
+<div class="desc"><p>Not an actual package manager. We use this value for package infos extracted from local configuration files.</p></div>
+</dd>
+<dt id="omniversion.models.package_manager.package_manager.PackageManagerIdentifier.galaxy"><code class="name">var <span class="ident">galaxy</span></code></dt>
+<dd>
+<div class="desc"><p><a href="https://galaxy.ansible.com">Ansible Galaxy</a></p></div>
+</dd>
+<dt id="omniversion.models.package_manager.package_manager.PackageManagerIdentifier.go"><code class="name">var <span class="ident">go</span></code></dt>
+<dd>
+<div class="desc"><p><a href="https://go.dev/ref/mod">go modules</a></p></div>
+</dd>
+<dt id="omniversion.models.package_manager.package_manager.PackageManagerIdentifier.homebrew"><code class="name">var <span class="ident">homebrew</span></code></dt>
+<dd>
+<div class="desc"><p><a href="https://brew.sh">homebrew</a></p></div>
 </dd>
 <dt id="omniversion.models.package_manager.package_manager.PackageManagerIdentifier.npm"><code class="name">var <span class="ident">npm</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p><a href="https://www.npmjs.com">npm</a></p></div>
+</dd>
+<dt id="omniversion.models.package_manager.package_manager.PackageManagerIdentifier.nvm"><code class="name">var <span class="ident">nvm</span></code></dt>
+<dd>
+<div class="desc"><p><a href="https://github.com/nvm-sh/nvm">nvm</a></p></div>
+</dd>
+<dt id="omniversion.models.package_manager.package_manager.PackageManagerIdentifier.pip"><code class="name">var <span class="ident">pip</span></code></dt>
+<dd>
+<div class="desc"><p><a href="https://pypi.org/project/pip/">pip</a></p></div>
 </dd>
 <dt id="omniversion.models.package_manager.package_manager.PackageManagerIdentifier.rubygems"><code class="name">var <span class="ident">rubygems</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p><a href="https://rubygems.org">rubygems</a></p></div>
 </dd>
 <dt id="omniversion.models.package_manager.package_manager.PackageManagerIdentifier.rvm"><code class="name">var <span class="ident">rvm</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p><a href="https://rvm.io">rvm</a></p></div>
 </dd>
 </dl>
 </dd>
@@ -189,9 +318,15 @@ def list_from_packages(cls, packages: Union[PackagesMetadataList, List[PackageMe
 </li>
 <li>
 <h4><code><a title="omniversion.models.package_manager.package_manager.PackageManagerIdentifier" href="#omniversion.models.package_manager.package_manager.PackageManagerIdentifier">PackageManagerIdentifier</a></code></h4>
-<ul class="">
+<ul class="two-column">
 <li><code><a title="omniversion.models.package_manager.package_manager.PackageManagerIdentifier.apt" href="#omniversion.models.package_manager.package_manager.PackageManagerIdentifier.apt">apt</a></code></li>
+<li><code><a title="omniversion.models.package_manager.package_manager.PackageManagerIdentifier.file" href="#omniversion.models.package_manager.package_manager.PackageManagerIdentifier.file">file</a></code></li>
+<li><code><a title="omniversion.models.package_manager.package_manager.PackageManagerIdentifier.galaxy" href="#omniversion.models.package_manager.package_manager.PackageManagerIdentifier.galaxy">galaxy</a></code></li>
+<li><code><a title="omniversion.models.package_manager.package_manager.PackageManagerIdentifier.go" href="#omniversion.models.package_manager.package_manager.PackageManagerIdentifier.go">go</a></code></li>
+<li><code><a title="omniversion.models.package_manager.package_manager.PackageManagerIdentifier.homebrew" href="#omniversion.models.package_manager.package_manager.PackageManagerIdentifier.homebrew">homebrew</a></code></li>
 <li><code><a title="omniversion.models.package_manager.package_manager.PackageManagerIdentifier.npm" href="#omniversion.models.package_manager.package_manager.PackageManagerIdentifier.npm">npm</a></code></li>
+<li><code><a title="omniversion.models.package_manager.package_manager.PackageManagerIdentifier.nvm" href="#omniversion.models.package_manager.package_manager.PackageManagerIdentifier.nvm">nvm</a></code></li>
+<li><code><a title="omniversion.models.package_manager.package_manager.PackageManagerIdentifier.pip" href="#omniversion.models.package_manager.package_manager.PackageManagerIdentifier.pip">pip</a></code></li>
 <li><code><a title="omniversion.models.package_manager.package_manager.PackageManagerIdentifier.rubygems" href="#omniversion.models.package_manager.package_manager.PackageManagerIdentifier.rubygems">rubygems</a></code></li>
 <li><code><a title="omniversion.models.package_manager.package_manager.PackageManagerIdentifier.rvm" href="#omniversion.models.package_manager.package_manager.PackageManagerIdentifier.rvm">rvm</a></code></li>
 </ul>

@@ -47,13 +47,21 @@ AVAILABLE_VERBS = [&#34;audit&#34;, &#34;list&#34;, &#34;refresh&#34;, &#34;outd
 class FileDataSource:
     &#34;&#34;&#34;An imported file including meta data&#34;&#34;&#34;
     num_packages: Optional[int] = None
+    &#34;&#34;&#34;The number of package metadata items that have been imported.&#34;&#34;&#34;
     verb: Optional[str] = None
+    &#34;&#34;&#34;The type of package manager command used to create the data in this file (e.g. `list`, `audit`, etc.).&#34;&#34;&#34;
     host: Optional[str] = None
+    &#34;&#34;&#34;The host from which the data was extracted.&#34;&#34;&#34;
     package_manager: Optional[str] = None
+    &#34;&#34;&#34;The identifier of the package manager through which the data was obtained.&#34;&#34;&#34;
     name: Optional[str] = None
+    &#34;&#34;&#34;The file name without the path.&#34;&#34;&#34;
     version: Optional[str] = None
+    &#34;&#34;&#34;The version of the `omniversion/cli` executable used to create the file.&#34;&#34;&#34;
     timestamp: Optional[float] = None
+    &#34;&#34;&#34;The time the file was last changed. Used to determine if data is stale and should be re-fetched.&#34;&#34;&#34;
     path: Optional[str] = None
+    &#34;&#34;&#34;The absolute or relative path to the file.&#34;&#34;&#34;
 
     @property
     def is_stale(self):
@@ -68,6 +76,25 @@ class FileDataSource:
     @classmethod
     def load_data(cls, file_path: str, verb: str, host: str, package_manager: str) -&gt; \
             tuple[Optional[&#39;FileDataSource&#39;], List[PackageMetadata]]:
+        &#34;&#34;&#34;Load data from the specified file.
+
+        Parameters
+        ----------
+        file_path
+            The relative or absolute path to the file.
+        verb
+            The type of package manager command used to create the data in this file (e.g. `list`, `audit`, etc.).
+        host
+            The host from which the data was extracted.
+        package_manager
+            The identifier of the package manager through which the data was obtained.
+
+        Returns
+        -------
+        tuple[FileDataSource, List[omniversion.models.package_metadata.package_metadata.PackageMetadata]]
+            A `FileDataSource` object containing extraction metadata and extracted package info as a list of \
+            `omniversion.models.package_metadata.package_metadata.PackageMetadata` objects.
+        &#34;&#34;&#34;
         file_name = os.path.basename(file_path)
         if not os.path.exists(file_path):
             return None, []
@@ -131,9 +158,6 @@ class FileDataSource:
             return None, None, timestamp
 
     def __str__(self):
-        &#34;&#34;&#34;Debug string representation.
-
-        Use the `omniversion.pretty_print` module for prettier output more suitable for human consumption.&#34;&#34;&#34;
         if self.num_packages is None:
             return f&#34;No valid `{self.verb}` data loaded for `{self.package_manager}`&#34;
         data_recency = &#34;Stale&#34; if self.is_stale else &#34;Recent&#34;
@@ -168,13 +192,21 @@ class FileDataSource:
 class FileDataSource:
     &#34;&#34;&#34;An imported file including meta data&#34;&#34;&#34;
     num_packages: Optional[int] = None
+    &#34;&#34;&#34;The number of package metadata items that have been imported.&#34;&#34;&#34;
     verb: Optional[str] = None
+    &#34;&#34;&#34;The type of package manager command used to create the data in this file (e.g. `list`, `audit`, etc.).&#34;&#34;&#34;
     host: Optional[str] = None
+    &#34;&#34;&#34;The host from which the data was extracted.&#34;&#34;&#34;
     package_manager: Optional[str] = None
+    &#34;&#34;&#34;The identifier of the package manager through which the data was obtained.&#34;&#34;&#34;
     name: Optional[str] = None
+    &#34;&#34;&#34;The file name without the path.&#34;&#34;&#34;
     version: Optional[str] = None
+    &#34;&#34;&#34;The version of the `omniversion/cli` executable used to create the file.&#34;&#34;&#34;
     timestamp: Optional[float] = None
+    &#34;&#34;&#34;The time the file was last changed. Used to determine if data is stale and should be re-fetched.&#34;&#34;&#34;
     path: Optional[str] = None
+    &#34;&#34;&#34;The absolute or relative path to the file.&#34;&#34;&#34;
 
     @property
     def is_stale(self):
@@ -189,6 +221,25 @@ class FileDataSource:
     @classmethod
     def load_data(cls, file_path: str, verb: str, host: str, package_manager: str) -&gt; \
             tuple[Optional[&#39;FileDataSource&#39;], List[PackageMetadata]]:
+        &#34;&#34;&#34;Load data from the specified file.
+
+        Parameters
+        ----------
+        file_path
+            The relative or absolute path to the file.
+        verb
+            The type of package manager command used to create the data in this file (e.g. `list`, `audit`, etc.).
+        host
+            The host from which the data was extracted.
+        package_manager
+            The identifier of the package manager through which the data was obtained.
+
+        Returns
+        -------
+        tuple[FileDataSource, List[omniversion.models.package_metadata.package_metadata.PackageMetadata]]
+            A `FileDataSource` object containing extraction metadata and extracted package info as a list of \
+            `omniversion.models.package_metadata.package_metadata.PackageMetadata` objects.
+        &#34;&#34;&#34;
         file_name = os.path.basename(file_path)
         if not os.path.exists(file_path):
             return None, []
@@ -252,9 +303,6 @@ class FileDataSource:
             return None, None, timestamp
 
     def __str__(self):
-        &#34;&#34;&#34;Debug string representation.
-
-        Use the `omniversion.pretty_print` module for prettier output more suitable for human consumption.&#34;&#34;&#34;
         if self.num_packages is None:
             return f&#34;No valid `{self.verb}` data loaded for `{self.package_manager}`&#34;
         data_recency = &#34;Stale&#34; if self.is_stale else &#34;Recent&#34;
@@ -269,35 +317,35 @@ class FileDataSource:
 <dl>
 <dt id="omniversion.models.data_source.file.FileDataSource.host"><code class="name">var <span class="ident">host</span> : Optional[str]</code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The host from which the data was extracted.</p></div>
 </dd>
 <dt id="omniversion.models.data_source.file.FileDataSource.name"><code class="name">var <span class="ident">name</span> : Optional[str]</code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The file name without the path.</p></div>
 </dd>
 <dt id="omniversion.models.data_source.file.FileDataSource.num_packages"><code class="name">var <span class="ident">num_packages</span> : Optional[int]</code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The number of package metadata items that have been imported.</p></div>
 </dd>
 <dt id="omniversion.models.data_source.file.FileDataSource.package_manager"><code class="name">var <span class="ident">package_manager</span> : Optional[str]</code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The identifier of the package manager through which the data was obtained.</p></div>
 </dd>
 <dt id="omniversion.models.data_source.file.FileDataSource.path"><code class="name">var <span class="ident">path</span> : Optional[str]</code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The absolute or relative path to the file.</p></div>
 </dd>
 <dt id="omniversion.models.data_source.file.FileDataSource.timestamp"><code class="name">var <span class="ident">timestamp</span> : Optional[float]</code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The time the file was last changed. Used to determine if data is stale and should be re-fetched.</p></div>
 </dd>
 <dt id="omniversion.models.data_source.file.FileDataSource.verb"><code class="name">var <span class="ident">verb</span> : Optional[str]</code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The type of package manager command used to create the data in this file (e.g. <code>list</code>, <code>audit</code>, etc.).</p></div>
 </dd>
 <dt id="omniversion.models.data_source.file.FileDataSource.version"><code class="name">var <span class="ident">version</span> : Optional[str]</code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>The version of the <code>omniversion/cli</code> executable used to create the file.</p></div>
 </dd>
 </dl>
 <h3>Static methods</h3>
@@ -306,7 +354,24 @@ class FileDataSource:
 <span>def <span class="ident">load_data</span></span>(<span>file_path: str, verb: str, host: str, package_manager: str) ‑> tuple[typing.Optional[<a title="omniversion.models.data_source.file.FileDataSource" href="#omniversion.models.data_source.file.FileDataSource">FileDataSource</a>], typing.List[<a title="omniversion.models.package_metadata.package_metadata.PackageMetadata" href="../package_metadata/package_metadata.html#omniversion.models.package_metadata.package_metadata.PackageMetadata">PackageMetadata</a>]]</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Load data from the specified file.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>file_path</code></strong></dt>
+<dd>The relative or absolute path to the file.</dd>
+<dt><strong><code>verb</code></strong></dt>
+<dd>The type of package manager command used to create the data in this file (e.g. <code>list</code>, <code>audit</code>, etc.).</dd>
+<dt><strong><code>host</code></strong></dt>
+<dd>The host from which the data was extracted.</dd>
+<dt><strong><code>package_manager</code></strong></dt>
+<dd>The identifier of the package manager through which the data was obtained.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>tuple[<a title="omniversion.models.data_source.file.FileDataSource" href="#omniversion.models.data_source.file.FileDataSource">FileDataSource</a>, List[<a title="omniversion.models.package_metadata.package_metadata.PackageMetadata" href="../package_metadata/package_metadata.html#omniversion.models.package_metadata.package_metadata.PackageMetadata">PackageMetadata</a>]]</code></dt>
+<dd>A <code><a title="omniversion.models.data_source.file.FileDataSource" href="#omniversion.models.data_source.file.FileDataSource">FileDataSource</a></code> object containing extraction metadata and extracted package info as a list of
+<code><a title="omniversion.models.package_metadata.package_metadata.PackageMetadata" href="../package_metadata/package_metadata.html#omniversion.models.package_metadata.package_metadata.PackageMetadata">PackageMetadata</a></code> objects.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -314,6 +379,25 @@ class FileDataSource:
 <pre><code class="python">@classmethod
 def load_data(cls, file_path: str, verb: str, host: str, package_manager: str) -&gt; \
         tuple[Optional[&#39;FileDataSource&#39;], List[PackageMetadata]]:
+    &#34;&#34;&#34;Load data from the specified file.
+
+    Parameters
+    ----------
+    file_path
+        The relative or absolute path to the file.
+    verb
+        The type of package manager command used to create the data in this file (e.g. `list`, `audit`, etc.).
+    host
+        The host from which the data was extracted.
+    package_manager
+        The identifier of the package manager through which the data was obtained.
+
+    Returns
+    -------
+    tuple[FileDataSource, List[omniversion.models.package_metadata.package_metadata.PackageMetadata]]
+        A `FileDataSource` object containing extraction metadata and extracted package info as a list of \
+        `omniversion.models.package_metadata.package_metadata.PackageMetadata` objects.
+    &#34;&#34;&#34;
     file_name = os.path.basename(file_path)
     if not os.path.exists(file_path):
         return None, []

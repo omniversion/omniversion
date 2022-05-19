@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
 <title>omniversion.models.data_source.config API documentation</title>
-<meta name="description" content="" />
+<meta name="description" content="Package info obtained from a configuration file …" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -22,11 +22,20 @@
 <h1 class="title">Module <code>omniversion.models.data_source.config</code></h1>
 </header>
 <section id="section-intro">
+<p>Package info obtained from a configuration file.</p>
+<p>Some package versions are specified in local files (e.g. a configuration file, an environment file, a Dockerfile,
+or an Ansible playbook with a hardcoded version). You can extract them using regular expressions.
+A ConfigDataSource tracks the metadata related to this process.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">import os
+<pre><code class="python">&#34;&#34;&#34;Package info obtained from a configuration file.
+
+Some package versions are specified in local files (e.g. a configuration file, an environment file, a Dockerfile,
+or an Ansible playbook with a hardcoded version). You can extract them using regular expressions.
+A ConfigDataSource tracks the metadata related to this process.&#34;&#34;&#34;
+import os
 import re
 from dataclasses import dataclass
 from typing import Optional, List
@@ -56,9 +65,25 @@ class ConfigDataSource:
     @classmethod
     def load(cls, file_path: str, regex: str, name: Optional[str] = None) -&gt; \
             tuple[&#39;ConfigDataSource&#39;, List[PackageMetadata]]:
-        &#34;&#34;&#34;Load package info from a local file&#34;&#34;&#34;
-        absolute_file_path = os.path.realpath(file_path)
-        with open(absolute_file_path, encoding=&#34;utf8&#34;) as file:
+        &#34;&#34;&#34;Load package info from a local file
+
+        Parameters
+        ----------
+        file_path
+            A relative or absolute path to a file.
+        regex
+            A Python-flavor regular expression used to extract the version(s) from the file.
+        name
+            The name of the package. This is required if the regex does not contain a `name` group.
+
+        Returns
+        -------
+        Tuple[ConfigDataSource, List[omniversion.models.package_metadata.package_metadata.PackageMetadata]]
+            A `ConfigDataSource` object containing extraction metadata and extracted package info as a list of \
+            `omniversion.models.package_metadata.package_metadata.PackageMetadata` objects.
+        &#34;&#34;&#34;
+        real_file_path = os.path.realpath(file_path)
+        with open(real_file_path, encoding=&#34;utf8&#34;) as file:
             try:
                 matches = re.compile(regex).finditer(file.read())
                 package_name = name
@@ -70,7 +95,7 @@ class ConfigDataSource:
                     package_metadata = PackageMetadata(
                         host=&#34;localhost&#34;,
                         name=package_name,
-                        package_manager=&#34;local file&#34;,
+                        package_manager=&#34;file&#34;,
                         current=version,
                     )
                     packages += [package_metadata]
@@ -87,9 +112,6 @@ class ConfigDataSource:
                                  &#34;parameter or a named group called `name`&#34;)
 
     def __str__(self):
-        &#34;&#34;&#34;Debug string representation.
-
-        Use the `omniversion.pretty_print` module for prettier output more suitable for human consumption.&#34;&#34;&#34;
         def entries_text():
             if self.num_packages == 0:
                 return &#34;No packages&#34;
@@ -143,9 +165,25 @@ class ConfigDataSource:
     @classmethod
     def load(cls, file_path: str, regex: str, name: Optional[str] = None) -&gt; \
             tuple[&#39;ConfigDataSource&#39;, List[PackageMetadata]]:
-        &#34;&#34;&#34;Load package info from a local file&#34;&#34;&#34;
-        absolute_file_path = os.path.realpath(file_path)
-        with open(absolute_file_path, encoding=&#34;utf8&#34;) as file:
+        &#34;&#34;&#34;Load package info from a local file
+
+        Parameters
+        ----------
+        file_path
+            A relative or absolute path to a file.
+        regex
+            A Python-flavor regular expression used to extract the version(s) from the file.
+        name
+            The name of the package. This is required if the regex does not contain a `name` group.
+
+        Returns
+        -------
+        Tuple[ConfigDataSource, List[omniversion.models.package_metadata.package_metadata.PackageMetadata]]
+            A `ConfigDataSource` object containing extraction metadata and extracted package info as a list of \
+            `omniversion.models.package_metadata.package_metadata.PackageMetadata` objects.
+        &#34;&#34;&#34;
+        real_file_path = os.path.realpath(file_path)
+        with open(real_file_path, encoding=&#34;utf8&#34;) as file:
             try:
                 matches = re.compile(regex).finditer(file.read())
                 package_name = name
@@ -157,7 +195,7 @@ class ConfigDataSource:
                     package_metadata = PackageMetadata(
                         host=&#34;localhost&#34;,
                         name=package_name,
-                        package_manager=&#34;local file&#34;,
+                        package_manager=&#34;file&#34;,
                         current=version,
                     )
                     packages += [package_metadata]
@@ -174,9 +212,6 @@ class ConfigDataSource:
                                  &#34;parameter or a named group called `name`&#34;)
 
     def __str__(self):
-        &#34;&#34;&#34;Debug string representation.
-
-        Use the `omniversion.pretty_print` module for prettier output more suitable for human consumption.&#34;&#34;&#34;
         def entries_text():
             if self.num_packages == 0:
                 return &#34;No packages&#34;
@@ -215,7 +250,22 @@ called <code>version</code> and, unless the <code>name</code> property is specif
 <span>def <span class="ident">load</span></span>(<span>file_path: str, regex: str, name: Optional[str] = None) ‑> tuple['<a title="omniversion.models.data_source.config.ConfigDataSource" href="#omniversion.models.data_source.config.ConfigDataSource">ConfigDataSource</a>', typing.List[<a title="omniversion.models.package_metadata.package_metadata.PackageMetadata" href="../package_metadata/package_metadata.html#omniversion.models.package_metadata.package_metadata.PackageMetadata">PackageMetadata</a>]]</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Load package info from a local file</p></div>
+<div class="desc"><p>Load package info from a local file</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>file_path</code></strong></dt>
+<dd>A relative or absolute path to a file.</dd>
+<dt><strong><code>regex</code></strong></dt>
+<dd>A Python-flavor regular expression used to extract the version(s) from the file.</dd>
+<dt><strong><code>name</code></strong></dt>
+<dd>The name of the package. This is required if the regex does not contain a <code>name</code> group.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>Tuple[<a title="omniversion.models.data_source.config.ConfigDataSource" href="#omniversion.models.data_source.config.ConfigDataSource">ConfigDataSource</a>, List[<a title="omniversion.models.package_metadata.package_metadata.PackageMetadata" href="../package_metadata/package_metadata.html#omniversion.models.package_metadata.package_metadata.PackageMetadata">PackageMetadata</a>]]</code></dt>
+<dd>A <code><a title="omniversion.models.data_source.config.ConfigDataSource" href="#omniversion.models.data_source.config.ConfigDataSource">ConfigDataSource</a></code> object containing extraction metadata and extracted package info as a list of
+<code><a title="omniversion.models.package_metadata.package_metadata.PackageMetadata" href="../package_metadata/package_metadata.html#omniversion.models.package_metadata.package_metadata.PackageMetadata">PackageMetadata</a></code> objects.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -223,9 +273,25 @@ called <code>version</code> and, unless the <code>name</code> property is specif
 <pre><code class="python">@classmethod
 def load(cls, file_path: str, regex: str, name: Optional[str] = None) -&gt; \
         tuple[&#39;ConfigDataSource&#39;, List[PackageMetadata]]:
-    &#34;&#34;&#34;Load package info from a local file&#34;&#34;&#34;
-    absolute_file_path = os.path.realpath(file_path)
-    with open(absolute_file_path, encoding=&#34;utf8&#34;) as file:
+    &#34;&#34;&#34;Load package info from a local file
+
+    Parameters
+    ----------
+    file_path
+        A relative or absolute path to a file.
+    regex
+        A Python-flavor regular expression used to extract the version(s) from the file.
+    name
+        The name of the package. This is required if the regex does not contain a `name` group.
+
+    Returns
+    -------
+    Tuple[ConfigDataSource, List[omniversion.models.package_metadata.package_metadata.PackageMetadata]]
+        A `ConfigDataSource` object containing extraction metadata and extracted package info as a list of \
+        `omniversion.models.package_metadata.package_metadata.PackageMetadata` objects.
+    &#34;&#34;&#34;
+    real_file_path = os.path.realpath(file_path)
+    with open(real_file_path, encoding=&#34;utf8&#34;) as file:
         try:
             matches = re.compile(regex).finditer(file.read())
             package_name = name
@@ -237,7 +303,7 @@ def load(cls, file_path: str, regex: str, name: Optional[str] = None) -&gt; \
                 package_metadata = PackageMetadata(
                     host=&#34;localhost&#34;,
                     name=package_name,
-                    package_manager=&#34;local file&#34;,
+                    package_manager=&#34;file&#34;,
                     current=version,
                 )
                 packages += [package_metadata]

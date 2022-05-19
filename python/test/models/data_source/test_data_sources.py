@@ -40,6 +40,7 @@ class DataSourcesTestCase(unittest.TestCase):
         data_sources = DataSources()
         self.assertTrue(data_sources.add_files(base_path=os.path.join(os.path.dirname(__file__), "../../vectors")))
         self.assertGreater(len(data_sources.files), 4)
+
         self.assertIsNotNone(data_sources.files[0].version)
         self.assertIsNotNone(data_sources.files[0].timestamp)
         self.assertIsNotNone(data_sources.files[0].num_packages)

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
 <title>omniversion.omniversion API documentation</title>
-<meta name="description" content="omniversion root module …" />
+<meta name="description" content="Root module. Starting point for loading and using omniversion data." />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -22,16 +22,12 @@
 <h1 class="title">Module <code>omniversion.omniversion</code></h1>
 </header>
 <section id="section-intro">
-<p>omniversion root module</p>
-<p>Module containing the Omniversion class, which is the starting point for data analysis.</p>
+<p>Root module. Starting point for loading and using omniversion data.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">&#34;&#34;&#34;omniversion root module
-
-Module containing the Omniversion class, which is the starting point for data analysis.
-&#34;&#34;&#34;
+<pre><code class="python">&#34;&#34;&#34;Root module. Starting point for loading and using omniversion data.&#34;&#34;&#34;
 from typing import List, Optional
 
 from omniversion.models import PackagesMetadataList, Localhost, Host
@@ -39,23 +35,33 @@ from omniversion.models.data_source.data_sources import DataSources
 
 
 class Omniversion:
-    &#34;&#34;&#34;Root class used to handle all omniversion data.
+    &#34;&#34;&#34;The `omniversion.Omniversion` class used to load and handle all omniversion data.
 
-    Once you have used the `omniversion/ansible` role to fetch some data from remote hosts
-    and save it into a local data directory (default is `/tmp/omniversion`),
-    you should instantiate this class to start using the data.
+    You will probably want to use an `omniversion/ansible` role first. It will fetch package metadata
+    from remote hosts, saving it to local `.omniversion.yaml` files.
+
+    Parameters
+    ----------
+    base_path
+        The absolute or relative path to the folder containing the `.omniversion.yaml` files. If `None` is \
+    specified, the default value of `/tmp/omniversion` (matching the `omniversion/ansible` roles&#39; default output \
+    directory) will be used. The expected folder structure is \
+    `base_path` / `hostname` / `package_manager` / `verb`.omniversion.yaml, \
+    which is the structure emitted by the `omniversion/ansible` roles.
+
+    data_sources
+        Optional data sources to include in addition to the data found in the specified `base_path`. \
+    You won&#39;t normally need this.
     &#34;&#34;&#34;
-    sources: DataSources
 
     def __init__(self, base_path: Optional[str] = &#34;/tmp/omniversion&#34;, data_sources: Optional[DataSources] = None):
-        &#34;&#34;&#34;Initialize the root class&#34;&#34;&#34;
-
         self.sources = data_sources if data_sources is not None else DataSources()
         if base_path is not None:
             self.sources.add_files(base_path=base_path)
 
     @property
     def packages(self) -&gt; PackagesMetadataList:
+        &#34;&#34;&#34;List of all package metadata items that have been loaded.&#34;&#34;&#34;
         return PackagesMetadataList(self.sources.packages)
 
     @property
@@ -94,33 +100,53 @@ class Omniversion:
 <span>(</span><span>base_path: Optional[str] = '/tmp/omniversion', data_sources: Optional[<a title="omniversion.models.data_source.data_sources.DataSources" href="models/data_source/data_sources.html#omniversion.models.data_source.data_sources.DataSources">DataSources</a>] = None)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Root class used to handle all omniversion data.</p>
-<p>Once you have used the <code>omniversion/ansible</code> role to fetch some data from remote hosts
-and save it into a local data directory (default is <code>/tmp/omniversion</code>),
-you should instantiate this class to start using the data.</p>
-<p>Initialize the root class</p></div>
+<div class="desc"><p>The <code>omniversion.Omniversion</code> class used to load and handle all omniversion data.</p>
+<p>You will probably want to use an <code>omniversion/ansible</code> role first. It will fetch package metadata
+from remote hosts, saving it to local <code>.omniversion.yaml</code> files.</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>base_path</code></strong></dt>
+<dd>The absolute or relative path to the folder containing the <code>.omniversion.yaml</code> files. If <code>None</code> is
+specified, the default value of <code>/tmp/omniversion</code> (matching the <code>omniversion/ansible</code> roles' default output
+directory) will be used. The expected folder structure is
+<code>base_path</code> / <code>hostname</code> / <code>package_manager</code> / <code>verb</code>.omniversion.yaml,
+which is the structure emitted by the <code>omniversion/ansible</code> roles.</dd>
+<dt><strong><code>data_sources</code></strong></dt>
+<dd>Optional data sources to include in addition to the data found in the specified <code>base_path</code>.
+You won't normally need this.</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class Omniversion:
-    &#34;&#34;&#34;Root class used to handle all omniversion data.
+    &#34;&#34;&#34;The `omniversion.Omniversion` class used to load and handle all omniversion data.
 
-    Once you have used the `omniversion/ansible` role to fetch some data from remote hosts
-    and save it into a local data directory (default is `/tmp/omniversion`),
-    you should instantiate this class to start using the data.
+    You will probably want to use an `omniversion/ansible` role first. It will fetch package metadata
+    from remote hosts, saving it to local `.omniversion.yaml` files.
+
+    Parameters
+    ----------
+    base_path
+        The absolute or relative path to the folder containing the `.omniversion.yaml` files. If `None` is \
+    specified, the default value of `/tmp/omniversion` (matching the `omniversion/ansible` roles&#39; default output \
+    directory) will be used. The expected folder structure is \
+    `base_path` / `hostname` / `package_manager` / `verb`.omniversion.yaml, \
+    which is the structure emitted by the `omniversion/ansible` roles.
+
+    data_sources
+        Optional data sources to include in addition to the data found in the specified `base_path`. \
+    You won&#39;t normally need this.
     &#34;&#34;&#34;
-    sources: DataSources
 
     def __init__(self, base_path: Optional[str] = &#34;/tmp/omniversion&#34;, data_sources: Optional[DataSources] = None):
-        &#34;&#34;&#34;Initialize the root class&#34;&#34;&#34;
-
         self.sources = data_sources if data_sources is not None else DataSources()
         if base_path is not None:
             self.sources.add_files(base_path=base_path)
 
     @property
     def packages(self) -&gt; PackagesMetadataList:
+        &#34;&#34;&#34;List of all package metadata items that have been loaded.&#34;&#34;&#34;
         return PackagesMetadataList(self.sources.packages)
 
     @property
@@ -144,13 +170,6 @@ you should instantiate this class to start using the data.</p>
         Use the `omniversion.pretty_print` module for prettier output more suitable for human consumption.&#34;&#34;&#34;
         return f&#34;omniversion data: {self.sources}&#34;</code></pre>
 </details>
-<h3>Class variables</h3>
-<dl>
-<dt id="omniversion.omniversion.Omniversion.sources"><code class="name">var <span class="ident">sources</span> : <a title="omniversion.models.data_source.data_sources.DataSources" href="models/data_source/data_sources.html#omniversion.models.data_source.data_sources.DataSources">DataSources</a></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-</dl>
 <h3>Instance variables</h3>
 <dl>
 <dt id="omniversion.omniversion.Omniversion.hostnames"><code class="name">var <span class="ident">hostnames</span> : List[str]</code></dt>
@@ -194,13 +213,14 @@ def localhost(self) -&gt; Localhost:
 </dd>
 <dt id="omniversion.omniversion.Omniversion.packages"><code class="name">var <span class="ident">packages</span> : <a title="omniversion.models.package_metadata.list.packages_metadata_list.PackagesMetadataList" href="models/package_metadata/list/packages_metadata_list.html#omniversion.models.package_metadata.list.packages_metadata_list.PackagesMetadataList">PackagesMetadataList</a></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>List of all package metadata items that have been loaded.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@property
 def packages(self) -&gt; PackagesMetadataList:
+    &#34;&#34;&#34;List of all package metadata items that have been loaded.&#34;&#34;&#34;
     return PackagesMetadataList(self.sources.packages)</code></pre>
 </details>
 </dd>
@@ -229,7 +249,6 @@ def packages(self) -&gt; PackagesMetadataList:
 <li><code><a title="omniversion.omniversion.Omniversion.hosts" href="#omniversion.omniversion.Omniversion.hosts">hosts</a></code></li>
 <li><code><a title="omniversion.omniversion.Omniversion.localhost" href="#omniversion.omniversion.Omniversion.localhost">localhost</a></code></li>
 <li><code><a title="omniversion.omniversion.Omniversion.packages" href="#omniversion.omniversion.Omniversion.packages">packages</a></code></li>
-<li><code><a title="omniversion.omniversion.Omniversion.sources" href="#omniversion.omniversion.Omniversion.sources">sources</a></code></li>
 </ul>
 </li>
 </ul>
