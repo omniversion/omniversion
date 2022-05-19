@@ -34,7 +34,6 @@ func ParseGoModFile(input string) ([]PackageMetadata, error) {
 			newItem.Aliases = []string{shared.ShortModuleName(requireLine.Mod.Path)}
 			newItem.Current = shared.CleanVersion(requireLine.Mod.Version)
 			newItem.PackageManager = "go"
-			newItem.InstallPath = requireLine.Mod.Path
 			newItem.Homepage = requireLine.Mod.Path
 			direct := !requireLine.Indirect
 			newItem.Direct = &direct
