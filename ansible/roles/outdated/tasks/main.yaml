@@ -11,7 +11,6 @@
     - gem
     - go
     - npm
-    - pip
   loop_control:
     loop_var: pm
   tags:
@@ -24,3 +23,16 @@
     apply:
       tags:
         - '{{ pm }}'
+
+- name: 'Run `pip` tasks'
+  tags:
+    - pip
+  # pip2 does not have an `outdated` command, but pip3 does...
+  when: var_omniversion.pip and not (var_omniversion.pip.version2 | default(false))
+  include_tasks: pip.yaml
+  vars:
+    var_omniversion_pm: pip
+  args:
+    apply:
+      tags:
+        - pip

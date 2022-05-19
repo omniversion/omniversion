@@ -8,9 +8,8 @@
   when: (var_omniversion.pip.global is defined and var_omniversion.pip.global) or var_omniversion.pip.global is not defined
   block:
     - name: 'pip : global : List packages'
-      ansible.builtin.shell: 'pip list --format=json'
+      ansible.builtin.shell: '{{ (var_omniversion.pip.version2 is defined and var_omniversion.pip.version2) | ternary("pip freeze", "pip3 list --format=json") }}'
       register: var_omniversion_pip_global_result
-      changed_when: true
 
     - name: 'pip : global : Parse result'
       include_tasks: ../../shared/parse.yaml
@@ -36,4 +35,4 @@
 - name: 'pip : Save results'
   include_tasks: ../../shared/save.yaml
   vars:
-    var_omniversion_save_input: "{{ var_omniversion_pip_global_parsed_result + \"\n---\n\" + (var_omniversion_npm_local_parsed_results | join(\"\n---\n\")) }}"
+    var_omniversion_save_input: "{{ var_omniversion_pip_global_parsed_result + \"\n---\n\" + (var_omniversion_pip_local_parsed_results | join(\"\n---\n\")) }}"

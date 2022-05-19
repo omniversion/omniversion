@@ -5,12 +5,11 @@
     var_omniversion_pip_local_parsed_results: []
 
 - name: 'pip : global : List available global `pip` updates'
-  when: (var_omniversion.pip.global is defined and var_omniversion.pip.global) or var_omniversion.pip.global is not defined
+  when: var_omniversion.pip.global | default(true)
   block:
-    - name: 'pip : global : List packages'
-      ansible.builtin.shell: 'pip list --outdated --format=json'
+    - name: 'pip : global : List available updates'
+      ansible.builtin.shell: 'pip3 list --outdated --format=json'
       register: var_omniversion_pip_global_result
-      changed_when: true
 
     - name: 'pip : global : Parse result'
       include_tasks: ../../shared/parse.yaml

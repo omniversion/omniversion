@@ -22,16 +22,26 @@
       command: which gem
     - name: npm
       command: which npm
-    - name: npm
+    - name: nvm
       command: which nvm
     - name: rvm
-      command: /bin/bash -l -c 'rvm --version'
-    - name: pip
-      command: which pip
+      command: bash -l -c 'rvm --version'
   when: var_omniversion.auto and var_omniversion[item.name] is not defined
   vars:
     var_omniversion_pm: '{{ item.name }}'
     var_omniversion_detect_command: '{{ item.command }}'
+
+- name: Check for presence of `pip`
+  tags:
+    - pip
+  args:
+    apply:
+      tags:
+        - pip
+  include_tasks: pip.yaml
+  when: var_omniversion.auto and var_omniversion["pip"] is not defined
+  vars:
+    var_omniversion_pm: pip
 
 - name: Show complete configuration after auto-detection
   tags:

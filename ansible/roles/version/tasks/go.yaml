@@ -2,7 +2,6 @@
 - name: Get `go` version info
   ansible.builtin.command: 'go version'
   register: var_omniversion_go_result
-  changed_when: true
 
 - include_tasks: ../../shared/parse.yaml
   vars:

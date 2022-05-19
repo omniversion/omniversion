@@ -4,7 +4,6 @@
   args:
     chdir: '{{ var_omniversion_npm_local_dir }}'
   register: var_omniversion_npm_local_result
-  changed_when: true
 
 - name: 'npm : local : Parse result'
   include_tasks: ../../shared/parse.yaml

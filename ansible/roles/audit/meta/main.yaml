@@ -20,3 +20,4 @@ galaxy_info:
     - name: Ubuntu
       versions:
         - all
+  min_ansible_version: 2.5

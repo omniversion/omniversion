@@ -1,0 +1,33 @@
+---
+- name: 'Check for presence of package manager `pip3`'
+  ansible.builtin.command: "which pip3"
+  register: omniversion_check_result
+  ignore_errors: true
+  failed_when: false
+  changed_when: false
+
+- name: Activate package manager `pip` (version 3)
+  set_fact:
+    var_omniversion: '{{ var_omniversion | combine({ "pip": true }) }}'
+  when: omniversion_check_result.rc == 0
+
+# if pip3 cannot be found, check `pip` (version 2)
+- name: Try `pip` (version 2) instead
+  when: omniversion_check_result.rc != 0
+  block:
+    - name: 'Check for presence of package manager `pip` (version 2)'
+      ansible.builtin.command: "which pip"
+      register: omniversion_check_pip2_result
+      ignore_errors: true
+      failed_when: false
+      changed_when: false
+
+    - name: 'Activate package manager `pip` (version 2)'
+      set_fact:
+        var_omniversion: '{{ var_omniversion | combine({ "pip": { "version2": true } }) }}'
+      when: omniversion_check_pip2_result.rc == 0
+
+    - name: 'Deactivate package manager `pip`'
+      set_fact:
+        var_omniversion: '{{ var_omniversion | combine({ "pip": false }) }}'
+      when: omniversion_check_pip2_result.rc != 0

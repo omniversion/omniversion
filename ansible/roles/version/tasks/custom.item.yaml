@@ -4,7 +4,6 @@
   args:
     chdir: '{{ var_omniversion_custom_dir }}'
   register: var_omniversion_custom_result
-  changed_when: true
   tags:
     - custom
 

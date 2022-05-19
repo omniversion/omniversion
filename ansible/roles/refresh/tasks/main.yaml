@@ -1,20 +1,18 @@
 ---
 - name: 'apt : Refresh `apt` cache'
-  when: var_omniversion.apt is defined
+  when: var_omniversion.apt is defined and var_omniversion.apt
   ansible.builtin.command: 'apt update 2> /dev/null || true'
   become: true
   failed_when: false
-  changed_when: true
   ignore_errors: true
   tags:
     - apt
 
 - name: 'gem : Refresh `bundle-audit` cache'
-  when: var_omniversion.gem is defined
+  when: var_omniversion.gem is defined and var_omniversion.gem
   ansible.builtin.command: 'bundle-audit update'
   become: true
   failed_when: false
-  changed_when: true
   ignore_errors: true
   tags:
     - gem

@@ -4,7 +4,6 @@
   args:
     chdir: '{{ var_omniversion_go_local_dir }}'
   register: var_omniversion_go_local_result
-  changed_when: true
 
 - name: 'go : local : Parse result'
   include_tasks: ../../shared/parse.yaml
