@@ -1,0 +1,6 @@
+items:
+  - []
+  - name:
+      foo: bar
+  - name: valid
+version: "test"

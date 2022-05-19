@@ -15,7 +15,7 @@
   "files": [],
   "scripts": {
     "test": "cd cli && go test ./... -coverprofile=test/coverage.out && cd ../python && python3 -m pytest --cov=omniversion --cov-report=xml test_omniversion",
-    "docs": "rm -r docs/python && cd python && pdoc omniversion --html --output-dir ../docs/python",
+    "docs": "rm -rf docs/python && cd python && pdoc omniversion --html --output-dir ../docs/python",
     "postinstall": "go-npm install",
     "preuninstall": "go-npm uninstall"
   },
@@ -24,10 +24,17 @@
     "url": "git+https://github.com/omniversion/omniversion-cli.git"
   },
   "keywords": [
-    "omniversion"
+    "omniversion",
+    "version",
+    "versions",
+    "version management",
+    "dependency",
+    "dependencies",
+    "package management",
+    "maintenance"
   ],
   "author": "Layer9 GmbH",
-  "license": "AGPL-3.0",
+  "license": "AGPL-3.0-only",
   "bugs": {
     "url": "https://github.com/omniversion/omniversion-cli/issues"
   },

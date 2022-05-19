@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
-<title>omniversion API documentation</title>
-<meta name="description" content="Omniversion Python integration" />
+<title>omniversion.models.package_metadata.list.vulnerabilities API documentation</title>
+<meta name="description" content="A list of dependencies, optionally containing vulnerability notices" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -19,42 +19,71 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Package <code>omniversion</code></h1>
+<h1 class="title">Module <code>omniversion.models.package_metadata.list.vulnerabilities</code></h1>
 </header>
 <section id="section-intro">
-<p>Omniversion Python integration</p>
+<p>A list of dependencies, optionally containing vulnerability notices</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">#!/usr/bin/env python
-&#34;&#34;&#34;Omniversion Python integration&#34;&#34;&#34;
-from .omniversion import Omniversion
-import omniversion.models</code></pre>
+<pre><code class="python">&#34;&#34;&#34;A list of dependencies, optionally containing vulnerability notices&#34;&#34;&#34;
+from collections import UserList
+
+
+class Vulnerabilities(UserList):
+    &#34;&#34;&#34;A list of dependencies, optionally containing vulnerability notices&#34;&#34;&#34;
+    pass
+
+    def __repr__(self):
+        advisories = [[data_item, advisory] for data_item in self for advisory in data_item.advisories]
+        if len(advisories) == 0:
+            return &#34;No vulnerabilities found&#34;
+        return f&#34;{len(advisories)} vulnerabilities found&#34; if len(advisories) &gt; 1 else &#34;One vulnerability found&#34;</code></pre>
 </details>
 </section>
 <section>
-<h2 class="section-title" id="header-submodules">Sub-modules</h2>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
-<dt><code class="name"><a title="omniversion.models" href="models/index.html">omniversion.models</a></code></dt>
+<dt id="omniversion.models.package_metadata.list.vulnerabilities.Vulnerabilities"><code class="flex name class">
+<span>class <span class="ident">Vulnerabilities</span></span>
+<span>(</span><span>initlist=None)</span>
+</code></dt>
 <dd>
-<div class="desc"></div>
-</dd>
-<dt><code class="name"><a title="omniversion.omniversion" href="omniversion.html">omniversion.omniversion</a></code></dt>
-<dd>
-<div class="desc"><p>omniversion root module …</p></div>
-</dd>
-<dt><code class="name"><a title="omniversion.pretty_print" href="pretty_print/index.html">omniversion.pretty_print</a></code></dt>
-<dd>
-<div class="desc"></div>
+<div class="desc"><p>A list of dependencies, optionally containing vulnerability notices</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Vulnerabilities(UserList):
+    &#34;&#34;&#34;A list of dependencies, optionally containing vulnerability notices&#34;&#34;&#34;
+    pass
+
+    def __repr__(self):
+        advisories = [[data_item, advisory] for data_item in self for advisory in data_item.advisories]
+        if len(advisories) == 0:
+            return &#34;No vulnerabilities found&#34;
+        return f&#34;{len(advisories)} vulnerabilities found&#34; if len(advisories) &gt; 1 else &#34;One vulnerability found&#34;</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>collections.UserList</li>
+<li>collections.abc.MutableSequence</li>
+<li>collections.abc.Sequence</li>
+<li>collections.abc.Reversible</li>
+<li>collections.abc.Collection</li>
+<li>collections.abc.Sized</li>
+<li>collections.abc.Iterable</li>
+<li>collections.abc.Container</li>
+</ul>
 </dd>
 </dl>
-</section>
-<section>
-</section>
-<section>
-</section>
-<section>
 </section>
 </article>
 <nav id="sidebar">
@@ -63,11 +92,16 @@ import omniversion.models</code></pre>
 <ul></ul>
 </div>
 <ul id="index">
-<li><h3><a href="#header-submodules">Sub-modules</a></h3>
+<li><h3>Super-module</h3>
 <ul>
-<li><code><a title="omniversion.models" href="models/index.html">omniversion.models</a></code></li>
-<li><code><a title="omniversion.omniversion" href="omniversion.html">omniversion.omniversion</a></code></li>
-<li><code><a title="omniversion.pretty_print" href="pretty_print/index.html">omniversion.pretty_print</a></code></li>
+<li><code><a title="omniversion.models.package_metadata.list" href="index.html">omniversion.models.package_metadata.list</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="omniversion.models.package_metadata.list.vulnerabilities.Vulnerabilities" href="#omniversion.models.package_metadata.list.vulnerabilities.Vulnerabilities">Vulnerabilities</a></code></h4>
+</li>
 </ul>
 </li>
 </ul>

@@ -10,5 +10,4 @@ future~=0.18.2
 colorama~=0.4.3
 PyYAML~=5.3.1
 dacite~=1.6.0
-pyfields~=1.7.0
 pdoc3~=0.10.0

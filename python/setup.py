@@ -16,6 +16,12 @@ setup(
     url="https://github.com/omniversion/omniversion",
     author="Layer9 GmbH",
     author_email="hello@layer9.berlin",
-    license="AGPLv3.0",
+    license="AGPL-v3.0-only",
     packages=find_packages(),
+    python_requires=">=3.10.0",
+    install_requires=[
+        "colorama",
+        "dacite",
+        "PyYAML",
+    ],
 )

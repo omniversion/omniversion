@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
-<title>omniversion API documentation</title>
-<meta name="description" content="Omniversion Python integration" />
+<title>omniversion.models.package_metadata.installed_package API documentation</title>
+<meta name="description" content="" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -19,42 +19,85 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Package <code>omniversion</code></h1>
+<h1 class="title">Module <code>omniversion.models.package_metadata.installed_package</code></h1>
 </header>
 <section id="section-intro">
-<p>Omniversion Python integration</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">#!/usr/bin/env python
-&#34;&#34;&#34;Omniversion Python integration&#34;&#34;&#34;
-from .omniversion import Omniversion
-import omniversion.models</code></pre>
+<pre><code class="python">from dataclasses import dataclass
+from typing import Optional
+
+
+@dataclass
+class InstalledPackage:
+    &#34;&#34;&#34;InstalledPackage is an installation of a software package
+        in a particular location on a particular host.
+    &#34;&#34;&#34;
+
+    location: Optional[str] = None
+    version: Optional[str] = None
+
+    def __str__(self):
+        &#34;&#34;&#34;Debug string representation.
+
+        Use the `omniversion.pretty_print` module for prettier output more suitable for human consumption.&#34;&#34;&#34;
+        version = &#39;?&#39; if self.version is None else self.version
+        location = &#39;?&#39; if self.location is None else self.location
+        return f&#34;version `{version}` in location `{location}`&#34;</code></pre>
 </details>
 </section>
 <section>
-<h2 class="section-title" id="header-submodules">Sub-modules</h2>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
-<dt><code class="name"><a title="omniversion.models" href="models/index.html">omniversion.models</a></code></dt>
+<dt id="omniversion.models.package_metadata.installed_package.InstalledPackage"><code class="flex name class">
+<span>class <span class="ident">InstalledPackage</span></span>
+<span>(</span><span>location: Optional[str] = None, version: Optional[str] = None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>InstalledPackage is an installation of a software package
+in a particular location on a particular host.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class InstalledPackage:
+    &#34;&#34;&#34;InstalledPackage is an installation of a software package
+        in a particular location on a particular host.
+    &#34;&#34;&#34;
+
+    location: Optional[str] = None
+    version: Optional[str] = None
+
+    def __str__(self):
+        &#34;&#34;&#34;Debug string representation.
+
+        Use the `omniversion.pretty_print` module for prettier output more suitable for human consumption.&#34;&#34;&#34;
+        version = &#39;?&#39; if self.version is None else self.version
+        location = &#39;?&#39; if self.location is None else self.location
+        return f&#34;version `{version}` in location `{location}`&#34;</code></pre>
+</details>
+<h3>Class variables</h3>
+<dl>
+<dt id="omniversion.models.package_metadata.installed_package.InstalledPackage.location"><code class="name">var <span class="ident">location</span> : Optional[str]</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt><code class="name"><a title="omniversion.omniversion" href="omniversion.html">omniversion.omniversion</a></code></dt>
-<dd>
-<div class="desc"><p>omniversion root module …</p></div>
-</dd>
-<dt><code class="name"><a title="omniversion.pretty_print" href="pretty_print/index.html">omniversion.pretty_print</a></code></dt>
+<dt id="omniversion.models.package_metadata.installed_package.InstalledPackage.version"><code class="name">var <span class="ident">version</span> : Optional[str]</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 </dl>
-</section>
-<section>
-</section>
-<section>
-</section>
-<section>
+</dd>
+</dl>
 </section>
 </article>
 <nav id="sidebar">
@@ -63,11 +106,20 @@ import omniversion.models</code></pre>
 <ul></ul>
 </div>
 <ul id="index">
-<li><h3><a href="#header-submodules">Sub-modules</a></h3>
+<li><h3>Super-module</h3>
 <ul>
-<li><code><a title="omniversion.models" href="models/index.html">omniversion.models</a></code></li>
-<li><code><a title="omniversion.omniversion" href="omniversion.html">omniversion.omniversion</a></code></li>
-<li><code><a title="omniversion.pretty_print" href="pretty_print/index.html">omniversion.pretty_print</a></code></li>
+<li><code><a title="omniversion.models.package_metadata" href="index.html">omniversion.models.package_metadata</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="omniversion.models.package_metadata.installed_package.InstalledPackage" href="#omniversion.models.package_metadata.installed_package.InstalledPackage">InstalledPackage</a></code></h4>
+<ul class="">
+<li><code><a title="omniversion.models.package_metadata.installed_package.InstalledPackage.location" href="#omniversion.models.package_metadata.installed_package.InstalledPackage.location">location</a></code></li>
+<li><code><a title="omniversion.models.package_metadata.installed_package.InstalledPackage.version" href="#omniversion.models.package_metadata.installed_package.InstalledPackage.version">version</a></code></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
