@@ -3,13 +3,19 @@
   ansible.builtin.set_fact:
     var_omniversion_pip_global_parsed_result: ''
     var_omniversion_pip_local_parsed_results: []
+    var_pip_executable: >-
+      {{ (var_omniversion.pip.version2 is defined and var_omniversion.pip.version2) 
+      | ternary("pip", "pip3") }}
 
 - name: 'pip : global : List global `pip` package versions'
   when: (var_omniversion.pip.global is defined and var_omniversion.pip.global) or var_omniversion.pip.global is not defined
   block:
     - name: 'pip : global : List packages'
-      ansible.builtin.shell: '{{ (var_omniversion.pip.version2 is defined and var_omniversion.pip.version2) | ternary("pip freeze", "pip3 list --format=json") }}'
+      ansible.builtin.command: >-
+        {{ (var_omniversion.pip.version2 is defined and var_omniversion.pip.version2)
+        | ternary("pip freeze", "pip3 list --format=json") }}
       register: var_omniversion_pip_global_result
+      changed_when: false
 
     - name: 'pip : global : Parse result'
       include_tasks: ../../shared/parse.yaml

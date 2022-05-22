@@ -1,7 +1,7 @@
 ---
 galaxy_info:
-  role_name: omniversion audit role
-  description: Run the `audit` command for each package manager on each host. Available for `npm` and `gem` (if `bundle-audit` is installed).
+  role_name: autodetect
+  description: Automatically detects the presence of package managers on the host.
   author: Roman Priebe
   company: Layer9 GmbH
   platforms:

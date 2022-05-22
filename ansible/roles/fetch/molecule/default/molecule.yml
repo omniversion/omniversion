@@ -1,0 +1,34 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+platforms:
+  - name: brew-instance
+    image: test-brew
+    pre_build_instance: true
+  - name: go-instance
+    image: test-go
+    pre_build_instance: true
+  - name: node-instance
+    image: test-node
+    pre_build_instance: true
+  - name: python2-instance
+    image: test-python2
+    pre_build_instance: true
+  - name: python3-instance
+    image: test-python3
+    pre_build_instance: true
+  - name: rbenv-instance
+    image: test-rbenv
+    pre_build_instance: true
+  - name: rvm-instance
+    image: test-rvm
+    pre_build_instance: true
+provisioner:
+  name: ansible
+  log: true
+verifier:
+  name: testinfra
+  additional_files_or_dirs:
+    - ./molecule/default/test/*

@@ -1,7 +1,7 @@
 ---
 galaxy_info:
-  role_name: omniversion shared tasks
-  description: Automatically detects the presence of package managers on the host.
+  role_name: audit
+  description: Run the `audit` command for each package manager on each host. Available for `npm` and `gem` (if `bundle-audit` is installed).
   author: Roman Priebe
   company: Layer9 GmbH
   platforms:

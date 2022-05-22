@@ -4,7 +4,7 @@
     - always
   block:
     - name: Run all roles in turn
-      include_role:
+      ansible.builtin.include_role:
         name: '{{ role }}'
       loop:
         - check

@@ -1,9 +1,10 @@
 ---
 - name: 'gem : List `gem` versions'
-  ansible.builtin.command: 'gem list --details --versions --all'
+  ansible.builtin.command: bash -lc 'gem list --details --versions --all'
   args:
     chdir: '{{ var_omniversion.gem.dir | default("/") }}'
   register: var_omniversion_gem_result
+  changed_when: false
 
 - include_tasks: ../../shared/parse.yaml
   vars:

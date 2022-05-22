@@ -4,6 +4,7 @@
   args:
     chdir: '{{ var_omniversion_npm_local_dir }}'
   register: var_omniversion_npm_local_result
+  changed_when: false
 
 - name: 'npm : local : Parse result'
   include_tasks: ../../shared/parse.yaml
@@ -11,5 +12,5 @@
     var_omniversion_parse_input: '{{ var_omniversion_npm_local_result.stdout | string }}'
 
 - name: 'npm : local : Remember result'
-  set_fact:
+  ansible.builtin.set_fact:
     var_omniversion_npm_local_parsed_results: '{{ var_omniversion_npm_local_parsed_results + [var_omniversion_parse_result.stdout] }}'

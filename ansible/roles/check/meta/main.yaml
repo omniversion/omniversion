@@ -1,6 +1,6 @@
 ---
 galaxy_info:
-  role_name: omniversion check role
+  role_name: check
   description: Check that `omniversion/cli` is installed on the control node.
   author: Roman Priebe
   company: Layer9 GmbH

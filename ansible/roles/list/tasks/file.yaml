@@ -1,0 +1,21 @@
+---
+- name: 'file : Prepare results'
+  ansible.builtin.set_fact:
+    var_omniversion_file_parsed_results: []
+
+- name: 'file : List `file` versions'
+  when: var_omniversion.file is defined
+  with_items: '{{ var_omniversion.file }}'
+  args:
+    apply:
+      tags:
+        - file
+  vars:
+    var_omniversion_file_local_dir: '{{ item }}'
+  include_tasks: file.item.yaml
+
+# we save the results as multiple yaml documents in the same file
+- name: 'file : Save results'
+  include_tasks: ../../shared/save.yaml
+  vars:
+    var_omniversion_save_input: "{{ (var_omniversion_file_parsed_results | join(\"\n---\n\")) }}"

@@ -1,6 +1,6 @@
 ---
 galaxy_info:
-  role_name: omniversion shared tasks
+  role_name: shared
   description: Shared tasks used by the `omniversion` roles to parse and save data.
   author: Roman Priebe
   company: Layer9 GmbH

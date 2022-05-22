@@ -1,7 +1,7 @@
 ---
 galaxy_info:
-  role_name: omniversion outdated role
-  description: Run the `oudated` command for each package manager on each host. Available for `apt`, `gem`, `go`, `npm`, and `pip`.
+  role_name: outdated
+  description: Run the `outdated` command for each package manager on each host. Available for `apt`, `gem`, `go`, `npm`, and `pip`.
   author: Roman Priebe
   company: Layer9 GmbH
   platforms:

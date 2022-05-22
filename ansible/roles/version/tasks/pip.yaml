@@ -1,7 +1,21 @@
 ---
-- name: 'pip : List available `pip` updates'
+- name: 'pip : Choose executable'
+  ansible.builtin.set_fact:
+    var_pip_executable: >-
+      {{ (var_omniversion.pip.version2 is defined and var_omniversion.pip.version2) 
+      | ternary("pip", "pip3") }}
+
+- name: 'pip : Get `pip` version info'
   ansible.builtin.command: 'pip --version'
   register: var_omniversion_pip_result
+  changed_when: false
+  when: var_omniversion.pip.version2 is defined and var_omniversion.pip.version2
+
+- name: 'pip : Get `pip` version info'
+  ansible.builtin.command: '{{ var_pip_executable }} --version'
+  register: var_omniversion_pip_result
+  changed_when: false
+  ignore_errors: true
 
 - include_tasks: ../../shared/parse.yaml
   vars:

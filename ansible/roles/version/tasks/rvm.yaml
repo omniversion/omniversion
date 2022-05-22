@@ -2,6 +2,7 @@
 - name: Get `rvm` version info
   ansible.builtin.command: 'bash -l -c "rvm --version"'
   register: var_omniversion_rvm_result
+  changed_when: false
 
 - include_tasks: ../../shared/parse.yaml
   vars:

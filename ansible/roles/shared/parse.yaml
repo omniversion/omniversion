@@ -6,3 +6,4 @@
   delegate_to: localhost
   register: var_omniversion_parse_result
   ignore_errors: true
+  changed_when: false

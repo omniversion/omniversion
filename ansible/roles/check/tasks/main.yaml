@@ -18,16 +18,16 @@
 - name: Find `omniversion` version
   run_once: true
   delegate_to: localhost
-  ansible.builtin.shell: "omniversion version | grep version: | sed 's/version: //'"
+  ansible.builtin.shell: "set -o pipefail && omniversion version | grep version: | sed 's/version: //'"
   register: var_omniversion_version_output
   tags:
     - always
+  changed_when: false
 
 - name: Set `omniversion` version
   run_once: true
   delegate_to: localhost
-  set_fact:
+  ansible.builtin.set_fact:
     var_omniversion_version: '{{ var_omniversion_version_output.stdout }}'
   tags:
     - always
-

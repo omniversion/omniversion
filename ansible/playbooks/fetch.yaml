@@ -1,5 +1,5 @@
 ---
-- name: Fetch all version info from servers
+- name: Fetch all package info from servers
   hosts: all
   roles:
     - layer9gmbh.omniversion.check

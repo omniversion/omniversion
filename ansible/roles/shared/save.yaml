@@ -4,7 +4,7 @@
     var_omniversion_save_dir: "{{ var_omniversion_output_dir | default('/tmp/omniversion') }}/{{ inventory_hostname }}/{{ var_omniversion_pm }}"
 
 - name: '{{ var_omniversion_pm }} : Determine output file'
-  set_fact:
+  ansible.builtin.set_fact:
     var_omniversion_save_file: "{{ var_omniversion_save_dir }}/{{ var_omniversion_verb }}.omniversion.yaml"
 
 - name: '{{ var_omniversion_pm }} : Ensure directory exists'

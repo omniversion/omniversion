@@ -3,13 +3,18 @@
   ansible.builtin.set_fact:
     var_omniversion_pip_global_parsed_result: ''
     var_omniversion_pip_local_parsed_results: []
+    var_pip_executable: >-
+      {{ (var_omniversion.pip.version2 is defined and var_omniversion.pip.version2) 
+      | ternary("pip", "pip3") }}
 
 - name: 'pip : global : List available global `pip` updates'
   when: var_omniversion.pip.global | default(true)
   block:
     - name: 'pip : global : List available updates'
-      ansible.builtin.shell: 'pip3 list --outdated --format=json'
+      ansible.builtin.command: '{{ var_pip_executable }} list --outdated --format=json'
       register: var_omniversion_pip_global_result
+      changed_when: false
+      ignore_errors: true
 
     - name: 'pip : global : Parse result'
       include_tasks: ../../shared/parse.yaml

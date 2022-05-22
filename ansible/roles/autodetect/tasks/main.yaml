@@ -19,13 +19,15 @@
     - name: brew
       command: which brew
     - name: gem
-      command: which gem
+      command: bash -lc "which gem"
+    - name: go
+      command: which go
     - name: npm
       command: which npm
     - name: nvm
-      command: which nvm
+      command: nvm --version
     - name: rvm
-      command: bash -l -c 'rvm --version'
+      command: bash -lc 'rvm --version'
   when: var_omniversion.auto and var_omniversion[item.name] is not defined
   vars:
     var_omniversion_pm: '{{ item.name }}'
@@ -47,5 +49,5 @@
   tags:
     - always
   when: var_omniversion.auto
-  debug:
+  ansible.builtin.debug:
     msg: '{{ var_omniversion }}'

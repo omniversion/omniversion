@@ -6,6 +6,7 @@
   register: var_omniversion_gem_result
   failed_when: false
   ignore_errors: true
+  changed_when: false
 
 - include_tasks: ../../shared/parse.yaml
   vars:

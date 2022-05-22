@@ -1,6 +1,6 @@
 ---
 galaxy_info:
-  role_name: omniversion all role
+  role_name: fetch
   description: Fetches all available `omniversion` data from each host.
   author: Roman Priebe
   company: Layer9 GmbH

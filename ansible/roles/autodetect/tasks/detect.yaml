@@ -8,11 +8,11 @@
   when: var_omniversion[item] is not defined
 
 - name: 'Activate package manager `{{ var_omniversion_pm }}`'
-  set_fact:
+  ansible.builtin.set_fact:
     var_omniversion: '{{ var_omniversion | combine({ var_omniversion_pm: true }) }}'
   when: omniversion_check_result.rc == 0
 
 - name: 'Deactivate package manager `{{ var_omniversion_pm }}`'
-  set_fact:
+  ansible.builtin.set_fact:
     var_omniversion: '{{ var_omniversion | combine({ var_omniversion_pm: false }) }}'
   when: omniversion_check_result.rc != 0
