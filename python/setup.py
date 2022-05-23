@@ -18,7 +18,7 @@ setup(
     author_email="hello@layer9.berlin",
     license="AGPL-v3.0-only",
     packages=find_packages(),
-    python_requires=">=3.10.0",
+    python_requires=">=3.8.0",
     install_requires=[
         "colorama",
         "dacite",
