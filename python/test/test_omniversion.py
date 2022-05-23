@@ -33,9 +33,9 @@ class OmniversionTestCase(unittest.TestCase):
 
     def test_hostnames(self):
         data_sources = DataSources()
-        data_sources.files = [FileDataSource(name="1", host="test1"),
-                              FileDataSource(name="2", host="test2"),
-                              FileDataSource(name="2", host="test2")]
+        data_sources.files = [FileDataSource(host="test1"),
+                              FileDataSource(host="test2"),
+                              FileDataSource(host="test2")]
         data_sources.configs = [ConfigDataSource(host="test1", file_path="/test", regex=""),
                                 ConfigDataSource(host="test2", file_path="/test", regex="")]
         omniversion = Omniversion(base_path=None, data_sources=data_sources)

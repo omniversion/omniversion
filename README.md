@@ -38,9 +38,10 @@
 ## Quick start
 
 ### Prerequisites
-* `Ansible` installed and configured
-* `Python` and `pip` installed
-* `npm` (or `homebrew`) installed
+
+* `Ansible` >= 2.2
+* `Python` >= 3.8 with `pip`
+* `npm` or `homebrew`
 
 ### Steps
 
@@ -54,7 +55,7 @@
 
 2. Run the `all` Ansible playbook
     ```shell
-    ansible-playbook layer9gmbh.omniversion.all
+    ansible-playbook layer9gmbh.omniversion.fetch
     ```
     in a directory where Ansible can find your host definitions.
 

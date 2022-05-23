@@ -43,15 +43,15 @@ will depend on the configured repositories, firewall settings etc.
 
     package_manager: Optional[str] = None
     """The package manager through which the package can be installed.
-    
+
     If a package is available through multiple package managers, we should use separate
     PackageMetadata objects to track them.
     """
     host: Optional[str] = None
     verb: Optional[str] = None
-    """The name of the machine on which this package has been installed, requested 
+    """The name of the machine on which this package has been installed, requested
     or otherwise tracked by a package manager.
-    
+
     This may be `localhost`, a hostname (with or without schema) or the name of a docker container.
     While the naming is flexible, care should be taken to keep these identifiers unique.
     If a package is installed on multiple hosts, we should use separate
@@ -69,12 +69,12 @@ will depend on the configured repositories, firewall settings etc.
 
     current: Optional[str] = None
     """The currently installed version of the package as reported by the package manager.
-    
+
     E.g. what is reported by `npm ls <package>`, `rvm info` `pip show <package>`.
     """
     default: Optional[str] = None
     """The version the package manager would select by default.
-    
+
     E.g. the version designated as `default` by `rvm ls`.
     """
     latest: Optional[str] = None
@@ -82,35 +82,35 @@ will depend on the configured repositories, firewall settings etc.
     wanted: Optional[str] = None
     """The version of the package that would be installed
     based on the relevant constraints defined for this package manager.
-    
+
     E.g. this is the highest version matching the range defined in `package.json` for `npm`.
     """
     locked: Optional[str] = None
     """The version specified in the relevant lock file for this package manager.
-    
+
     E.g. the version defined in `package-lock.json` or `npm-shrinkwrap.json`.
     """
     extraneous: Optional[bool] = None
     """True if the package is not required, but installed.
-    
+
     Installed optional packages do not count as extraneous."""
     missing: Optional[bool] = None
     """Missing is true if the package is required, but not installed."""
 
     dependencies: Optional[List[str]] = None
     """Packages directly required by this package at runtime."""
-    devDependencies: Optional[List[str]] = None
+    dev_dependencies: Optional[List[str]] = None
     """Packages directly required by this package during development."""
-    peerDependencies: Optional[List[str]] = None
+    peer_dependencies: Optional[List[str]] = None
     """Packages directly required, but not managed by this package.
-    
+
     E.g. a plugin might add functionality to another package
     which is assumed to be installed independently of the plugin.
     """
 
     architecture: Optional[str] = None
     """The architecture for which the package was compiled.
-    
+
     E.g. the architecture field reported by `rvm ls` or `apt list`.
     """
     author: Optional[str] = None
@@ -121,24 +121,21 @@ will depend on the configured repositories, firewall settings etc.
     """The package's homepage reported by the package manager."""
     license: Optional[str] = None
     """A license identifier as reported by the package manager.
-    
+
     This is not currently standardized across package managers.
     """
     sources: List[PackageSource] = field(default_factory=lambda: [])
     """Sources through which the package is available, as reported by the package manager.
-    
+
     E.g. the `sources` field in `apt list`.
     """
     advisories: List[Advisory] = field(default_factory=lambda: [])
     """Security notices on known vulnerabilities.
-    
+
     E.g. the information contained in the output of `npm audit`.
     """
 
     def __str__(self):
-        """Debug string representation.
-
-        Use the `omniversion.pretty_print` module for prettier output more suitable for human consumption."""
         if self.name is None:
             return "unknown package name"
         version = ""

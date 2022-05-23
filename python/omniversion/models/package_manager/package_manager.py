@@ -11,25 +11,25 @@ from omniversion.models.package_metadata.package_metadata import PackageMetadata
 class PackageManagerIdentifier(Enum):
     """All package managers currently known to omniversion."""
 
-    apt = "apt"
+    APT = "apt"
     """[Aptitude](https://salsa.debian.org/apt-team/apt)"""
-    file = "file"
+    FILE = "file"
     """Not an actual package manager. We use this value for package infos extracted from local configuration files."""
-    galaxy = "galaxy"
+    GALAXY = "galaxy"
     """[Ansible Galaxy](https://galaxy.ansible.com)"""
-    go = "go"
+    GO = "go"
     """[go modules](https://go.dev/ref/mod)"""
-    homebrew = "homebrew"
+    BREW = "homebrew"
     """[homebrew](https://brew.sh)"""
-    npm = "npm"
+    NPM = "npm"
     """[npm](https://www.npmjs.com)"""
-    nvm = "nvm"
+    NVM = "nvm"
     """[nvm](https://github.com/nvm-sh/nvm)"""
-    pip = "pip"
+    PIP = "pip"
     """[pip](https://pypi.org/project/pip/)"""
-    rubygems = "rubygems"
+    RUBYGEMS = "rubygems"
     """[rubygems](https://rubygems.org)"""
-    rvm = "rvm"
+    RVM = "rvm"
     """[rvm](https://rvm.io)"""
 
 
@@ -49,13 +49,13 @@ class PackageManager:
         Parameters
         ----------
         packages
-            A `PackagesMetadataList` or a list of `PackageMetadata` items that should be be grouped by their \
+            A `PackagesMetadataList` or a list of `PackageMetadata` items that should be grouped by their
             `package_manager` property.
             
         Returns
         -------
         List[PackageManager]
-            A list of `PackageManager` objects, each containing only the package infos obtained via this package \
+            A list of `PackageManager` objects, each containing only the package infos obtained via this package
             manager.        
         """
         package_manager_identifiers = sorted(list({package.package_manager for package in packages

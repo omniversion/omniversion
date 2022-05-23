@@ -1,3 +1,4 @@
+"""Model class for metadata regarding the package info available to `omniversion`."""
 import os
 from typing import List, Optional
 
@@ -9,7 +10,10 @@ VALID_VERBS = ["audit", "list", "refresh", "outdated", "version"]
 
 
 class DataSources:
-    """Metadata regarding the package info available to `omniversion`."""
+    """Metadata regarding the package info available to `omniversion`.
+
+    `omniversion.models.package_metadata.package_metadata.PackageMetadata` contains metadata on packages, `DataSources`
+    contains "meta-metadata" about what kind of package information is available and how it was obtained."""
     def __init__(self, files: Optional[List[FileDataSource]] = None, configs: Optional[List[ConfigDataSource]] = None,
                  packages: Optional[List[PackageMetadata]] = None) -> None:
         """Create a new data sources object, loading the specified files and configuration values.
@@ -40,14 +44,14 @@ class DataSources:
         Parameters
         ----------
         base_path
-            The base from which to load the files. The expected folder structure is \
-        `base_path` / `hostname` / `package_manager` / `verb`.omniversion.yaml, \
+            The base from which to load the files. The expected folder structure is
+        `base_path` / `hostname` / `package_manager` / `verb`.omniversion.yaml,
         which is the structure emitted by the omniversion/ansible roles.
 
         Returns
         -------
         List
-            A list of extracted package metadata is returned for convenience. The same data is also added \
+            A list of extracted package metadata is returned for convenience. The same data is also added
         to the `packages` property of the `DataSources` object."""
         files = []
         packages = []
@@ -93,7 +97,7 @@ class DataSources:
         Returns
         -------
         List[omniversion.models.package_metadata.package_metadata.PackageMetadata]
-            A list of extracted package metadata for convenience. The same data is also added to the `packages` \
+            A list of extracted package metadata for convenience. The same data is also added to the `packages`
         property of the `DataSources` object.
         """
         file, packages = FileDataSource.load_data(file_path, verb, host, package_manager)
@@ -132,7 +136,7 @@ class DataSources:
 
     @property
     def host_infos(self) -> List[tuple[str, List[FileDataSource], List[ConfigDataSource]]]:
-        """List of host information, containing the hostname, a list of `.omniversion.yaml` files and a list of \
+        """List of host information, containing the hostname, a list of `.omniversion.yaml` files and a list of
         configuration files from which packages have been loaded.
         """
         def item_for_host(hostname: str):

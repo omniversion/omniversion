@@ -1,2 +1,3 @@
 """Convenience methods for human-readable output."""
-from .pretty_print import header, OmniversionPrettyPrinter, pformat, pprint
+from .helpers import header, traffic_light
+from .pretty_print import OmniversionPrettyPrinter, pformat, pprint

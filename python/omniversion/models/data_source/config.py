@@ -21,7 +21,7 @@ class ConfigDataSource:
     file_path: str
     """The path of the configuration or environment file that specifies one or more package version(s)."""
     regex: str
-    """A Python-flavor regular expression used to extract the version(s) from the file. It should contain a group 
+    """A Python-flavor regular expression used to extract the version(s) from the file. It should contain a group
     called `version` and, unless the `name` property is specified, a named group called `name`."""
     name: Optional[str] = None
     """The name of the package. This is required if the regex does not contain a `name` group."""
@@ -75,9 +75,9 @@ class ConfigDataSource:
                     name=name,
                 )
                 return config_data_source, packages
-            except IndexError:
+            except IndexError as exception:
                 raise IndexError("Invalid regex. You need to provide a named group called `version` and either a name "
-                                 "parameter or a named group called `name`")
+                                 "parameter or a named group called `name`") from exception
 
     def __str__(self):
         def entries_text():

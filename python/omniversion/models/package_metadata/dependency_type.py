@@ -1,3 +1,10 @@
+"""The type of dependency (prod/dev/peer)."""
 from enum import Enum
 
-DependencyType = Enum("DependencyType", "prod dev peer")
+
+class DependencyType(Enum):
+    """The type of dependency (prod/dev/peer)."""
+
+    DEV = "dev"
+    PEER = "peer"
+    PROD = "prod"

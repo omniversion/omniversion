@@ -43,7 +43,7 @@ class ListPackagesTestCase(unittest.TestCase):
             PackageMetadata(host="host1", package_manager="pm1", verb="outdated"),
             PackageMetadata(host="host1", package_manager="pm1", verb="version"),
             ])
-        self.assertListEqual([packages[1], packages[3]], packages.ls().data)
+        self.assertListEqual([packages[1], packages[3]], packages.list().data)
 
     def test_available_updates(self):
         packages = PackagesMetadataList([

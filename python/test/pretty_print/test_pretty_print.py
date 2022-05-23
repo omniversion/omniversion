@@ -9,8 +9,7 @@ from wheel.util import StringIO
 from omniversion import Omniversion
 from omniversion.models import FileDataSource, PackageMetadata, PackagesMetadataList, VersionsMatch, Vulnerabilities, \
     Advisory, AvailableUpdates, DataSources, ConfigDataSource
-from omniversion.pretty_print import pformat, pprint
-from omniversion.pretty_print.pretty_print import header, traffic_light
+from omniversion.pretty_print import header, pformat, pprint, traffic_light
 
 
 class PrettyPrintTestCase(unittest.TestCase):
@@ -134,9 +133,9 @@ class PrettyPrintTestCase(unittest.TestCase):
 
     def test_pretty_print_omniversion(self):
         data_sources = DataSources()
-        data_sources.files = [FileDataSource(num_packages=1, name="1", host="test1", verb="test"),
-                              FileDataSource(name="2", host="test2", verb="test"),
-                              FileDataSource(name="3", host="test3", verb="test")]
+        data_sources.files = [FileDataSource(num_packages=1, host="test1", verb="test"),
+                              FileDataSource(host="test2", verb="test"),
+                              FileDataSource(host="test3", verb="test")]
         data_sources.configs = [ConfigDataSource(host="test4", regex="test", file_path="/test"),
                                 ConfigDataSource(host="test5", regex="test", file_path="/test")]
         omniversion = Omniversion(base_path=None, data_sources=data_sources)

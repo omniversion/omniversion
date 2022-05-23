@@ -25,8 +25,6 @@ class FileDataSource:
     """The host from which the data was extracted."""
     package_manager: Optional[str] = None
     """The identifier of the package manager through which the data was obtained."""
-    name: Optional[str] = None
-    """The file name without the path."""
     version: Optional[str] = None
     """The version of the `omniversion/cli` executable used to create the file."""
     timestamp: Optional[float] = None
@@ -66,33 +64,30 @@ class FileDataSource:
             A `FileDataSource` object containing extraction metadata and extracted package info as a list of \
             `omniversion.models.package_metadata.package_metadata.PackageMetadata` objects.
         """
-        file_name = os.path.basename(file_path)
         if not os.path.exists(file_path):
             return None, []
         version, packages_data, timestamp = cls._extract_yaml_data(file_path)
         if packages_data is None:
             return FileDataSource(
-                num_packages=None, version=version, name=file_name, host=host, package_manager=package_manager,
+                num_packages=None, version=version, host=host, package_manager=package_manager,
                 verb=verb, timestamp=timestamp, path=file_path
             ), []
-        else:
-            packages: List[PackageMetadata] = [cls._parse_package_data(package_data) for package_data in packages_data]
-            # remove packages that didn't parse correctly
-            packages = [package for package in packages if package is not None]
-            for package in packages:
-                package.verb = verb
-                package.host = host
-                package.package_manager = package_manager
-            return FileDataSource(
-                num_packages=len(packages),
-                version=version,
-                name=file_name,
-                host=host,
-                package_manager=package_manager,
-                verb=verb,
-                timestamp=timestamp,
-                path=file_path,
-            ), packages
+        packages: List[PackageMetadata] = [cls._parse_package_data(package_data) for package_data in packages_data]
+        # remove packages that didn't parse correctly
+        packages = [package for package in packages if package is not None]
+        for package in packages:
+            package.verb = verb
+            package.host = host
+            package.package_manager = package_manager
+        return FileDataSource(
+            num_packages=len(packages),
+            version=version,
+            host=host,
+            package_manager=package_manager,
+            verb=verb,
+            timestamp=timestamp,
+            path=file_path,
+        ), packages
 
     @classmethod
     def _parse_package_data(cls, data: Any) -> Optional[PackageMetadata]:

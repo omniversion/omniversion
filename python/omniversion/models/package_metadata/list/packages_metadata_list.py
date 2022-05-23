@@ -13,6 +13,7 @@ class PackagesMetadataList(UserList):
     """A list of package metadata items, each describing all that is known about a particular software package.
 
     This object is offers convenient methods for filtering packages."""
+
     def filter(
             self,
             verb: Optional[Union[str, List[str]]] = None,
@@ -42,20 +43,20 @@ class PackagesMetadataList(UserList):
         PackagesMetadataList
             A list of matching packages.
         """
+
         def filter_condition(package: PackageMetadata) -> bool:
             if host is not None and package.host != host:
                 return False
             if package_manager is not None and package.package_manager != package_manager:
                 return False
-            if isinstance(verb, list) and package.verb not in verb:
-                return False
-            if isinstance(verb, str) and verb != package.verb:
+            if (isinstance(verb, list) and package.verb not in verb) or (
+                    isinstance(verb, str) and verb != package.verb):
                 return False
             if package_name is None:
                 return True
-            if isinstance(package_name, list):
-                return package.name in package_name
-            return package.name == package_name
+            return (isinstance(package_name, list) and package.name in package_name) or (
+                    package.name == package_name)
+
         return PackagesMetadataList([item for item in self if filter_condition(item)])
 
     def audit(
@@ -84,7 +85,7 @@ class PackagesMetadataList(UserList):
         """
         return Vulnerabilities(self.filter("audit", host, package_manager, package_name))
 
-    def ls(
+    def list(
             self,
             host: Optional[str] = None,
             package_manager: Optional[str] = None,
@@ -165,4 +166,4 @@ class PackagesMetadataList(UserList):
 
     def __repr__(self) -> str:
         num_dependencies = len(self)
-        return f"{num_dependencies} package{ '' if num_dependencies == 1 else 's'}"
+        return f"{num_dependencies} package{'' if num_dependencies == 1 else 's'}"

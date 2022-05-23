@@ -1,11 +1,11 @@
+"""InstalledPackage is an installation of a software package in a particular location on a particular host."""
 from dataclasses import dataclass
 from typing import Optional
 
 
 @dataclass
 class InstalledPackage:
-    """InstalledPackage is an installation of a software package
-        in a particular location on a particular host.
+    """InstalledPackage is an installation of a software package in a particular location on a particular host.
     """
 
     location: Optional[str] = None

@@ -4,7 +4,6 @@ from collections import UserList
 
 class Vulnerabilities(UserList):
     """A list of package metadata items containing vulnerability notices"""
-    pass
 
     def __repr__(self):
         advisories = [[data_item, advisory] for data_item in self for advisory in data_item.advisories]

@@ -19,11 +19,6 @@ class Advisory:  # pylint: disable=too-many-instance-attributes
     vulnerable_versions: Optional[str] = None
 
     def __str__(self):
-        """Debug string representation.
-
-        Use the `omniversion.pretty_print` module for prettier output more suitable for human consumption."""
         if self.severity:
             return f"known vulnerability (severity `{self.severity}`)"
-        else:
-            return "known vulnerability"
-
+        return "known vulnerability"
