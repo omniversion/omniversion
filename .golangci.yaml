@@ -1,0 +1,4 @@
+service:
+  project-path: github.com/omniversion/omniversion
+  analyzed-paths:
+    - ./cli/...

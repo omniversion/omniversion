@@ -3,7 +3,7 @@ package pip
 import (
 	"fmt"
 	. "github.com/omniversion/omniversion/cli/cmd/parse/pip/formats"
-	"github.com/omniversion/omniversion/cli/cmd/parse/pip/formats/default"
+	_default "github.com/omniversion/omniversion/cli/cmd/parse/pip/formats/default"
 	"github.com/omniversion/omniversion/cli/cmd/parse/pip/formats/freeze"
 	_json "github.com/omniversion/omniversion/cli/cmd/parse/pip/formats/json"
 	"github.com/omniversion/omniversion/cli/cmd/parse/shared"

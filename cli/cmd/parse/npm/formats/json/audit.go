@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/mitchellh/mapstructure"
-	. "github.com/omniversion/omniversion/cli/cmd/parse/npm/item"
+	"github.com/omniversion/omniversion/cli/cmd/parse/npm/item"
 	"github.com/omniversion/omniversion/cli/cmd/parse/npm/stderr"
 	. "github.com/omniversion/omniversion/cli/types"
 	"sort"
@@ -118,7 +118,7 @@ func ParseAuditOutput(input string, stderrOutput stderr.Output) ([]PackageMetada
 	if v8JsonUnmarshallErr == nil && v8AuditJson.AuditReportVersion != 0 {
 		result = make(map[string]PackageMetadata, len(v8AuditJson.Vulnerabilities))
 		for _, vulnerability := range v8AuditJson.Vulnerabilities {
-			newItem := New(vulnerability.Name)
+			newItem := item.New(vulnerability.Name)
 			for _, viaData := range vulnerability.Via {
 				var via V8AuditVia
 				decodeErr := mapstructure.Decode(viaData, &via)
@@ -165,7 +165,7 @@ func ParseAuditOutput(input string, stderrOutput stderr.Output) ([]PackageMetada
 					existingResult.Advisories = append(existingResult.Advisories, newAdvisory)
 					result[advisory.ModuleName] = existingResult
 				} else {
-					newItem := New(advisory.ModuleName)
+					newItem := item.New(advisory.ModuleName)
 					newItem.Advisories = []Advisory{newAdvisory}
 					result[advisory.ModuleName] = *newItem
 				}
@@ -185,9 +185,9 @@ func ParseAuditOutput(input string, stderrOutput stderr.Output) ([]PackageMetada
 		return resultsArray[i].Name < resultsArray[j].Name
 	})
 	// also need to sort the advisories by identifier
-	for _, item := range resultsArray {
-		sort.Slice(item.Advisories, func(i, j int) bool {
-			return item.Advisories[i].Identifier < item.Advisories[j].Identifier
+	for _, resultItem := range resultsArray {
+		sort.Slice(resultItem.Advisories, func(i, j int) bool {
+			return resultItem.Advisories[i].Identifier < resultItem.Advisories[j].Identifier
 		})
 	}
 	return resultsArray, nil

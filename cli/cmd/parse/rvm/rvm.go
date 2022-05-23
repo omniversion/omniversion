@@ -14,7 +14,7 @@ func parseRvmOutput(input string) ([]PackageMetadata, error) {
 		return result, nil
 	}
 
-	compiledRegex := regexp.MustCompile("(?m)^(?P<current>=)? ?(?P<default>\\*)?([ >])? *ruby-(?P<version>[^ ]*) \\[ (?P<architecture>.*) ]$")
+	compiledRegex := regexp.MustCompile(`(?m)^(?P<current>=)? ?(?P<default>\*)?([ >])? *ruby-(?P<version>[^ ]*) \[ (?P<architecture>.*) ]$`)
 	matches := compiledRegex.FindAllStringSubmatch(input, -1)
 	newItem := PackageMetadata{
 		Name:           "ruby",

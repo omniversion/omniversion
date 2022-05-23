@@ -16,6 +16,7 @@
   "scripts": {
     "test": "cd cli && go test ./... -coverprofile=test/coverage.out && cd ../python && python3 -m pytest --cov=omniversion --cov-report=xml test",
     "docs": "rm -rf docs/python && cd python && pdoc omniversion --html --output-dir ../docs/python",
+    "lint": "ansible-lint ansible/roles && pylint python/omniversion --max-line-length=120 --disable=W0511,C0303 && cd cli && golangci-lint run && cd ..",
     "postinstall": "go-npm install",
     "preuninstall": "go-npm uninstall"
   },

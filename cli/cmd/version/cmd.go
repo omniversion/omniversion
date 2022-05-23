@@ -40,7 +40,7 @@ func InitSubcommand(rootCommand *cobra.Command) {
 
 func runVersionCmd(writer io.Writer) {
 	executableLocation, _ := os.Executable()
-	_, _ = writer.Write([]byte(fmt.Sprintln(fmt.Sprintf(
+	_, _ = writer.Write([]byte(fmt.Sprintf(
 		`name: omniversion
 version: %v
 via: %v
@@ -48,5 +48,5 @@ date: %v
 commit: %-8v
 checksum: %-8v
 location: %v
-`, Version, Via, Date, CommitHash, RepoChecksum, executableLocation))))
+`, Version, Via, Date, CommitHash, RepoChecksum, executableLocation)))
 }
