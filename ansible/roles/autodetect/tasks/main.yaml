@@ -19,13 +19,13 @@
     - name: brew
       command: which brew
     - name: gem
-      command: bash -lc "which gem"
+      command: bash -lc 'which gem'
     - name: go
       command: which go
     - name: npm
-      command: which npm
+      command: bash -ic 'which npm'
     - name: nvm
-      command: nvm --version
+      command: bash -ic 'nvm --version'
     - name: rvm
       command: bash -lc 'rvm --version'
   when: var_omniversion.auto and var_omniversion[item.name] is not defined

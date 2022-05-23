@@ -1,6 +1,6 @@
 ---
 - name: 'nvm : Get `nvm` version info'
-  ansible.builtin.command: 'nvm --version'
+  ansible.builtin.command: bash -ic 'nvm --version'
   register: var_omniversion_nvm_result
   changed_when: false
 

@@ -8,10 +8,11 @@
   when: (var_omniversion.npm.global is defined and var_omniversion.npm.global) or var_omniversion.npm.global is not defined
   block:
     - name: 'npm : global : List packages'
-      ansible.builtin.command: 'npm -g outdated --json --all'
+      ansible.builtin.command: bash -ic 'npm -g outdated --json --all'
       register: var_omniversion_npm_global_result
       changed_when: false
       failed_when: false
+      ignore_errors: true
 
     - name: 'npm : global : Parse result'
       include_tasks: ../../shared/parse.yaml

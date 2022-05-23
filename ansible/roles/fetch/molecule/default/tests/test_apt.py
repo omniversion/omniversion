@@ -1,17 +1,13 @@
 from omniversion import Omniversion
 
 EXPECTATION = {
-    "rvm-instance": {"count": 409},
-    "golang-instance": {"count": 202},
-    "redmine-instance": {"count": 236},
-    "ubuntu-ansible-instance": {"count": 203},
-    "debian-instance": {"count": 185},
-    "docker-php-instance": {"count": 269},
-    "fedora-instance": {"count": 0},
-    "python2-instance": {"count": 443},
-    "guestbook-instance": {"count": 0},
-    "node-instance": {"count": 518},
-    "rails-demo-instance": {"count": 388}
+    "brew-instance": {"count": 337},
+    "go-instance": {"count": 1},
+    "node-instance": {"count": 1},
+    "python2-instance": {"count": 1},
+    "python3-instance": {"count": 1},
+    "rbenv-ansible-instance": {"count": 1},
+    "rvm-instance": {"count": 1},
 }
 
 

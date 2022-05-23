@@ -1,10 +1,11 @@
 ---
 - name: 'npm : local : List available local `npm` updates'
-  ansible.builtin.shell: 'npm outdated --json --all 2> /dev/null || true'
+  ansible.builtin.shell: bash -ic 'npm outdated --json --all'
   args:
     chdir: '{{ var_omniversion_npm_local_dir }}'
   register: var_omniversion_npm_local_result
   changed_when: false
+  ignore_errors: true
 
 - name: 'npm : local : Parse result'
   include_tasks: ../../shared/parse.yaml

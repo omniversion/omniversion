@@ -1,6 +1,6 @@
 ---
 - name: 'rvm : List `rvm` ruby versions'
-  ansible.builtin.shell: 'bash -l -c "rvm ls"' # noqa command-instead-of-shell
+  ansible.builtin.command: 'bash -lc "rvm ls"'
   register: var_omniversion_rvm_result
   changed_when: true
 

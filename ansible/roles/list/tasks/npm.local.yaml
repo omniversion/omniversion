@@ -1,6 +1,6 @@
 ---
 - name: 'npm : local : List local `npm` package versions'
-  ansible.builtin.command: 'npm ls --json --all || true'
+  ansible.builtin.command: bash -ic 'npm ls --json --all'
   args:
     chdir: '{{ var_omniversion_npm_local_dir }}'
   register: var_omniversion_npm_local_result
