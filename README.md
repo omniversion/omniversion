@@ -40,7 +40,7 @@
 ### Prerequisites
 
 * `Ansible` >= 2.2
-* `Python` >= 3.8 with `pip`
+* `Python` >= 3.8
 * `npm` or `homebrew`
 
 ### Steps
