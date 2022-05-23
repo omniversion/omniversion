@@ -1,5 +1,5 @@
 """Pretty-printing for data source model classes"""
-from typing import Union, List, Callable
+from typing import Union, List, Callable, Tuple
 
 from colorama import Back, Style
 
@@ -24,7 +24,7 @@ def _pretty_print_data_source(obj: Union[DataSources, ConfigDataSource, FileData
         return traffic_light(obj, color)
 
     # must be a `DataSources` object
-    def host_summary(host_info: tuple[str, List[FileDataSource], List[ConfigDataSource]]):
+    def host_summary(host_info: Tuple[str, List[FileDataSource], List[ConfigDataSource]]):
         sources = [recursive_format(file) for file in host_info[1]] + \
                   [recursive_format(config) for config in host_info[2]]
         formatted_sources = "\n".join(sources)

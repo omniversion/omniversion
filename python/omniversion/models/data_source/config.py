@@ -6,7 +6,7 @@ A ConfigDataSource tracks the metadata related to this process."""
 import os
 import re
 from dataclasses import dataclass
-from typing import Optional, List
+from typing import Optional, List, Tuple
 
 from ...models.package_metadata.package_metadata import PackageMetadata
 
@@ -32,7 +32,7 @@ class ConfigDataSource:
 
     @classmethod
     def load(cls, file_path: str, regex: str, name: Optional[str] = None) -> \
-            tuple['ConfigDataSource', List[PackageMetadata]]:
+            Tuple['ConfigDataSource', List[PackageMetadata]]:
         """Load package info from a local file
 
         Parameters

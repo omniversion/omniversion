@@ -37,7 +37,7 @@ Configure your package managers via the `var_omniversion` variable. It is a dict
 | Key      | Value                                                                                   | 
 |----------|-----------------------------------------------------------------------------------------|
 | `apt`    | [Aptitude options](./docs/APT.md)                                                       |
-| `auto`   | [Auto-detection options](./docs/AUTO.md)                                                |
+| `auto`   | [auto-detection options](./docs/AUTO.md)                                                |
 | `galaxy` | [Ansible Galaxy options](./docs/GALAXY.md)                                              |
 | `custom` | [custom command fetcher options](./docs/CUSTOM.md) _(fetch unmanaged package versions)_ |
 | `file`   | [file fetcher options](./docs/FILE.md) _(fetch versions from configuration files)_      |

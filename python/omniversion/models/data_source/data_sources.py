@@ -1,6 +1,6 @@
 """Model class for metadata regarding the package info available to `omniversion`."""
 import os
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 from .config import ConfigDataSource
 from .file import FileDataSource
@@ -135,7 +135,7 @@ class DataSources:
         return sorted(list({file.host for file in self.files}))
 
     @property
-    def host_infos(self) -> List[tuple[str, List[FileDataSource], List[ConfigDataSource]]]:
+    def host_infos(self) -> List[Tuple[str, List[FileDataSource], List[ConfigDataSource]]]:
         """List of host information, containing the hostname, a list of `.omniversion.yaml` files and a list of
         configuration files from which packages have been loaded.
         """

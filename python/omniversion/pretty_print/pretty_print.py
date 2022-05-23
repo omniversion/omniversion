@@ -1,5 +1,6 @@
 """Pretty-print some data as a human-readable string"""
 from pprint import PrettyPrinter
+from typing import Tuple
 
 from omniversion import Omniversion
 from omniversion.models import DataSources, Host, FileDataSource, ConfigDataSource, PackagesMetadataList, \
@@ -14,7 +15,7 @@ class OmniversionPrettyPrinter(PrettyPrinter):
     """`PrettyPrinter` subclass that knows how to format `omniversion` objects"""
 
     def format(self, obj: object,  # pylint: disable=arguments-renamed
-               context, maxlevels: int, level: int) -> tuple[str, bool, bool]:
+               context, maxlevels: int, level: int) -> Tuple[str, bool, bool]:
         def recursive_format(value: object) -> str:
             return self.format(value, context=context, maxlevels=maxlevels, level=level - 1)[0]
 

@@ -2,7 +2,7 @@
 import os
 import time
 from dataclasses import dataclass
-from typing import Optional, List, Any
+from typing import Optional, List, Any, Tuple
 
 import yaml
 from dacite import from_dict, ForwardReferenceError, MissingValueError, UnexpectedDataError, WrongTypeError
@@ -44,7 +44,7 @@ class FileDataSource:
 
     @classmethod
     def load_data(cls, file_path: str, verb: str, host: str, package_manager: str) -> \
-            tuple[Optional['FileDataSource'], List[PackageMetadata]]:
+            Tuple[Optional['FileDataSource'], List[PackageMetadata]]:
         """Load data from the specified file.
 
         Parameters
@@ -60,7 +60,7 @@ class FileDataSource:
 
         Returns
         -------
-        tuple[FileDataSource, List[omniversion.models.package_metadata.package_metadata.PackageMetadata]]
+        Tuple[FileDataSource, List[omniversion.models.package_metadata.package_metadata.PackageMetadata]]
             A `FileDataSource` object containing extraction metadata and extracted package info as a list of \
             `omniversion.models.package_metadata.package_metadata.PackageMetadata` objects.
         """
@@ -98,7 +98,7 @@ class FileDataSource:
             return None
 
     @classmethod
-    def _extract_yaml_data(cls, file_path: str) -> tuple[Optional[str], Optional[list[any]], Optional[float]]:
+    def _extract_yaml_data(cls, file_path: str) -> Tuple[Optional[str], Optional[list[any]], Optional[float]]:
         """load an omniversion file containing yaml data"""
         timestamp = None
         try:
