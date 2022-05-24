@@ -1,0 +1,66 @@
+<html lang="en">
+<head>
+    <title>Omniversion dashboard</title>
+    <link href="static/css/style.css" rel="stylesheet"/>
+</head>
+<body>
+<main>
+    <div id="background">
+    </div>
+    <div id="dashboard-header">
+        <h1>Omniversion dashboard</h1>
+    </div>
+    <div class="wrapping-flex-container">
+
+        <div class="dashboard-card">
+            <div class="dashboard-card-icon">
+                <img src="static/icons/files.svg" alt="sources icon" />
+            </div>
+            <div class="dashboard-card-header"><h2>Data sources</h2><span>{{ data.sources | length }}</span></div>
+            {% for host in data.hosts -%}
+            <div class="dashboard-card-line">
+                <span class="host-label">{{ host.name }}</span>
+                <span>{{ data.sources.for_host(hostname=host.name) | length }}</span>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="dashboard-card">
+            <div class="dashboard-card-icon">
+                <img src="static/icons/package.svg" alt="packages icon" />
+            </div>
+            <div class="dashboard-card-header"><h2>Packages</h2><span>{{ data.packages | length }}</span></div>
+            {% for host in data.hosts -%}
+            <div class="dashboard-card-line">
+                <span class="host-label">{{ host.name }}</span>
+                <span>{{ data.packages.filter(host=host.name) | length }}</span>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="dashboard-card">
+            <div class="dashboard-card-icon">
+                <img src="static/icons/world-download.svg" alt="updates icon" />
+            </div>
+            <div class="dashboard-card-header"><h2>Available updates</h2><span>{{ data.packages.outdated() | length }}</span></div>
+            {% for host in data.hosts -%}
+            <div class="dashboard-card-line">
+                <span class="host-label">{{ host.name }}</span>
+                <span>{{ data.packages.filter(host=host.name, verb="outdated") | length }}</span>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="dashboard-card">
+            <div class="dashboard-card-icon">
+                <img src="static/icons/shield-lock.svg" alt="audit icon" />
+            </div>
+            <div class="dashboard-card-header"><h2>Vulnerabilities</h2><span>{{ data.packages.audit() | length }}</span></div>
+            {% for host in data.hosts -%}
+            <div class="dashboard-card-line">
+                <span class="host-label">{{ host.name }}</span>
+                <span>{{ data.packages.filter(host=host.name, verb="audit") | length }}</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</main>
+</body>
+</html>

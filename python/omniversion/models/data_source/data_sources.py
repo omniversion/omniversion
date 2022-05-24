@@ -140,15 +140,22 @@ class DataSources:
         configuration files from which packages have been loaded.
         """
         def item_for_host(hostname: str):
-            files = [file for file in self.files if file.host == hostname]
-            configs = [config for config in self.configs if config.host == hostname]
-            return hostname, files, configs
+            sources_for_host = self.for_host(hostname=hostname)
+            return hostname, sources_for_host.files, sources_for_host.configs
         return [item_for_host(hostname) for hostname in self.hostnames]
 
     @property
     def package_manager_identifiers(self) -> List[str]:
         """Deduplicated list of hosts for which files are present in the list."""
         return sorted(list({file.package_manager for file in self.files}))
+
+    def for_host(self, hostname: str) -> 'DataSources':
+        files = [file for file in self.files if file.host == hostname]
+        configs = [config for config in self.configs if config.host == hostname]
+        return DataSources(files=files, configs=configs)
+
+    def __len__(self) -> int:
+        return len(self.files) + len(self.configs)
 
     def __str__(self):
         num_files = len(self.files)
