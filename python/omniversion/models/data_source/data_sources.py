@@ -15,7 +15,7 @@ class DataSources:
     `omniversion.models.package_metadata.package_metadata.PackageMetadata` contains metadata on packages, `DataSources`
     contains "meta-metadata" about what kind of package information is available and how it was obtained."""
     def __init__(self, files: Optional[List[FileDataSource]] = None, configs: Optional[List[ConfigDataSource]] = None,
-                 packages: Optional[List[PackageMetadata]] = None) -> None:
+                 packages: Optional[List[PackageMetadata]] = None, load_from_filesystem=True) -> None:
         """Create a new data sources object, loading the specified files and configuration values.
 
         Parameters
@@ -28,15 +28,19 @@ class DataSources:
             Additional packages to be included in addition to the loaded packages. These will have no \
         associated file.
         """
-        self.packages = packages if packages is not None else []
-        self.files = []
-        if files is not None:
-            for file in files:
-                self.add_file(file_path=file.path, verb=file.verb, host=file.host, package_manager=file.package_manager)
-        self.configs = []
-        if configs is not None:
-            for config in configs:
-                self.add_config(file_path=config.file_path, regex=config.regex, name=config.name)
+        self.packages: List[PackageMetadata] = packages if packages is not None else []
+        if load_from_filesystem:
+            self.files = []
+            if files is not None:
+                for file in files:
+                    self.add_file(file_path=file.path, verb=file.verb, host=file.host, package_manager=file.package_manager)
+            self.configs = []
+            if configs is not None:
+                for config in configs:
+                    self.add_config(file_path=config.file_path, regex=config.regex, name=config.name)
+        else:
+            self.files = files
+            self.configs = configs
 
     def add_files(self, base_path: str) -> List[PackageMetadata]:
         """Load package info from a folder on the local machine.
@@ -140,8 +144,9 @@ class DataSources:
         configuration files from which packages have been loaded.
         """
         def item_for_host(hostname: str):
-            sources_for_host = self.for_host(hostname=hostname)
-            return hostname, sources_for_host.files, sources_for_host.configs
+            files = [file for file in self.files if file.host == hostname]
+            configs = [config for config in self.configs if config.host == hostname]
+            return hostname, files, configs
         return [item_for_host(hostname) for hostname in self.hostnames]
 
     @property
@@ -152,7 +157,8 @@ class DataSources:
     def for_host(self, hostname: str) -> 'DataSources':
         files = [file for file in self.files if file.host == hostname]
         configs = [config for config in self.configs if config.host == hostname]
-        return DataSources(files=files, configs=configs)
+        packages = [package for package in self.packages if package.host == hostname]
+        return DataSources(files=files, configs=configs, packages=packages, load_from_filesystem=False)
 
     def __len__(self) -> int:
         return len(self.files) + len(self.configs)
