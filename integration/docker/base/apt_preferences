@@ -1,5 +1,5 @@
 Package: nmap
-Pin: version 7.01-2ubuntu2
+Pin: version 7.01-not-found
 Pin-Priority: 1001
 
 Package: mysql-common
@@ -7,5 +7,5 @@ Pin: version 5.8+1.0.4
 Pin-Priority: 1001
 
 Package: nginx
-Pin: version 1.14.0-0ubuntu1.7
+Pin: version 1.14.0-*
 Pin-Priority: 1001

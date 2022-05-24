@@ -2,39 +2,39 @@ version: "3.9"
 services:
   test-base:
     image: test-base
-    build: base
+    build: ./docker/base
   test-brew:
     image: test-brew
-    build: brew
+    build: ./docker/brew
     depends_on:
       - test-base
   test-go:
     image: test-go
-    build: go
+    build: ./docker/go
     depends_on:
       - test-base
   test-node:
     image: test-node
-    build: node
+    build: ./docker/node
     depends_on:
       - test-base
   test-python2:
     image: test-python2
-    build: python2
+    build: ./docker/python2
     depends_on:
       - test-base
   test-python3:
     image: test-python3
-    build: python3
+    build: ./docker/python3
     depends_on:
       - test-base
   test-rbenv:
     image: test-rbenv
-    build: rbenv
+    build: ./docker/rbenv
     depends_on:
       - test-base
   test-rvm:
     image: test-rvm
-    build: rvm
+    build: ./docker/rvm
     depends_on:
       - test-base

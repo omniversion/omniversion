@@ -1,0 +1,8 @@
+ansible-core
+ansible-lint
+molecule
+molecule-docker
+omniversion
+pytest
+pytest-molecule
+pytest-testinfra

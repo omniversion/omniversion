@@ -27,8 +27,30 @@ platforms:
     pre_build_instance: true
 provisioner:
   name: ansible
+  options:
+    vv: True
   log: true
+  env:
+    ANSIBLE_ROLES_PATH: ../../../ansible/roles
+  inventory:
+    host_vars:
+      python2-instance:
+        var_omniversion:
+          auto: true
+          pip:
+            executables:
+              - pip
+            venv:
+              - /pip/test1/test-env
+              - /pip/test2/test-env
+      python3-instance:
+        var_omniversion:
+          auto: true
+          pip:
+            executables:
+              - pip3
+            venv:
+              - /pip/test1/test-env
+              - /pip/test2/test-env
 verifier:
   name: testinfra
-  additional_files_or_dirs:
-    - ./molecule/default/test/*
