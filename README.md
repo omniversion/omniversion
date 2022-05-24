@@ -4,8 +4,8 @@
 [![Software License](https://img.shields.io/badge/license-AGPL--3.0-green.svg?style=for-the-badge)](/LICENSE)
 
 
-> ### 🚧 **Status: proof of concept**
-> [Feedback](https://github.com/omniversion/omniversion/discussions/1) much appreciated
+> ### 🚧 **Status: in active development**
+> [Feedback and suggestions](https://github.com/omniversion/omniversion/discussions/1) much appreciated
 
 
 <!--suppress HtmlDeprecatedAttribute -->
@@ -15,37 +15,44 @@
     <br />
 </div>
 
-`omniversion` is a **dependency management toolbox** streamlining common maintenance tasks.
+`omniversion` is a **dependency management toolbox**.
+
+Some or all of its tools might be useful if you need to:
+
+* keep servers up-to-date
+* deal with multiple package managers
+* identify conflicts across package managers and/or servers
+* show all information with a single command in one spot
+* include unmanaged or unpinned packages (e.g. manual installs, `apt install nginx`, `nvm install node`)
+* keep `qa` and `prod` _exactly_ in sync
+* patch vulnerabilities as soon as they are reported
+* develop your own toolchain for server maintenance
+
+## The tools
 
 ### Collection
+
 [omniversion/ansible](ansible) collects versions and dependencies from servers orchestrated via Ansible.
 
 ### Aggregation
+
 [omniversion/cli](cli) translates the output of many different version managers into a single, unified list.
 
 ### Analysis
+
 [omniversion/python](python) adds convenience methods to create dashboards and reports in a few lines of code.
-
-## Why use `omniversion`?
-
-* Manage all dependencies in one place, across package managers and servers.
-* Pull unmanaged versions (e.g. from config files and downloaded applications).
-* View available updates, conflicts and security advisories in a single dashboard.
-* Use only what you need and flexibly adapt it to your own use cases.
-
-[More details on why omniversion was created](docs/WHY.md)
 
 ## Quick start
 
 ### Prerequisites
 
-* `Ansible` >= 2.2
+* `Ansible` >= 2.8
+* `npm` (or `homebrew`)
 * `Python` >= 3.8
-* `npm` or `homebrew`
 
 ### Steps
 
-1. Install the Ansible collection, the CLI and the Python module:
+1.  **Install** the Ansible collection, the CLI and the Python module:
     ```shell
     ansible-galaxy collection install layer9gmbh.omniversion
     npm install -g omniversion
@@ -53,22 +60,29 @@
     ```
 
 
-2. Run the `all` Ansible playbook
+2.  **Fetch** some data by running the Ansible playbook
     ```shell
     ansible-playbook layer9gmbh.omniversion.fetch
     ```
     in a directory where Ansible can find your host definitions.
 
 
-3. Run the Python sample dashboard:
+3.  **Display** the data on the sample website dashboard:
     ```shell
-    python3 -m omniversion.samples.dashboard
+    python3 -m omniversion.dashboard.website
+    ```
+    or in the terminal:
+    ```shell
+    python3 -m omniversion.dashboard.terminal
     ```
 
-## Get in touch
+### What if I don't use Ansible?
 
-- [<img alt="GitHub Discussions" src="https://icongr.am/octicons/heart-fill.svg?color=808080&amp;size=10"/> GitHub Discussions](https://github.com/omniversion/omniversion/discussions/1): provide feedback and participate in discussions
-- [<img alt="GitHub Issues" src="https://icongr.am/octicons/mark-github.svg?color=808080&amp;size=10"/> GitHub Issues](https://github.com/omniversion/omniversion/issues): report a bug or request a feature
+At the moment, Ansible is the only option to fetch version data automatically. We might add a custom task runner to the toolbox at some point in the (probably distant) future.
+
+In the meantime, you can fetch package manager output using shell scripts or any other method, feeding it to the `omniversion/cli` tool to get a single, comprehensive dependency list in a consistent format.
+
+Feel free to suggest additional features and integrations in the [feedback section](https://github.com/omniversion/omniversion/discussions/1).
 
 ## Documentation
 
@@ -76,11 +90,24 @@
 * [CLI documentation](https://pkg.go.dev/github.com/omniversion/omniversion/cli)
 * [Python documentation](https://omniversion.github.io/omniversion/python/omniversion/)
 
+## Why?
+
+[Why we created omniversion](docs/WHY.md)
+
+
+## Get in touch
+
+- [<img alt="GitHub Discussions" src="https://icongr.am/octicons/heart-fill.svg?color=808080&amp;size=10"/> GitHub Discussions](https://github.com/omniversion/omniversion/discussions/1):
+  provide feedback and participate in discussions
+- [<img alt="GitHub Issues" src="https://icongr.am/octicons/mark-github.svg?color=808080&amp;size=10"/> GitHub Issues](https://github.com/omniversion/omniversion/issues):
+  report a bug or request a feature
+
 ## Supported platforms
 
 ### Operating systems
 
-`omniversion` has been built and tested on a macOS control node with linux hosts, but we do aim to support linux control nodes as well.
+`omniversion` is being built and tested mostly on macOS control nodes with linux hosts, but we do aim to support linux control
+nodes as well.
 
 Like Ansible, we not support Windows control nodes, but this might change in the future, if there is demand.
 
