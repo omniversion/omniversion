@@ -1,4 +1,9 @@
 ---
+- name: 'rvm : Prepare results'
+  ansible.builtin.set_fact:
+    var_omniversion_rvm_global_parsed_result: ""
+    var_omniversion_rvm_gemset_parsed_results: []
+
 - name: 'rvm : List `rvm` ruby versions'
   ansible.builtin.command: 'bash -lc "rvm ls"'
   register: var_omniversion_rvm_result
@@ -8,6 +13,23 @@
   vars:
     var_omniversion_parse_input: '{{ var_omniversion_rvm_result.stdout | string }}'
 
-- include_tasks: ../../shared/save.yaml
+- name: 'rvm : global : Remember result'
+  ansible.builtin.set_fact:
+    var_omniversion_rvm_global_parsed_result: '{{ var_omniversion_parse_result.stdout | string }}'
+
+- name: 'rvm : gemset : Export each gemset'
+  when: var_omniversion.rvm.gemset is defined
+  loop: '{{ var_omniversion.rvm.gemset }}'
+  loop_control:
+    loop_var: var_omniversion_rvm_gemset
+  args:
+    apply:
+      tags:
+        - rvm
+  include_tasks: rvm.gemset.yaml
+
+# we save the results as multiple yaml documents in the same file
+- name: 'rvm : Save results'
+  include_tasks: ../../shared/save.yaml
   vars:
-    var_omniversion_save_input: '{{ var_omniversion_parse_result.stdout | string }}'
+    var_omniversion_save_input: "{{ ([var_omniversion_rvm_global_parsed_result] + var_omniversion_rvm_gemset_parsed_results) | join(\"\n---\n\") }}"

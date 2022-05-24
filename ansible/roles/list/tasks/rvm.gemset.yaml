@@ -1,0 +1,14 @@
+---
+- name: 'rvm : gemset : Export gemset'
+  ansible.builtin.command: 'rvm {{ var_omniversion_rvm_gemset }} export'
+  register: var_omniversion_rvm_gemset_result
+  changed_when: false
+
+- name: 'rvm : gemset : Parse result'
+  include_tasks: ../../shared/parse.yaml
+  vars:
+    var_omniversion_parse_input: '{{ var_omniversion_rvm_gemset_result.stdout | string }}'
+
+- name: 'rvm : gemset : Remember result'
+  ansible.builtin.set_fact:
+    var_omniversion_rvm_gemset_parsed_results: '{{ var_omniversion_rvm_gemset_parsed_results + [var_omniversion_parse_result.stdout] }}'

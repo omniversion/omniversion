@@ -6,9 +6,14 @@
   failed_when: false
   changed_when: false
 
+- name: 'List gemsets'
+  ansible.builtin.command: bash -lc 'rvm gemset list'
+  register: omniversion_gemset_list_result
+  changed_when: false
+
 - name: 'Activate package manager `{{ var_omniversion_pm }}`'
   ansible.builtin.set_fact:
-    var_omniversion: '{{ var_omniversion | combine({ var_omniversion_pm: true }) }}'
+    var_omniversion: '{{ var_omniversion | combine({ var_omniversion_pm: { gemset: omniversion_gemset_list_result.stdout_lines } }, recursive=True) }}'
   when: omniversion_check_result.rc == 0
 
 - name: 'Deactivate package manager `{{ var_omniversion_pm }}`'

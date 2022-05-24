@@ -1,5 +1,5 @@
 ---
-- name: 'pip : venv : List `pip` updates in virtual environment'
+- name: 'pip : venv : List `pip` packages in virtual environment'
   ansible.builtin.command: '{{ var_omniversion_pip_executable }} list --format=json --local'
   register: var_omniversion_pip_local_result
   changed_when: false
