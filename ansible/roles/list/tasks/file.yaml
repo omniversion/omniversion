@@ -5,13 +5,13 @@
 
 - name: 'file : List `file` versions'
   when: var_omniversion.file is defined
-  with_items: '{{ var_omniversion.file }}'
+  loop: '{{ var_omniversion.file }}'
+  loop_control:
+    loop_var: var_omniversion_file_item
   args:
     apply:
       tags:
         - file
-  vars:
-    var_omniversion_file_local_dir: '{{ item }}'
   include_tasks: file.item.yaml
 
 # we save the results as multiple yaml documents in the same file

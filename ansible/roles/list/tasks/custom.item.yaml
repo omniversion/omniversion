@@ -1,0 +1,18 @@
+---
+- name: 'custom : item : List `custom` package versions'
+  ansible.builtin.shell: '{{ var_omniversion_custom_item.command }}'
+  args:
+    chdir: '{{ var_omniversion_custom_item.dir | default("/") }}'
+  register: var_omniversion_custom_item_result
+  changed_when: false
+
+- name: 'custom : item : Parse result'
+  include_tasks: ../../shared/parse.yaml
+  vars:
+    var_omniversion_parse_input: '{{ var_omniversion_custom_item_result.stdout | string }}'
+    var_omniversion_pm: raw
+    var_omniversion_parse_args: '--name={{ var_omniversion_custom_item.name | default("") }} --regex={{ var_omniversion_custom_item.regex | default("") | quote }}'
+
+- name: 'custom : item : Remember result'
+  ansible.builtin.set_fact:
+    var_omniversion_custom_parsed_results: '{{ var_omniversion_custom_parsed_results + [var_omniversion_parse_result.stdout] }}'

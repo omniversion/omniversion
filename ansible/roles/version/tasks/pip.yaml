@@ -1,26 +1,32 @@
 ---
-- name: 'pip : Choose executable'
+- name: 'pip : Prepare results'
   ansible.builtin.set_fact:
-    var_pip_executable: >-
-      {{ (var_omniversion.pip.version2 is defined and var_omniversion.pip.version2) 
-      | ternary("pip", "pip3") }}
+    var_omniversion_pip_parsed_results: []
 
-- name: 'pip : Get `pip` version info'
-  ansible.builtin.command: 'pip --version'
-  register: var_omniversion_pip_result
-  changed_when: false
-  when: var_omniversion.pip.version2 is defined and var_omniversion.pip.version2
+- name: 'Get version of each `pip` executable'
+  loop: '{{ var_omniversion.pip.executables | default(["pip"]) }}'
+  loop_control:
+    loop_var: var_omniversion_pip_executable
+  include_tasks: 'pip.executable.yaml'
+  args:
+    apply:
+      tags:
+        - pip
 
-- name: 'pip : Get `pip` version info'
-  ansible.builtin.command: '{{ var_pip_executable }} --version'
-  register: var_omniversion_pip_result
-  changed_when: false
-  ignore_errors: true
-
-- include_tasks: ../../shared/parse.yaml
+- name: 'Get version of each `pip` executable in virtual environments'
+  loop: '{{ var_omniversion.pip.venv | default([]) }}'
+  loop_control:
+    loop_var: var_omniversion_pip_venv
+  include_tasks: 'pip.executable.yaml'
+  args:
+    apply:
+      tags:
+        - pip
   vars:
-    var_omniversion_parse_input: '{{ var_omniversion_pip_result.stdout | string }}'
+    var_omniversion_pip_executable: '{{ var_omniversion_pip_venv }}/bin/pip'
 
-- include_tasks: ../../shared/save.yaml
+# we save the results as multiple yaml documents in the same file
+- name: 'pip : Save results'
+  include_tasks: ../../shared/save.yaml
   vars:
-    var_omniversion_save_input: '{{ var_omniversion_parse_result.stdout | string }}'
+    var_omniversion_save_input: "{{ var_omniversion_pip_parsed_results | join(\"\n---\n\") }}"

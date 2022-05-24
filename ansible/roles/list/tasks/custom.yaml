@@ -1,0 +1,21 @@
+---
+- name: 'custom : Prepare results'
+  ansible.builtin.set_fact:
+    var_omniversion_custom_parsed_results: []
+
+- name: 'custom : List `custom` versions'
+  when: var_omniversion.custom is defined
+  loop: '{{ var_omniversion.custom }}'
+  loop_control:
+    loop_var: var_omniversion_custom_item
+  args:
+    apply:
+      tags:
+        - custom
+  include_tasks: custom.item.yaml
+
+# we save the results as multiple yaml documents in the same file
+- name: 'custom : Save results'
+  include_tasks: ../../shared/save.yaml
+  vars:
+    var_omniversion_save_input: "{{ (var_omniversion_custom_parsed_results | join(\"\n---\n\")) }}"

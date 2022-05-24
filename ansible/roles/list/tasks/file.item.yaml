@@ -1,16 +1,18 @@
 ---
-- name: 'file : local : List local `file` package versions'
-  ansible.builtin.command: 'npm ls --json --all || true'
+- name: 'file : item : List `file` item package versions'
+  ansible.builtin.shell: '{{ var_omniversion_file_item.command }}'
   args:
-    chdir: '{{ var_omniversion_npm_local_dir }}'
-  register: var_omniversion_npm_local_result
+    chdir: '{{ var_omniversion_file_item.dir | default("/") }}'
+  register: var_omniversion_file_item_result
   changed_when: false
 
-- name: 'npm : local : Parse result'
+- name: 'file : item : Parse result'
   include_tasks: ../../shared/parse.yaml
   vars:
-    var_omniversion_parse_input: '{{ var_omniversion_npm_local_result.stdout | string }}'
+    var_omniversion_parse_input: '{{ var_omniversion_file_item_result.stdout | string }}'
+    var_omniversion_pm: raw
+    var_omniversion_parse_args: '--name={{ var_omniversion_file_item.name | default("") }} --regex={{ var_omniversion_file_item.regex | default("") | quote }}'
 
-- name: 'npm : local : Remember result'
+- name: 'file : item : Remember result'
   ansible.builtin.set_fact:
-    var_omniversion_npm_local_parsed_results: '{{ var_omniversion_npm_local_parsed_results + [var_omniversion_parse_result.stdout] }}'
+    var_omniversion_file_parsed_results: '{{ var_omniversion_file_parsed_results + [var_omniversion_parse_result.stdout] }}'

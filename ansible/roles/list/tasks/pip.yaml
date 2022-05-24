@@ -1,44 +1,35 @@
 ---
 - name: 'pip : Prepare results'
   ansible.builtin.set_fact:
-    var_omniversion_pip_global_parsed_result: ''
+    var_omniversion_pip_global_parsed_results: []
     var_omniversion_pip_local_parsed_results: []
-    var_pip_executable: >-
-      {{ (var_omniversion.pip.version2 is defined and var_omniversion.pip.version2) 
-      | ternary("pip", "pip3") }}
 
 - name: 'pip : global : List global `pip` package versions'
   when: (var_omniversion.pip.global is defined and var_omniversion.pip.global) or var_omniversion.pip.global is not defined
-  block:
-    - name: 'pip : global : List packages'
-      ansible.builtin.command: >-
-        {{ (var_omniversion.pip.version2 is defined and var_omniversion.pip.version2)
-        | ternary("pip freeze", "pip3 list --format=json") }}
-      register: var_omniversion_pip_global_result
-      changed_when: false
+  loop: '{{ var_omniversion.pip.executables | default(["pip"]) }}'
+  loop_control:
+    loop_var: var_omniversion_pip_executable
+  args:
+    apply:
+      tags:
+        - pip
+  include_tasks: pip.global.yaml
 
-    - name: 'pip : global : Parse result'
-      include_tasks: ../../shared/parse.yaml
-      vars:
-        var_omniversion_parse_input: '{{ var_omniversion_pip_global_result.stdout | string }}'
-
-    - name: 'pip : global : Remember result'
-      ansible.builtin.set_fact:
-        var_omniversion_pip_global_parsed_result: '{{ var_omniversion_parse_result.stdout | string }}'
-
-- name: 'pip : local : List local `pip` package versions'
-  when: var_omniversion.pip.local is defined
-  with_items: '{{ var_omniversion.pip.local }}'
+- name: 'pip : local : List `pip` package versions in virtual environments'
+  when: var_omniversion.pip.venv is defined
+  loop: '{{ var_omniversion.pip.venv }}'
+  loop_control:
+    loop_var: var_omniversion_pip_venv_dir
   args:
     apply:
       tags:
         - pip
   vars:
-    var_omniversion_pip_local_dir: '{{ item }}'
-  include_tasks: pip.local.yaml
+    var_omniversion_pip_executable: '{{ var_omniversion_pip_venv_dir }}/bin/pip'
+  include_tasks: pip.venv.yaml
 
 # we save the results as multiple yaml documents in the same file
 - name: 'pip : Save results'
   include_tasks: ../../shared/save.yaml
   vars:
-    var_omniversion_save_input: "{{ var_omniversion_pip_global_parsed_result + \"\n---\n\" + (var_omniversion_pip_local_parsed_results | join(\"\n---\n\")) }}"
+    var_omniversion_save_input: "{{ (var_omniversion_pip_global_parsed_results + var_omniversion_pip_local_parsed_results) | join(\"\n---\n\") }}"

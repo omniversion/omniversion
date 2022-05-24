@@ -1,0 +1,15 @@
+---
+- name: 'pip : executable : Get `pip` version info'
+  ansible.builtin.command: '{{ var_omniversion_pip_executable }} --version'
+  register: var_omniversion_pip_result
+  changed_when: false
+  ignore_errors: true
+
+- name: 'pip : executable : Parse result'
+  include_tasks: ../../shared/parse.yaml
+  vars:
+    var_omniversion_parse_input: '{{ var_omniversion_pip_result.stdout | string }}'
+
+- name: 'pip : executable : Remember result'
+  ansible.builtin.set_fact:
+    var_omniversion_pip_parsed_results: '{{ var_omniversion_pip_parsed_results + [var_omniversion_parse_result.stdout] }}'

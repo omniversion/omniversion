@@ -1,33 +1,44 @@
 ---
-- name: 'Check for presence of package manager `pip3`'
-  ansible.builtin.command: "which pip3"
-  register: omniversion_check_result
+- name: 'Prepare results for `pip`'
+  ansible.builtin.set_fact:
+    omniversion_pip_executables: []
+
+# we might have a `pip` and/or `pip3` executable
+# and these may or may not be identical
+
+# check for `pip3` first
+- name: 'Check for presence of executable `pip3`'
+  ansible.builtin.command: pip3 --version
+  register: omniversion_pip3_version_result
   ignore_errors: true
   failed_when: false
   changed_when: false
 
-- name: Activate package manager `pip` (version 3)
+- name: Add found executable `pip3`
   ansible.builtin.set_fact:
-    var_omniversion: '{{ var_omniversion | combine({ "pip": true }) }}'
-  when: omniversion_check_result.rc == 0
+    omniversion_pip_executables: '{{ omniversion_pip_executables + [ "pip3" ] }}'
+  when: omniversion_pip3_version_result.rc == 0
 
-# if pip3 cannot be found, check `pip` (version 2)
-- name: Try `pip` (version 2) instead
-  when: omniversion_check_result.rc != 0
-  block:
-    - name: 'Check for presence of package manager `pip` (version 2)'
-      ansible.builtin.command: "which pip"
-      register: omniversion_check_pip2_result
-      ignore_errors: true
-      failed_when: false
-      changed_when: false
+# now look for `pip` and add it only if the version is different from that of `pip3`
+# this way, we can collect packages for version 2 and version 3
+- name: 'Check for presence of executable `pip`'
+  ansible.builtin.command: pip --version
+  register: omniversion_pip_version_result
+  ignore_errors: true
+  failed_when: false
+  changed_when: false
 
-    - name: 'Activate package manager `pip` (version 2)'
-      ansible.builtin.set_fact:
-        var_omniversion: '{{ var_omniversion | combine({ "pip": { "version2": true } }) }}'
-      when: omniversion_check_pip2_result.rc == 0
+- name: Add found executable `pip`
+  ansible.builtin.set_fact:
+    omniversion_pip_executables: '{{ omniversion_pip_executables + [ "pip" ] }}'
+  when: omniversion_pip_version_result.rc == 0 and (omniversion_pip3_version_result.rc != 0 or omniversion_pip_version_result.stdout != omniversion_pip3_version_result.stdout)
 
-    - name: 'Deactivate package manager `pip`'
-      ansible.builtin.set_fact:
-        var_omniversion: '{{ var_omniversion | combine({ "pip": false }) }}'
-      when: omniversion_check_pip2_result.rc != 0
+- name: Deactivate package manager `pip`
+  ansible.builtin.set_fact:
+    var_omniversion: '{{ var_omniversion | combine({ "pip": false }) }}'
+  when: omniversion_pip_executables | length == 0
+
+- name: Activate package manager `pip`
+  ansible.builtin.set_fact:
+    var_omniversion: '{{ var_omniversion | combine({ "pip": { "executables": omniversion_pip_executables } }, recursive=True) }}'
+  when: omniversion_pip_executables | length > 0
