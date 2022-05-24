@@ -1,0 +1,13 @@
+---
+- name: 'galaxy : List `galaxy` package versions'
+  ansible.builtin.command: 'ansible-galaxy list'
+  register: var_omniversion_galaxy_result
+  changed_when: false
+
+- include_tasks: ../../shared/parse.yaml
+  vars:
+    var_omniversion_parse_input: '{{ var_omniversion_galaxy_result.stdout | string }}'
+
+- include_tasks: ../../shared/save.yaml
+  vars:
+    var_omniversion_save_input: '{{ var_omniversion_parse_result.stdout | string }}'

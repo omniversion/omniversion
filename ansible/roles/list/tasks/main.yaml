@@ -8,6 +8,7 @@
 - name: 'Run tasks'
   loop:
     - apt
+    - galaxy
     - gem
     - go
     - npm
