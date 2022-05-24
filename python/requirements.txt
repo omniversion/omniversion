@@ -2,3 +2,4 @@ colorama==0.4.4
 dacite==1.6.0
 PyYAML==6.0
 setuptools==62.3.2
+wheel==0.37.1
