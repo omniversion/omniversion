@@ -80,6 +80,22 @@ func TestParseRvmVersionOutput(t *testing.T) {
 	assert.Equal(t, "https://rvm.io", item.Homepage)
 }
 
+func TestParseRvmVersionOutput_Manual(t *testing.T) {
+	vector := "rvm 1.29.12 (manual) by Michal Papis, Piotr Kuczynski, Wayne E. Seguin [https://rvm.io]\n"
+
+	result, err := parseRvmOutput(vector)
+
+	assert.Nil(t, err)
+	assert.Equal(t, 1, len(result))
+
+	item := result[0]
+	assert.Equal(t, "rvm", item.Name)
+	assert.Equal(t, "1.29.12", item.Current)
+	assert.Equal(t, "", item.Latest)
+	assert.Equal(t, "Michal Papis, Piotr Kuczynski, Wayne E. Seguin", item.Author)
+	assert.Equal(t, "https://rvm.io", item.Homepage)
+}
+
 func TestParseRvmVersionOutput_PathWarning(t *testing.T) {
 	vector := "Warning! PATH is not properly set up, /Users/testor/.rvm/gems/ruby-3.1.0/bin is not at first place.\n         Usually this is caused by shell initialization files. Search for PATH=... entries.\n         You can also re-add RVM to your profile by running: rvm get stable --auto-dotfiles\n         To fix it temporarily in this shell session run: rvm use ruby-3.1.0\n         To ignore this error add rvm_silence_path_mismatch_check_flag=1 to your ~/.rvmrc file.\nrvm 1.29.12 (latest) by Michal Papis, Piotr Kuczynski, Wayne E. Seguin [https://rvm.io]\n"
 

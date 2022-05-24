@@ -39,7 +39,7 @@ func parseRvmOutput(input string) ([]PackageMetadata, error) {
 }
 
 func parseAsRvmVersionOutput(input string) ([]PackageMetadata, error) {
-	compiledRegex := regexp.MustCompile(`(?m)^rvm (?P<version>\S*)(?P<latest> \(latest\))? by (?P<author>.*) \[(?P<url>.*)]$`)
+	compiledRegex := regexp.MustCompile(`(?m)^rvm (?P<version>\S*)(?P<latest> \(latest\))?(?P<manual> \(manual\))? by (?P<author>.*) \[(?P<url>.*)]$`)
 	match := compiledRegex.FindStringSubmatch(input)
 	if match == nil {
 		// if the input is actually `rvm version` output,
