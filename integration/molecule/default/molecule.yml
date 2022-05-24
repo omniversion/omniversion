@@ -34,6 +34,12 @@ provisioner:
     ANSIBLE_ROLES_PATH: ../../../ansible/roles
   inventory:
     host_vars:
+      npm-instance:
+        var_omniversion:
+          auto: true
+          npm:
+            local:
+              - ~/npm/test
       python2-instance:
         var_omniversion:
           auto: true

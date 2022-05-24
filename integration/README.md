@@ -6,7 +6,7 @@ Test the entire pipeline: Ansible roles, CLI and Python module.
 
 1. Create containers
 ```shell
-docker-compose up base-instance && docker-compose up
+docker-compose up test-base --build && docker-compose up --build
 ```
 
 2. Create & activate virtual environment

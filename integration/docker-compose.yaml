@@ -1,5 +1,8 @@
 version: "3.9"
 services:
+  test-ansible:
+    image: test-ansible
+    build: ./docker/ansible
   test-base:
     image: test-base
     build: ./docker/base
