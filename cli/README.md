@@ -29,11 +29,28 @@ brew tap omniversion/tap && brew install omniversion
 
 #### `parse` subcommand
 
-The `parse` subcommand understands many different types of package manager output, translating the available information into the universal [omniversion format](../docs/MODELS.md).
+The `parse` subcommand understands many different types of package manager output, translating it into the universal [omniversion format](../docs/MODELS.md).
 ```shell
+ansible-galaxy list | omniversion parse galaxy
+ansible-galaxy list -vvv | omniversion parse galaxy
+ansible-galaxy --version | omniversion parse galaxy
+cat requirements.yaml | omniversion parse galaxy
+
 apt list --installed | omniversion parse apt
 apt list --upgradable | omniversion parse apt
 apt list --upgradable --all-versions | omniversion parse apt
+cat apt_preferences | omniversion parse apt
+
+brew list | omniversion parse brew
+
+gem list | omniversion parse gem
+bundle-audit | omniversion parse gem
+
+go list | omniversion parse go
+go list -m -json all | omniversion parse go
+go go version | omniversion parse go
+cat go.mod | omniversion parse go
+cat go.sum | omniversion parse go
 
 npm audit | omniversion parse npm
 npm audit --json | omniversion parse npm
@@ -48,20 +65,10 @@ cat package-lock.json | omniversion parse npm
 npm --versions | omniversion parse npm
 npm --versions --json | omniversion parse npm
 
+nvm list | omniversion parse nvm
+
 rvm list | omniversion parse rvm
 rvm version | omniversion parse rvm
-
-brew list | omniversion parse homebrew
-
-gem list | omniversion parse rubygems
-bundle-audit | omniversion parse rubygems
-```
-
-##### Stderr output
-
-```shell
-npm audit 2>&1 || true | omniversion parse npm
-
 ```
 
 ### How to uninstall

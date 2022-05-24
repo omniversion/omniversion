@@ -1,4 +1,4 @@
-package rubygems
+package gem
 
 import (
 	"fmt"
@@ -60,7 +60,7 @@ func parseOutdatedListItem(name string, versions string, dependencies *[]Package
 		Installations: []InstalledPackage{{Version: currentVersion}},
 	}
 	if shared.InjectPackageManager {
-		newResult.PackageManager = "rubygems"
+		newResult.PackageManager = "gem"
 	}
 	*dependencies = append(*dependencies, newResult)
 	return nil
@@ -95,7 +95,7 @@ func parseListItem(name string, versionsString string, dependencies *[]PackageMe
 		}
 	}
 	if shared.InjectPackageManager {
-		newResult.PackageManager = "rubygems"
+		newResult.PackageManager = "gem"
 	}
 	*dependencies = append(*dependencies, newResult)
 	return nil
@@ -111,7 +111,7 @@ func parseDetails(name string, versions string, content string, dependencies *[]
 		Name: name,
 	}
 	if shared.InjectPackageManager {
-		newResult.PackageManager = "rubygems"
+		newResult.PackageManager = "gem"
 	}
 
 	if parsedContent == nil {

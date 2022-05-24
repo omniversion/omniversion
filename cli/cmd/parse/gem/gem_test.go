@@ -1,4 +1,4 @@
-package rubygems
+package gem
 
 import (
 	"github.com/omniversion/omniversion/cli/cmd/parse/shared"
@@ -24,7 +24,7 @@ func TestParseRubygemsSimpleOutput(t *testing.T) {
 	assert.Equal(t, 1, len(result))
 
 	assert.Equal(t, `Marc-Andre Lafortune`, result[0].Author)
-	assert.Equal(t, "rubygems", result[0].PackageManager)
+	assert.Equal(t, "gem", result[0].PackageManager)
 	assert.Equal(t, "prime", result[0].Name)
 	assert.Equal(t, 1, len(result[0].Installations))
 	assert.Equal(t, "0.1.2", result[0].Current)
@@ -81,7 +81,7 @@ bundler (2.3.7 < 2.3.12)`
 
 	item := result[0]
 	assert.Equal(t, "bigdecimal", item.Name)
-	assert.Equal(t, "rubygems", item.PackageManager)
+	assert.Equal(t, "gem", item.PackageManager)
 	assert.Equal(t, "3.1.1", item.Current)
 	assert.Equal(t, 1, len(item.Installations))
 	assert.Equal(t, "3.1.1", item.Installations[0].Version)

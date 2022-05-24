@@ -1,4 +1,4 @@
-package ansible
+package galaxy
 
 import (
 	"github.com/omniversion/omniversion/cli/cmd/parse/shared"
@@ -14,20 +14,49 @@ func TestParseListOutput(t *testing.T) {
 	shared.InjectPackageManager = true
 	result, err := ParseListOutput(vector)
 	assert.Nil(t, err)
-	assert.Equal(t, 7, len(result))
+	assert.Equal(t, 11, len(result))
 
 	item := result[0]
+	assert.Equal(t, "ansible-core", item.Name)
+	assert.Equal(t, []string{"ansible-galaxy"}, item.Aliases)
+	assert.Equal(t, "galaxy", item.PackageManager)
+	assert.Equal(t, "2.12.5", item.Current)
+	assert.Equal(t, 1, len(item.Installations))
+	assert.Equal(t, "2.12.5", item.Installations[0].Version)
+
+	item = result[1]
+	assert.Equal(t, "python", item.Name)
+	assert.Equal(t, "galaxy", item.PackageManager)
+	assert.Equal(t, "3.8.13", item.Current)
+	assert.Equal(t, 1, len(item.Installations))
+	assert.Equal(t, "3.8.13", item.Installations[0].Version)
+
+	item = result[2]
+	assert.Equal(t, "clang", item.Name)
+	assert.Equal(t, "galaxy", item.PackageManager)
+	assert.Equal(t, "13.0.0", item.Current)
+	assert.Equal(t, 1, len(item.Installations))
+	assert.Equal(t, "13.0.0", item.Installations[0].Version)
+
+	item = result[3]
+	assert.Equal(t, "jinja", item.Name)
+	assert.Equal(t, "galaxy", item.PackageManager)
+	assert.Equal(t, "2.11.2", item.Current)
+	assert.Equal(t, 1, len(item.Installations))
+	assert.Equal(t, "2.11.2", item.Installations[0].Version)
+
+	item = result[4]
 	assert.Equal(t, "atosatto.minio", item.Name)
 	assert.Equal(t, []string{"minio"}, item.Aliases)
-	assert.Equal(t, "ansible", item.PackageManager)
+	assert.Equal(t, "galaxy", item.PackageManager)
 	assert.Equal(t, "1.1.0", item.Current)
 	assert.Equal(t, 1, len(item.Installations))
 	assert.Equal(t, "1.1.0", item.Installations[0].Version)
 
-	item = result[1]
+	item = result[5]
 	assert.Equal(t, "rvm.ruby", item.Name)
 	assert.Equal(t, []string{"ruby"}, item.Aliases)
-	assert.Equal(t, "ansible", item.PackageManager)
+	assert.Equal(t, "galaxy", item.PackageManager)
 	assert.Equal(t, "2.1.2", item.Current)
 	assert.Equal(t, 1, len(item.Installations))
 	assert.Equal(t, "2.1.2", item.Installations[0].Version)

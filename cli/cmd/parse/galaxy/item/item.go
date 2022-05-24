@@ -10,7 +10,7 @@ func New(name string) *PackageMetadata {
 		Name: name,
 	}
 	if shared.InjectPackageManager {
-		newItem.PackageManager = "ansible"
+		newItem.PackageManager = "galaxy"
 	}
 	return newItem
 }

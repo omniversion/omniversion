@@ -1,4 +1,4 @@
-package ansible
+package galaxy
 
 import (
 	"github.com/stretchr/testify/assert"

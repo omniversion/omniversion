@@ -1,4 +1,4 @@
-package ansible
+package galaxy
 
 import (
 	"github.com/omniversion/omniversion/cli/cmd/parse/shared"
@@ -18,8 +18,9 @@ func ParseOutput(input string) ([]PackageMetadata, error) {
 }
 
 var ParseCommand = &cobra.Command{
-	Use:   "ansible",
-	Short: "Parse the output of `ansible-galaxy list` or a `requirements.yaml` file",
-	Long:  "Translate `ansible-galaxy` output into the omniversion format.",
-	Run:   shared.WrapCommand(ParseOutput),
+	Use:     "galaxy",
+	Short:   "Parse the output of `ansible-galaxy list` or a `requirements.yaml` file",
+	Long:    "Translate `ansible-galaxy` output into the omniversion format.",
+	Run:     shared.WrapCommand(ParseOutput),
+	Aliases: []string{"ansible", "ansible-galaxy"},
 }

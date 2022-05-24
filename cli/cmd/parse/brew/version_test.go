@@ -1,4 +1,4 @@
-package homebrew
+package brew
 
 import (
 	"github.com/omniversion/omniversion/cli/cmd/parse/shared"

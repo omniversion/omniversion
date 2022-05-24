@@ -1,4 +1,4 @@
-package homebrew
+package brew
 
 import (
 	"github.com/stretchr/testify/assert"

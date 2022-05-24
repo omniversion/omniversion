@@ -1,7 +1,7 @@
-package ansible
+package galaxy
 
 import (
-	"github.com/omniversion/omniversion/cli/cmd/parse/ansible/item"
+	"github.com/omniversion/omniversion/cli/cmd/parse/galaxy/item"
 	"github.com/omniversion/omniversion/cli/cmd/parse/shared"
 	. "github.com/omniversion/omniversion/cli/types"
 	"gopkg.in/yaml.v3"

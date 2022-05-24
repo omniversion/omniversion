@@ -1,8 +1,8 @@
-package homebrew
+package brew
 
 import (
 	"github.com/hashicorp/go-multierror"
-	"github.com/omniversion/omniversion/cli/cmd/parse/homebrew/item"
+	"github.com/omniversion/omniversion/cli/cmd/parse/brew/item"
 	. "github.com/omniversion/omniversion/cli/types"
 	"regexp"
 )
