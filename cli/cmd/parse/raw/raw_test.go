@@ -6,7 +6,7 @@ import (
 )
 
 func TestParseRawOutput_NameWithoutRegex(t *testing.T) {
-	vector := "v1.2.3"
+	vector := "v1.2.3\n"
 
 	name = "test"
 	regex = ""

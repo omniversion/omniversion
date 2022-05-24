@@ -49,6 +49,6 @@ var ParseCommand = func() *cobra.Command {
 		Run:   shared.WrapCommand(parseRawOutput),
 	}
 	parseCommand.PersistentFlags().StringVarP(&regex, "regex", "r", "", "An optional GoLang-style regex containing a named groups `name` and `version`. The `name` group can be omitted if a --name parameter is provided. If no regex is given, the entire string will be used as the version.")
-	parseCommand.PersistentFlags().StringVarP(&regex, "name", "n", "", "The name of the package. This is required if the regex contains no `name` group.")
+	parseCommand.PersistentFlags().StringVarP(&name, "name", "n", "", "The name of the package. This is required if the regex contains no `name` group.")
 	return parseCommand
 }()

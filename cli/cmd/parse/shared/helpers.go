@@ -15,7 +15,7 @@ func ShortModuleName(fullName string) string {
 }
 
 func CleanVersion(version string) string {
-	return strings.TrimLeft(version, "v")
+	return strings.Trim(strings.TrimLeft(version, "v"), "\n")
 }
 
 func CleanVersions(versions []string) []string {

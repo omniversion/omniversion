@@ -66,9 +66,22 @@ npm --versions | omniversion parse npm
 npm --versions --json | omniversion parse npm
 
 nvm list | omniversion parse nvm
+nvm --version | omniversion parse nvm
+cat .nvmrc | omniversion parse nvm
+
+pip list | omniversion parse pip
+pip list --format=json | omniversion parse pip
+pip list --format=freeze | omniversion parse pip
+pip freeze | omniversion parse pip
+pip list --outdated | omniversion parse pip
+pip list --outdated --format=json | omniversion parse pip
+pip --version | omniversion parse pip
+
+echo "v1.2.3" | omniversion parse raw --name="test"
+echo 'test1=v1.2.3\ntest2=v2.3.4\ntest3=v3.4.5' | omniversion parse raw --regex="(?m)^(?P<name>\S*)=(?P<version>\S*)$"
 
 rvm list | omniversion parse rvm
-rvm version | omniversion parse rvm
+rvm --version | omniversion parse rvm
 ```
 
 ### How to uninstall
