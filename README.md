@@ -20,12 +20,11 @@
 Some or all of its tools might be useful if you need to:
 
 * keep servers up-to-date
-* deal with multiple package managers
-* identify conflicts across package managers and/or servers
-* show all information with a single command in one spot
-* include unmanaged or unpinned packages (e.g. manual installs, `apt install nginx`, `nvm install node`)
-* keep `qa` and `prod` _exactly_ in sync
+* identify conflicts across multiple package managers and/or servers
+* include unmanaged or unpinned versions (e.g. manual installs, `apt install nginx`, `nvm install node`)
 * patch vulnerabilities as soon as they are reported
+* keep `qa` and `prod` _exactly_ in sync
+* save time by streamlining your version management process
 * develop your own toolchain for server maintenance
 
 ## The tools
@@ -34,7 +33,7 @@ Some or all of its tools might be useful if you need to:
 
 [omniversion/ansible](ansible) collects versions and dependencies from servers orchestrated via Ansible.
 
-### Aggregation
+### Conversion
 
 [omniversion/cli](cli) translates the output of many different version managers into a single, unified list.
 
