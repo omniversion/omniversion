@@ -1,6 +1,6 @@
 import pathlib
 import os
-from setuptools import setup
+from setuptools import setup, find_packages
 
 VERSION = os.environ['VERSION']
 
@@ -24,8 +24,8 @@ setup(
         "Jinja2"
         "PyYAML",
     ],
-    packages=['omniversion'],
-    package_data={'omniversion': [
+    packages=find_packages(),
+    package_data={'': [
         'dashboard/website/template.html.js',
         'dashboard/website/static/icons/*.svg',
         'dashboard/website/static/css/*.css'

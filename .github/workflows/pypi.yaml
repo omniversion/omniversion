@@ -22,7 +22,7 @@ jobs:
         id: get_version
         run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/v}
 
-      - name: Create PyPi package
+      - name: Create PyPI package
         working-directory: python
         run: VERSION=${{ steps.get_version.outputs.VERSION }} python3 -m build
 
