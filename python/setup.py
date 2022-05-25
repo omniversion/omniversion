@@ -22,7 +22,7 @@ setup(
     install_requires=[
         "colorama",
         "dacite",
-        "Jinja2"
+        "Jinja2",
         "PyYAML",
     ],
     package_data={'omniversion': [
