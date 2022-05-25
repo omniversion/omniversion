@@ -52,28 +52,28 @@ Some or all of it might be useful if you need to:
 ### Steps
 
 #### 1.  Install the Ansible collection, the CLI and the Python module:
-    ```shell
-    ansible-galaxy collection install layer9gmbh.omniversion
-    npm install -g omniversion
-    pip install omniversion
-    ```
+```shell
+ansible-galaxy collection install layer9gmbh.omniversion
+npm install -g omniversion
+pip install omniversion
+```
 
 
 #### 2.  Fetch some data by running the Ansible playbook
-    ```shell
-    ansible-playbook layer9gmbh.omniversion.fetch
-    ```
-    in a directory where Ansible can find your host definitions.
+```shell
+ansible-playbook layer9gmbh.omniversion.fetch
+```
+in a directory where Ansible can find your host definitions.
 
 
 #### 3.  Display the data on the sample website dashboard:
-    ```shell
-    python3 -m omniversion.dashboard.website
-    ```
-    or in the terminal:
-    ```shell
-    python3 -m omniversion.dashboard.terminal
-    ```
+```shell
+python3 -m omniversion.dashboard.website
+```
+or in the terminal:
+```shell
+python3 -m omniversion.dashboard.terminal
+```
 
 ### What if I don't use Ansible?
 
