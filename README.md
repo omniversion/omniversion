@@ -17,13 +17,13 @@
 
 `omniversion` is a **dependency management toolbox**.
 
-Some or all of its tools might be useful if you need to:
+Some or all of it might be useful if you need to:
 
 * keep servers up-to-date
 * identify conflicts across multiple package managers and/or servers
 * include unmanaged or unpinned versions (e.g. manual installs, `apt install nginx`, `nvm install node`)
 * patch vulnerabilities as soon as they are reported
-* keep `qa` and `prod` _exactly_ in sync
+* keep environments _exactly_ in sync
 * save time by streamlining your version management process
 * develop your own toolchain for server maintenance
 
