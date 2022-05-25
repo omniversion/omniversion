@@ -77,4 +77,28 @@ body {
   width: 128px;
 }
 
+.dashboard-card-line:nth-of-type(6n+0) {
+  color: #4F73B0;
+}
+
+.dashboard-card-line:nth-of-type(6n+1) {
+  color: #A5A35A;
+}
+
+.dashboard-card-line:nth-of-type(6n+2) {
+  color: #73B04F;
+}
+
+.dashboard-card-line:nth-of-type(6n+3) {
+  color: #A35AA5;
+}
+
+.dashboard-card-line:nth-of-type(6n+4) {
+  color: #5AA5A3;
+}
+
+.dashboard-card-line:nth-of-type(6n+5) {
+  color: #B04F73;
+}
+
 /*# sourceMappingURL=style.css.map */

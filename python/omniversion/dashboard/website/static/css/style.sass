@@ -67,3 +67,9 @@ body
   & img
     height: 128px
     width: 128px
+
+$colors: (#4F73B0, #A5A35A, #73B04F, #A35AA5, #5AA5A3, #B04F73)
+
+@for $i from 0 through 5
+  .dashboard-card-line:nth-of-type(6n+#{$i})
+    color: nth($colors, $i + 1)
