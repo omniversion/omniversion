@@ -51,7 +51,7 @@ Some or all of it might be useful if you need to:
 
 ### Steps
 
-1.  **Install** the Ansible collection, the CLI and the Python module:
+#### 1.  Install the Ansible collection, the CLI and the Python module:
     ```shell
     ansible-galaxy collection install layer9gmbh.omniversion
     npm install -g omniversion
@@ -59,14 +59,14 @@ Some or all of it might be useful if you need to:
     ```
 
 
-2.  **Fetch** some data by running the Ansible playbook
+#### 2.  Fetch some data by running the Ansible playbook
     ```shell
     ansible-playbook layer9gmbh.omniversion.fetch
     ```
     in a directory where Ansible can find your host definitions.
 
 
-3.  **Display** the data on the sample website dashboard:
+#### 3.  Display the data on the sample website dashboard:
     ```shell
     python3 -m omniversion.dashboard.website
     ```
@@ -77,9 +77,7 @@ Some or all of it might be useful if you need to:
 
 ### What if I don't use Ansible?
 
-At the moment, Ansible is the only option to fetch version data automatically. We might add a custom task runner to the toolbox at some point in the (probably distant) future.
-
-In the meantime, you can fetch package manager output using shell scripts or any other method, feeding it to the `omniversion/cli` tool to get a single, comprehensive dependency list in a consistent format.
+You can fetch package manager output using shell scripts or any other method, feeding it to the `omniversion/cli` tool to get a single, comprehensive dependency list in a consistent format.
 
 Feel free to suggest additional features and integrations in the [feedback section](https://github.com/omniversion/omniversion/discussions/1).
 
