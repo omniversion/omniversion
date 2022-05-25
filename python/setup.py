@@ -17,6 +17,7 @@ setup(
     author="Layer9 GmbH",
     author_email="hello@layer9.berlin",
     license="AGPL-v3.0-only",
+    packages=find_packages(),
     python_requires=">=3.8.0",
     install_requires=[
         "colorama",
@@ -24,10 +25,9 @@ setup(
         "Jinja2"
         "PyYAML",
     ],
-    packages=find_packages(),
-    package_data={'': [
-        'dashboard/website/template.html.js',
-        'dashboard/website/static/icons/*.svg',
-        'dashboard/website/static/css/*.css'
-    ]}
+    package_data={'omniversion': [
+        "dashboard/website/template.html.j2",
+        "dashboard/website/static/icons/*.svg",
+        "dashboard/website/static/css/*.css",
+    ]},
 )
