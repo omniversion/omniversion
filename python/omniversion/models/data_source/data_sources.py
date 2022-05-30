@@ -1,10 +1,11 @@
 """Model class for metadata regarding the package info available to `omniversion`."""
 import os
-from typing import List, Optional, Tuple
+from typing import List, Optional, Dict
 
 from .config import ConfigDataSource
 from .file import FileDataSource
 from ..package_metadata.package_metadata import PackageMetadata
+from ...helpers.helpers import apply_filters
 
 VALID_VERBS = ["audit", "list", "refresh", "outdated", "version"]
 
@@ -14,6 +15,7 @@ class DataSources:
 
     `omniversion.models.package_metadata.package_metadata.PackageMetadata` contains metadata on packages, `DataSources`
     contains "meta-metadata" about what kind of package information is available and how it was obtained."""
+
     def __init__(self, files: Optional[List[FileDataSource]] = None, configs: Optional[List[ConfigDataSource]] = None,
                  packages: Optional[List[PackageMetadata]] = None, load_from_filesystem=True) -> None:
         """Create a new data sources object, loading the specified files and configuration values.
@@ -33,7 +35,8 @@ class DataSources:
             self.files = []
             if files is not None:
                 for file in files:
-                    self.add_file(file_path=file.path, verb=file.verb, host=file.host, package_manager=file.package_manager)
+                    self.add_file(file_path=file.path, verb=file.verb, host=file.host,
+                                  package_manager=file.package_manager)
             self.configs = []
             if configs is not None:
                 for config in configs:
@@ -139,25 +142,23 @@ class DataSources:
         return sorted(list({file.host for file in self.files}))
 
     @property
-    def host_infos(self) -> List[Tuple[str, List[FileDataSource], List[ConfigDataSource]]]:
-        """List of host information, containing the hostname, a list of `.omniversion.yaml` files and a list of
-        configuration files from which packages have been loaded.
-        """
-        def item_for_host(hostname: str):
-            files = [file for file in self.files if file.host == hostname]
-            configs = [config for config in self.configs if config.host == hostname]
-            return hostname, files, configs
-        return [item_for_host(hostname) for hostname in self.hostnames]
+    def by_host(self) -> Dict[str, 'DataSources']:
+        """Group the sources by host"""
+        return {hostname: self.filter(hostname=hostname) for hostname in self.hostnames}
 
     @property
     def package_manager_identifiers(self) -> List[str]:
         """Deduplicated list of hosts for which files are present in the list."""
         return sorted(list({file.package_manager for file in self.files}))
 
-    def for_host(self, hostname: str) -> 'DataSources':
-        files = [file for file in self.files if file.host == hostname]
-        configs = [config for config in self.configs if config.host == hostname]
-        packages = [package for package in self.packages if package.host == hostname]
+    def filter(self,
+               hostname: Optional[str] = None,
+               verb: Optional[str] = None,
+               package_manager: Optional[str] = None) -> 'DataSources':
+        """Filter sources by the given criteria."""
+        files = apply_filters(self.files, host=hostname, verb=verb, package_manager=package_manager)
+        configs = apply_filters(self.configs, host=hostname)
+        packages = apply_filters(self.packages, host=hostname, verb=verb, package_manager=package_manager)
         return DataSources(files=files, configs=configs, packages=packages, load_from_filesystem=False)
 
     def __len__(self) -> int:

@@ -47,10 +47,10 @@ class DataSourcesTestCase(unittest.TestCase):
         self.assertEqual(2, data_sources.files[0].num_packages)
 
         self.assertIn("test_host", data_sources.hostnames)
-        test_host_info = data_sources.host_infos[0]
-        self.assertEqual("test_host", test_host_info[0])
-        self.assertEqual(4, len(test_host_info[1]))
-        self.assertEqual(0, len(test_host_info[2]))
+        grouped_data_sources = data_sources.by_host
+        self.assertIn("test_host", grouped_data_sources)
+        self.assertEqual(4, len(grouped_data_sources["test_host"].files))
+        self.assertEqual(0, len(grouped_data_sources["test_host"].configs))
 
         self.assertIn("test_pm", data_sources.package_manager_identifiers)
 
