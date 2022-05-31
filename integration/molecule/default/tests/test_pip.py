@@ -5,8 +5,7 @@ from omniversion import Omniversion
 
 EXPECTATION: Any = {
     "brew-instance": {"count": 6, "packages": ["pip", "python", "setuptools"]},
-    "node-instance": {"count": 16, "packages": ["pip", "python"]},
-    "python2-instance": {"count": 39, "packages": ["pip", "python", "botocore", "PyYAML", "six"]},
+    "python2-instance": {"count": 56, "packages": ["pip", "python", "botocore", "PyYAML", "six"]},
     "python3-instance": {"count": 33, "packages": ["pip", "python", "botocore", "PyYAML", "six"]},
 }
 

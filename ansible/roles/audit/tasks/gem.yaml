@@ -1,6 +1,6 @@
 ---
 - name: 'gem : List `gem` security advisories'
-  ansible.builtin.command: 'bundle-audit 2> /dev/null || true'
+  ansible.builtin.command: 'bundle-audit'
   args:
     chdir: '{{ var_omniversion.gem.dir | default("/") }}'
   register: var_omniversion_gem_result

@@ -1,8 +1,8 @@
 ---
 - name: 'file : item : List `file` item package versions'
-  ansible.builtin.shell: '{{ var_omniversion_file_item.command }}'
+  ansible.builtin.shell: 'cat {{ var_omniversion_file_item.path }}'
   args:
-    chdir: '{{ var_omniversion_file_item.dir | default("/") }}'
+    chdir: /
   register: var_omniversion_file_item_result
   changed_when: false
 

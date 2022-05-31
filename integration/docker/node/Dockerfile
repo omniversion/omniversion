@@ -10,7 +10,7 @@ RUN nvm use default
 
 RUN npm install -g pug
 
-RUN mkdir -p ~/npm/test
-WORKDIR ~/npm/test
-RUN npm init -y
+RUN mkdir -p /home/ansible/npm/test
+WORKDIR /home/ansible/npm/test
+RUN npm init --yes
 RUN npm install async.js

@@ -1,9 +1,10 @@
 ---
 - name: 'npm : local : List local `npm` security advisories'
-  ansible.builtin.shell: 'npm audit --prod --json --all 2> /dev/null || true'
+  ansible.builtin.shell: bash -ic 'npm audit --prod --json --all'
   args:
     chdir: '{{ var_omniversion_npm_local_dir }}'
   register: var_omniversion_npm_local_result
+  ignore_errors: true
   changed_when: false
 
 - name: 'npm : local : Parse result'

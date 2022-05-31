@@ -12,6 +12,7 @@ ENV PATH $PATH:/usr/local/go/bin
 WORKDIR /repos/go
 RUN go get github.com/sirupsen/logrus
 RUN go get github.com/juju/errors
+RUN go install github.com/nathan-fiscaletti/example-go-install@latest
 RUN git clone https://github.com/spf13/viper.git
 WORKDIR /repos/go/viper
 RUN go get

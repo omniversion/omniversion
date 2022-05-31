@@ -9,18 +9,15 @@ jobs:
   codecov:
     runs-on: ubuntu-latest
     steps:
-      -
-        name: Checkout
+      - name: Checkout
         uses: actions/checkout@v2
         with:
           fetch-depth: 2
-      -
-        name: Set up Go
+      - name: Set up Go
         uses: actions/setup-go@v2
         with:
           go-version: 1.17
-      -
-        name: Go test
+      - name: Go test
         working-directory: cli
         run: go test ./... -coverprofile=test/coverage.out
 
@@ -41,8 +38,7 @@ jobs:
         working-directory: python
         run: python3 -m pytest --cov=omniversion --cov-report=xml test
 
-      -
-        name: Upload  coverage
+      - name: Upload  coverage
         uses: codecov/codecov-action@v2
         with:
           files: ./cli/test/coverage.out,./python/coverage.xml

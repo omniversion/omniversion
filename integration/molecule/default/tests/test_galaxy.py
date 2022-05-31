@@ -9,5 +9,5 @@ EXPECTATION = {
 def test_galaxy_packages(host):
     omniversion = Omniversion()
     hostname = host.backend.get_pytest_id().split("://")[1]
-    apt_packages = omniversion.packages.filter(package_manager="galaxy", host=hostname, verb=["list", "version"])
-    verify_expectation(hostname, apt_packages, EXPECTATION)
+    galaxy_packages = omniversion.packages.filter(package_manager="galaxy", host=hostname, verb=["list", "version"])
+    verify_expectation(hostname, galaxy_packages, EXPECTATION)

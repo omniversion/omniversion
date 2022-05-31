@@ -34,7 +34,13 @@ provisioner:
     ANSIBLE_ROLES_PATH: ../../../ansible/roles
   inventory:
     host_vars:
-      npm-instance:
+      go-instance:
+        var_omniversion:
+          auto: true
+          go:
+            local:
+              - /repos/go/viper
+      node-instance:
         var_omniversion:
           auto: true
           npm:

@@ -1,6 +1,6 @@
 ---
 - name: '{{ var_omniversion_pm }} : Parse output'
-  ansible.builtin.command: 'omniversion parse {{ var_omniversion_pm }} {{ var_omniversion_parse_args }}'
+  ansible.builtin.command: 'omniversion parse {{ var_omniversion_pm }} {{ var_omniversion_parse_args | default("") }}'
   args:
     stdin: '{{ var_omniversion_parse_input | string }}'
   delegate_to: localhost

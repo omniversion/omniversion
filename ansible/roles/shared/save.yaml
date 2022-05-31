@@ -20,6 +20,7 @@
     content: ""
     mode: '777'
   delegate_to: localhost
+  changed_when: false
 
 - name: '{{ var_omniversion_pm }} : Store result'
   ansible.builtin.copy:
@@ -27,3 +28,4 @@
     content: '{{ var_omniversion_save_input }}'
     mode: '777'
   delegate_to: localhost
+  changed_when: false

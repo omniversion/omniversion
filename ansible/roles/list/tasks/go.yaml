@@ -5,14 +5,22 @@
 
 - name: 'go : List `go` module versions'
   when: var_omniversion.go.local is defined
-  with_items: '{{ var_omniversion.go.local }}'
+  loop: '{{ var_omniversion.go.local }}'
+  loop_control:
+    loop_var: var_omniversion_go_local_dir
   args:
     apply:
       tags:
         - go
-  vars:
-    var_omniversion_go_local_dir: '{{ item }}'
   include_tasks: go.local.yaml
+
+- name: 'go : List system `go` module versions'
+  when: var_omniversion.go.system | default(true)
+  args:
+    apply:
+      tags:
+        - go
+  include_tasks: go.system.yaml
 
 # we save the results as multiple yaml documents in the same file
 - name: 'go : Save results'

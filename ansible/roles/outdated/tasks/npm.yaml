@@ -5,7 +5,7 @@
     var_omniversion_npm_local_parsed_results: []
 
 - name: 'npm : global : List available global `npm` updates'
-  when: (var_omniversion.npm.global is defined and var_omniversion.npm.global) or var_omniversion.npm.global is not defined
+  when: var_omniversion.npm.global | default(true)
   block:
     - name: 'npm : global : List packages'
       ansible.builtin.command: bash -ic 'npm -g outdated --json --all'

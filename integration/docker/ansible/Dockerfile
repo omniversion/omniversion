@@ -11,5 +11,5 @@ ENV LC_ALL C.UTF-8
 RUN python3 -m pip install -U pip setuptools
 RUN python3 -m pip install --user -U ansible
 
-RUN python3 -m ansible-galaxy install geerlingguy.nginx
-RUN python3 -m ansible-galaxy collection install ansible.utils
+# RUN python3 -m ansible-galaxy install geerlingguy.nginx
+# RUN python3 -m ansible-galaxy collection install ansible.utils

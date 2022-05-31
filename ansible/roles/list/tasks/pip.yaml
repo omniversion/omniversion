@@ -5,7 +5,7 @@
     var_omniversion_pip_local_parsed_results: []
 
 - name: 'pip : global : List global `pip` package versions'
-  when: (var_omniversion.pip.global is defined and var_omniversion.pip.global) or var_omniversion.pip.global is not defined
+  when: var_omniversion.pip.global | default(true)
   loop: '{{ var_omniversion.pip.executables | default(["pip"]) }}'
   loop_control:
     loop_var: var_omniversion_pip_executable

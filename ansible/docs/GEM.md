@@ -2,10 +2,13 @@
 
 ## Key: `gem`
 
-There are no particular configuration options for [rubygems](https://rubygems.org).
+[rubygems](https://rubygems.org) can be configured by providing a dictionary/map with the following keys and values:
 
-Specify a truthy value to activate, a falsy value to deactivate. If no value is
-specified and `auto` is set to `true`, auto-detection will be used.
+| Key     | Value type           | Optional | Default | Purpose                               |
+|---------|----------------------|----------|---------|---------------------------------------|
+| `dir`   | `string`             | yes      | `/`     | Working directory to fetch gems from. |
+
+If you don't want to provide any options, you can also set a falsy/truthy value to (de-)activate global dependency collection.
 
 ```yaml
 var_omniversion:
