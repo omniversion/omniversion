@@ -59,10 +59,16 @@ func ParseListOutput(input string) ([]PackageMetadata, error) {
 		newItem.Current = shared.CleanVersion(listItem.Version)
 		direct := !listItem.Indirect
 		newItem.Direct = &direct
-		newItem.Installations = []InstalledPackage{{
-			Location: listItem.Dir,
-			Version:  shared.LastVersion(strings.Split(listItem.Dir, "@")),
-		}}
+		if listItem.Dir != "" {
+			version := ""
+			if strings.Contains(listItem.Dir, "@") {
+				version = shared.LastVersion(strings.Split(listItem.Dir, "@"))
+			}
+			newItem.Installations = []InstalledPackage{{
+				Location: listItem.Dir,
+				Version:  version,
+			}}
+		}
 		if listItem.Update != nil {
 			newItem.Latest = shared.CleanVersion(listItem.Update.Version)
 			newItem.Sources = []PackagesSource{{

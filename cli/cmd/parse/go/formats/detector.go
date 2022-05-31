@@ -1,7 +1,6 @@
 package formats
 
 import (
-	"encoding/json"
 	"strings"
 )
 
@@ -24,13 +23,14 @@ func DetectVerbAndFormat(input string) (Verb, InputFormat) {
 	if strings.HasPrefix(input, "go version ") {
 		return VersionCommand, DefaultFormat
 	}
-	var jsonData map[string]interface{}
-	jsonUnmarshallErr := json.Unmarshal([]byte(input), &jsonData)
-	if jsonUnmarshallErr == nil {
+	if strings.HasPrefix(input, "{") {
 		return ListCommand, JsonFormat
 	}
 	if strings.HasPrefix(input, "module ") {
 		return GoModFile, DefaultFormat
 	}
-	return GoSumFile, DefaultFormat
+	if strings.Contains(input, " ") {
+		return GoSumFile, DefaultFormat
+	}
+	return ListCommand, DefaultFormat
 }
